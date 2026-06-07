@@ -1,0 +1,110 @@
+.section {
+  padding: var(--section-padding);
+  background: var(--color-bg);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+.header .section-subtitle {
+  margin: 0 auto;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  position: relative;
+  margin-bottom: 48px;
+}
+
+.step {
+  position: relative;
+  background: var(--color-white);
+  border: 1px solid rgba(46,42,57,0.07);
+  border-radius: var(--radius-xl);
+  padding: 40px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow var(--transition);
+}
+.step:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.connector {
+  display: none;
+}
+
+.stepNumber {
+  font-size: 4rem;
+  font-weight: 900;
+  color: rgba(155,4,111,0.07);
+  line-height: 1;
+  position: absolute;
+  top: 24px;
+  right: 28px;
+  font-variant-numeric: tabular-nums;
+}
+
+.iconBox {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stepTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-dark);
+}
+
+.stepDesc {
+  font-size: 0.925rem;
+  color: var(--color-text-light);
+  line-height: 1.7;
+}
+
+/* Highlight bar */
+.highlight {
+  background: linear-gradient(135deg, var(--color-bg-alt), #efe8f5);
+  border: 1px solid rgba(155,4,111,0.12);
+  border-radius: var(--radius-xl);
+  padding: 28px 36px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.highlightIcon {
+  font-size: 2rem;
+}
+.highlight p {
+  flex: 1;
+  font-size: 1rem;
+  color: var(--color-dark);
+  min-width: 200px;
+}
+.highlight strong {
+  color: var(--color-primary);
+}
+
+@media (max-width: 768px) {
+  .section { padding: var(--section-padding-mobile); }
+  .steps { grid-template-columns: 1fr; gap: 20px; }
+  .highlight {
+    flex-direction: column;
+    text-align: center;
+    padding: 24px 20px;
+    gap: 16px;
+  }
+  .highlight p { min-width: unset; }
+}

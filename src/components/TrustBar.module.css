@@ -1,0 +1,62 @@
+.trustBar {
+  background: var(--color-dark);
+  padding: 18px 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.trustBar::before,
+.trustBar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none;
+}
+.trustBar::before {
+  left: 0;
+  background: linear-gradient(to right, var(--color-dark), transparent);
+}
+.trustBar::after {
+  right: 0;
+  background: linear-gradient(to left, var(--color-dark), transparent);
+}
+
+.track {
+  display: flex;
+  gap: 0;
+  animation: marquee 25s linear infinite;
+  width: max-content;
+}
+
+.track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 36px;
+  border-right: 1px solid rgba(255,255,255,0.08);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.icon {
+  font-size: 1.2rem;
+}
+
+.text {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.8);
+  letter-spacing: 0.03em;
+}

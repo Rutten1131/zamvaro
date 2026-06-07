@@ -1,0 +1,63 @@
+.section {
+  background: var(--color-gradient-hero);
+  padding: 64px 24px;
+  margin: 0;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.shieldWrap {
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255,255,255,0.2);
+}
+.shieldEmoji { font-size: 2.4rem; }
+
+.content { flex: 1; min-width: 200px; }
+
+.title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 8px;
+}
+
+.text {
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.7;
+}
+
+.badges {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.badge {
+  background: rgba(255,255,255,0.12);
+  color: white;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255,255,255,0.2);
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .inner { flex-direction: column; text-align: center; align-items: center; }
+  .badges { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+}
