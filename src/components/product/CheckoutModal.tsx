@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { X, User, Phone, MapPin } from 'lucide-react';
 import type { Product } from '@/data/products';
 import styles from './CheckoutModal.module.css';
+import * as fpixel from '@/lib/fpixel';
 
 interface Props {
   product: Product;
@@ -28,6 +29,19 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
 
   const basePrice = parseFloat(product.price.replace(/[^\d.]/g, '')) || 24.99;
   const totalPrice = basePrice;
+
+  // Registrar el inicio del proceso de pago (InitiateCheckout)
+  useEffect(() => {
+    if (isOpen) {
+      fpixel.event('InitiateCheckout', {
+        content_name: product.name,
+        content_ids: [product.id.toString()],
+        content_type: 'product',
+        value: totalPrice,
+        currency: 'USD',
+      });
+    }
+  }, [isOpen, product, totalPrice]);
 
   const provinces = [
     'Azuay', 'Bolívar', 'Cañar', 'Carchi', 'Chimborazo', 'Cotopaxi', 'El Oro',
@@ -71,6 +85,15 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
         throw new Error('Error al enviar los datos del pedido.');
       }
 
+      // Registrar la compra exitosa (Purchase) en Meta Pixel
+      fpixel.event('Purchase', {
+        content_name: product.name,
+        content_ids: [product.id.toString()],
+        content_type: 'product',
+        value: totalPrice,
+        currency: 'USD',
+      });
+
       alert('¡Tu pedido fue registrado con éxito! 🎉 Nos comunicaremos contigo pronto para confirmar tu entrega. Gracias por confiar en Zamvaro Ecuador.');
       onClose();
     } catch (err) {
@@ -80,6 +103,7 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
       setLoading(false);
     }
   };
+
 
 
   return (

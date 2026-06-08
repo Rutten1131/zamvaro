@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import FacebookPixel from '@/components/FacebookPixel';
 
 export const metadata: Metadata = {
   title: 'Zamvaro Ecuador | Compra con Pago Contraentrega',
@@ -29,7 +30,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body>{children}</body>
+      <body>
+        <FacebookPixel />
+        {children}
+      </body>
     </html>
   );
 }
+
