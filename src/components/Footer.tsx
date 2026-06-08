@@ -8,16 +8,16 @@ import styles from './Footer.module.css';
 const navLinks = [
   { href: '/', label: 'Inicio' },
   { href: '/productos', label: 'Productos' },
-  { href: '/rastreo', label: 'Rastrear Pedido' },
 ];
 
 const legalLinks = [
-  { href: '#', label: 'Términos y Condiciones' },
-  { href: '#', label: 'Política de Privacidad' },
-  { href: '#', label: 'Política de Devoluciones' },
+  { href: '/terminos-y-condiciones', label: 'Términos y Condiciones' },
+  { href: '/politica-de-privacidad', label: 'Política de Privacidad' },
 ];
 
 export default function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer className={styles.footer}>
       <div className="container">
@@ -34,7 +34,7 @@ export default function Footer() {
               />
             </Link>
             <p className={styles.brandTagline}>
-              Dropshipping con pago contraentrega en Ecuador.
+              Compra contraentrega en Ecuador.
               Compra segura, sin tarjeta, sin riesgo.
             </p>
             <div className={styles.socials}>
@@ -48,16 +48,16 @@ export default function Footer() {
                 <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
               </a>
               <a
-                href="https://facebook.com/zamvaro.ec"
+                href="https://www.facebook.com/people/Zamvaro/61560653776134/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.socialBtn}
                 aria-label="Facebook"
               >
-                <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1-0 0 1 1-1h3z"/></svg>
               </a>
               <a
-                href="https://wa.me/593000000000"
+                href="https://wa.me/593939243014"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`${styles.socialBtn} ${styles.whatsappBtn}`}
@@ -92,14 +92,14 @@ export default function Footer() {
               </li>
               <li>
                 <span className={styles.contactIcon}>💬</span>
-                <a href="https://wa.me/593000000000" target="_blank" rel="noopener noreferrer" className={styles.contactLink}>
-                  WhatsApp: +593 00 000 0000
+                <a href="https://wa.me/593939243014" target="_blank" rel="noopener noreferrer" className={styles.contactLink}>
+                  WhatsApp: +593 93 924 3014
                 </a>
               </li>
               <li>
                 <span className={styles.contactIcon}>📧</span>
-                <a href="mailto:hola@zamvaro.ec" className={styles.contactLink}>
-                  hola@zamvaro.ec
+                <a href="mailto:ecuador@zamvaro.com" className={styles.contactLink}>
+                  ecuador@zamvaro.com
                 </a>
               </li>
             </ul>
@@ -118,13 +118,13 @@ export default function Footer() {
         {/* Bottom */}
         <div className={styles.bottom}>
           <p className={styles.copyright}>
-            © {new Date().getFullYear()} Zamvaro Ecuador · Todos los derechos reservados
+            Diseñado por <a href="http://cesarreyesjaramillo.com/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline', color: 'inherit' }}>Cesar Reyes</a> | Zamvaro Ecuador {currentYear}
           </p>
           <div className={styles.legalLinks}>
             {legalLinks.map((link) => (
-              <a key={link.label} href={link.href} className={styles.legalLink}>
+              <Link key={link.label} href={link.href} className={styles.legalLink}>
                 {link.label}
-              </a>
+              </Link>
             ))}
           </div>
         </div>

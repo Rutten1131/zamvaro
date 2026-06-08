@@ -102,10 +102,10 @@ export default function Hero() {
         >
           <div className={styles.imageWrapper}>
             <Image
-              src="/hero-bg.png"
-              alt="Productos Zamvaro Ecuador"
+              src="/hero-zamvaro.png"
+              alt="Zamvaro Ecuador — Compra Fácil, Paga al Recibir"
               fill
-              style={{ objectFit: 'cover', borderRadius: '24px' }}
+              style={{ objectFit: 'contain', borderRadius: '24px' }}
               priority
             />
             {/* Floating card */}

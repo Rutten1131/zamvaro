@@ -24,7 +24,7 @@ export default function ProductFeatures({ product }: Props) {
 
   const leftFeatures = product.features.slice(0, 2);
   const rightFeatures = product.features.slice(2, 4);
-  const imageSrc = product.image || '';
+  const imageSrc = product.imageFeatures || product.image || '';
 
   return (
     <section className={styles.section}>

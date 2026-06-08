@@ -1,8 +1,7 @@
 'use client';
 
-import { use } from 'react';
+import { use, useState, useEffect } from 'react';
 import { notFound } from 'next/navigation';
-import { products } from '@/data/products';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
@@ -24,9 +23,58 @@ interface PageProps {
 
 export default function ProductDetailPage({ params }: PageProps) {
   const resolvedParams = use(params);
-  const product = products.find((p) => p.slug === resolvedParams.slug);
+  const [product, setProduct] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-  if (!product || !product.isAvailable) {
+  useEffect(() => {
+    fetch(`/api/products?slug=${resolvedParams.slug}`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Not found');
+        return res.json();
+      })
+      .then((data) => {
+        setProduct(data);
+      })
+      .catch((err) => {
+        console.error('Error loading product:', err);
+        setError(true);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [resolvedParams.slug]);
+
+  if (loading) {
+    return (
+      <>
+        <Navbar />
+        <main style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-bg)' }}>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{
+              border: '4px solid rgba(139, 92, 246, 0.1)',
+              borderRadius: '50%',
+              borderTop: '4px solid var(--color-primary)',
+              width: '50px',
+              height: '50px',
+              animation: 'spin 1s linear infinite',
+              margin: '0 auto 20px'
+            }}></div>
+            <p style={{ fontWeight: 600, color: 'var(--color-text-light)' }}>Cargando detalles del producto...</p>
+            <style jsx>{`
+              @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+              }
+            `}</style>
+          </div>
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
+  if (error || !product || !product.isAvailable) {
     notFound();
   }
 
@@ -49,13 +97,10 @@ export default function ProductDetailPage({ params }: PageProps) {
         {/* 5. Testimonials & Social Proof */}
         <ProductTestimonials product={product} />
 
-        {/* 6. Comparison Table */}
+        {/* 6. Comparison & Stats (Unified Section) */}
         <ProductComparison product={product} />
 
-        {/* 7. Numbers/Stats Panel */}
-        <ProductStats product={product} />
-
-        {/* 8. Step by step instructions */}
+        {/* 7. Step by step instructions */}
         <ProductHowTo product={product} />
 
         {/* 9. Frequently Asked Questions */}
@@ -68,3 +113,4 @@ export default function ProductDetailPage({ params }: PageProps) {
     </>
   );
 }
+

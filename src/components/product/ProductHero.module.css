@@ -336,4 +336,5 @@
   .trustColumns { grid-template-columns: repeat(3, 1fr); gap: 8px; }
   .trustText strong { font-size: 0.72rem; }
   .trustText span { font-size: 0.68rem; }
+  .thumb { width: 52px; height: 52px; }
 }

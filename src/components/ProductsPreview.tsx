@@ -1,17 +1,29 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, X, ShoppingBag } from 'lucide-react';
 import styles from './ProductsPreview.module.css';
-
-import { products } from '@/data/products';
 import { ShoppingCart } from 'lucide-react';
 
 export default function ProductsPreview() {
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/products')
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setProducts(data);
+        }
+      })
+      .catch((err) => console.error('Error fetching products:', err))
+      .finally(() => setLoading(false));
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -130,7 +142,7 @@ export default function ProductsPreview() {
         >
           <p>¿Buscas un producto específico? Escríbenos y lo conseguimos para ti.</p>
           <a
-            href="https://wa.me/593000000000"
+            href="https://wa.me/593939243014"
             target="_blank"
             rel="noopener noreferrer"
             className="btn-primary"

@@ -31,6 +31,13 @@ const testimonials = [
   },
 ];
 
+// Duplicar la data para el slider infinito
+const duplicatedTestimonials = [
+  ...testimonials,
+  ...testimonials,
+  ...testimonials,
+];
+
 const stats = [
   { number: '100%', label: 'Pago seguro', icon: '🔒' },
   { number: '24/7', label: 'Soporte activo', icon: '📞' },
@@ -41,100 +48,101 @@ const stats = [
 export default function Testimonials() {
   return (
     <section className={styles.section}>
-      <div className="container">
+      <div className={styles.containerFluid}>
+        
         {/* Stats Row */}
-        <motion.div
-          className={styles.statsRow}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          {stats.map((s) => (
-            <div key={s.label} className={styles.statItem}>
-              <span className={styles.statNumber}>{s.number}</span>
-              <span className={styles.statLabel}>{s.label}</span>
-            </div>
-          ))}
-        </motion.div>
+        <div className="container" style={{ marginBottom: '64px' }}>
+          <motion.div
+            className={styles.statsRow}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            {stats.map((s) => (
+              <div key={s.label} className={styles.statItem}>
+                <span className={styles.statNumber}>{s.number}</span>
+                <span className={styles.statLabel}>{s.label}</span>
+              </div>
+            ))}
+          </motion.div>
+        </div>
 
         {/* Header */}
-        <motion.div
-          className={styles.header}
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-        >
-          <span className="section-badge">💬 Testimonios</span>
-          <h2 className="section-title">
-            Lo que dicen nuestros
-            <span className={styles.accent}> clientes</span>
-          </h2>
-          <p className="section-subtitle">
-            Personas reales de todo Ecuador que ya compraron con confianza.
-          </p>
-        </motion.div>
+        <div className="container">
+          <motion.div
+            className={styles.header}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <span className="section-badge">💬 Testimonios</span>
+            <h2 className="section-title">
+              Lo que dicen nuestros
+              <span className={styles.accent}> clientes</span>
+            </h2>
+            <p className="section-subtitle">
+              Personas reales de todo Ecuador que ya compraron con confianza.
+            </p>
+          </motion.div>
+        </div>
 
-        {/* Testimonial Cards */}
-        <div className={styles.cards}>
-          {testimonials.map((t, i) => (
-            <motion.div
-              key={t.name}
-              className={styles.card}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.55, delay: i * 0.15 }}
-              whileHover={{ y: -6, transition: { duration: 0.25 } }}
-            >
-              {/* Stars */}
-              <div className={styles.stars}>
-                {Array.from({ length: t.rating }).map((_, si) => (
-                  <Star key={si} size={16} fill="#F59E0B" color="#F59E0B" />
-                ))}
-              </div>
+        {/* Testimonial Cards con slider infinito horizontal en todo dispositivo */}
+        <div className={styles.sliderContainer}>
+          <div className={styles.sliderTrack}>
+            {duplicatedTestimonials.map((t, i) => (
+              <div key={i} className={styles.card}>
+                <div className={styles.stars}>
+                  {Array.from({ length: t.rating }).map((_, si) => (
+                    <Star key={si} size={16} fill="#F59E0B" color="#F59E0B" />
+                  ))}
+                </div>
 
-              <p className={styles.quote}>&ldquo;{t.text}&rdquo;</p>
+                <p className={styles.quote}>&ldquo;{t.text}&rdquo;</p>
 
-              <div className={styles.productTag}>
-                🛍️ Compró: <strong>{t.product}</strong>
-              </div>
+                <div className={styles.productTag}>
+                  🛍️ Compró: <strong>{t.product}</strong>
+                </div>
 
-              <div className={styles.author}>
-                <span className={styles.avatar}>{t.avatar}</span>
-                <div>
-                  <p className={styles.authorName}>{t.name}</p>
-                  <p className={styles.authorCity}>📍 {t.city}</p>
+                <div className={styles.author}>
+                  <span className={styles.avatar}>{t.avatar}</span>
+                  <div>
+                    <p className={styles.authorName}>{t.name}</p>
+                    <p className={styles.authorCity}>📍 {t.city}</p>
+                  </div>
                 </div>
               </div>
-            </motion.div>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* Guarantee Banner */}
-        <motion.div
-          className={styles.guarantee}
-          initial={{ opacity: 0, scale: 0.97 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-        >
-          <div className={styles.guaranteeItem}>
-            <span className={styles.guaranteeIcon}>🚫</span>
-            <p><strong>No pagas si no llega</strong><br />Si tu pedido no llega, no se te cobra nada.</p>
-          </div>
-          <div className={styles.divider} />
-          <div className={styles.guaranteeItem}>
-            <span className={styles.guaranteeIcon}>↩️</span>
-            <p><strong>Devolución sin complicaciones</strong><br />Si el producto no es lo esperado, lo resolvemos.</p>
-          </div>
-          <div className={styles.divider} />
-          <div className={styles.guaranteeItem}>
-            <span className={styles.guaranteeIcon}>💯</span>
-            <p><strong>Producto real garantizado</strong><br />Lo que ves es lo que recibes. Sin engaños.</p>
-          </div>
-        </motion.div>
+        <div className="container">
+          <motion.div
+            className={styles.guarantee}
+            initial={{ opacity: 0, scale: 0.97 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <div className={styles.guaranteeItem}>
+              <span className={styles.guaranteeIcon}>🚫</span>
+              <p><strong>No pagas si no llega</strong><br />Si tu pedido no llega, no se te cobra nada.</p>
+            </div>
+            <div className={styles.divider} />
+            <div className={styles.guaranteeItem}>
+              <span className={styles.guaranteeIcon}>↩️</span>
+              <p><strong>Devolución sin complicaciones</strong><br />Si el producto no es lo esperado, lo resolvemos.</p>
+            </div>
+            <div className={styles.divider} />
+            <div className={styles.guaranteeItem}>
+              <span className={styles.guaranteeIcon}>💯</span>
+              <p><strong>Producto real garantizado</strong><br />Lo que ves es lo que recibes. Sin engaños.</p>
+            </div>
+          </motion.div>
+        </div>
+
       </div>
     </section>
   );

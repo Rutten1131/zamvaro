@@ -48,6 +48,9 @@ export interface Product {
   emoji?: string;
   image?: string;
   images?: string[];
+  imageProblem?: string;
+  imageFeatures?: string;
+  imageHowTo?: string;
   isAvailable: boolean;
   slug?: string;
   bullets?: string[];
@@ -75,7 +78,12 @@ export const products: Product[] = [
     originalPrice: '$50.00',
     tag: 'Más vendido',
     image: 'https://zamvaro.com/cdn/shop/files/1.png?v=1777075512',
-    images: ['https://zamvaro.com/cdn/shop/files/1.png?v=1777075512'],
+    images: [
+      'https://zamvaro.com/cdn/shop/files/1.png?v=1777075512',
+      'https://zamvaro.com/cdn/shop/files/2.png?v=1777075512',
+      'https://zamvaro.com/cdn/shop/files/3.png?v=1777075512',
+      'https://zamvaro.com/cdn/shop/files/4.png?v=1777075512'
+    ],
     isAvailable: true,
     slug: 'cepillo-secador-3-en-1',
     bullets: [
@@ -199,7 +207,7 @@ export const products: Product[] = [
       },
     ],
     guaranteeText: 'Si el cepillo no cumple tus expectativas, nos escribes y lo resolvemos. Tu satisfacción es nuestra prioridad. Zamvaro Ecuador garantiza tu tranquilidad en cada compra.',
-    whatsappNumber: '593000000000',
+    whatsappNumber: '593939243014',
   },
   {
     id: 2,

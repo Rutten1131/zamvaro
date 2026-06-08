@@ -1,6 +1,11 @@
 .section {
-  padding: var(--section-padding);
+  padding: 80px 0;
   background: var(--color-bg-alt);
+  overflow: hidden;
+}
+
+.containerFluid {
+  width: 100%;
 }
 
 /* Stats Row */
@@ -12,7 +17,6 @@
   border: 1px solid rgba(155,4,111,0.1);
   border-radius: var(--radius-xl);
   overflow: hidden;
-  margin-bottom: 64px;
 }
 .statItem {
   background: var(--color-white);
@@ -40,15 +44,56 @@
   text-align: center;
   margin-bottom: 48px;
 }
-.header .section-subtitle { margin: 0 auto; }
 .accent { color: var(--color-primary); }
 
-/* Cards */
-.cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+/* ── Slider Infinito Testimonios ── */
+.sliderContainer {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  padding: 20px 0;
+  margin-bottom: 56px;
+}
+
+.sliderContainer::before,
+.sliderContainer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.sliderContainer::before {
+  left: 0;
+  background: linear-gradient(to right, var(--color-bg-alt), transparent);
+}
+
+.sliderContainer::after {
+  right: 0;
+  background: linear-gradient(to left, var(--color-bg-alt), transparent);
+}
+
+.sliderTrack {
+  display: flex;
   gap: 24px;
-  margin-bottom: 40px;
+  width: max-content;
+  animation: scrollTestimonials 35s linear infinite;
+}
+
+.sliderTrack:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scrollTestimonials {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-33.333% - 8px));
+  }
 }
 
 .card {
@@ -60,10 +105,15 @@
   flex-direction: column;
   gap: 16px;
   box-shadow: var(--shadow-card);
-  transition: box-shadow var(--transition);
+  transition: all 0.3s ease;
   position: relative;
+  width: 320px;
+  flex-shrink: 0;
 }
-.card:hover { box-shadow: var(--shadow-md); }
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+}
 .card::before {
   content: '"';
   position: absolute;
@@ -82,9 +132,9 @@
 }
 
 .quote {
-  font-size: 0.925rem;
+  font-size: 0.9rem;
   color: var(--color-text);
-  line-height: 1.75;
+  line-height: 1.7;
   font-style: italic;
   flex: 1;
 }
@@ -108,7 +158,7 @@
   margin-top: auto;
 }
 .avatar {
-  font-size: 2rem;
+  font-size: 1.8rem;
   width: 44px;
   height: 44px;
   background: rgba(155,4,111,0.08);
@@ -176,13 +226,15 @@
 
 /* Responsive */
 @media (max-width: 900px) {
-  .cards { grid-template-columns: 1fr; }
   .statsRow { grid-template-columns: repeat(2, 1fr); }
   .guarantee { flex-direction: column; padding: 28px 24px; gap: 24px; }
   .guaranteeItem { padding: 0; }
   .divider { width: 100%; height: 1px; }
+  .sliderContainer::before,
+  .sliderContainer::after {
+    width: 60px;
+  }
 }
 @media (max-width: 560px) {
-  .section { padding: var(--section-padding-mobile); }
   .statsRow { grid-template-columns: repeat(2, 1fr); }
 }

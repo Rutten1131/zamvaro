@@ -1,78 +1,186 @@
 .section {
-  padding: var(--section-padding);
-  background: var(--color-bg-alt);
+  padding: 80px 24px;
+  background: var(--color-white);
+  border-top: 1px solid var(--color-border);
 }
 
+/* ── Encabezado ── */
 .header {
   text-align: center;
-  margin-bottom: 56px;
+  margin-bottom: 52px;
 }
 
-.highlight {
-  color: var(--color-primary);
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 32px;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.card {
-  background: var(--color-white);
-  padding: 40px 32px;
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--color-border);
-  position: relative;
-  transition: var(--transition);
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-}
-
-.num {
-  font-family: var(--font-title);
-  font-size: 2.5rem;
+.title {
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
   font-weight: 800;
-  color: rgba(155, 4, 111, 0.1);
-  position: absolute;
-  top: 24px;
-  right: 32px;
-  line-height: 1;
-}
-
-.emoji {
-  font-size: 3rem;
-  margin-bottom: 24px;
-}
-
-.cardTitle {
-  font-family: var(--font-title);
-  font-size: 1.25rem;
-  font-weight: 700;
   color: var(--color-dark);
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
-.cardDesc {
-  font-size: 0.95rem;
+.subtitle {
+  font-size: 1rem;
   color: var(--color-text-light);
   line-height: 1.6;
 }
 
-@media (max-width: 992px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
+.subtitle em {
+  font-style: normal;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* ── Layout 3 columnas ── */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 300px 1fr;
+  gap: 40px;
+  align-items: center;
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+/* ── Columnas de pasos ── */
+.stepsColLeft,
+.stepsColRight {
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+}
+
+.stepsColLeft {
+  text-align: center;
+}
+
+.stepsColRight {
+  text-align: center;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.stepNum {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--color-dark);
+  line-height: 1;
+}
+
+.stepTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-dark);
+  line-height: 1.3;
+}
+
+.stepDesc {
+  font-size: 0.875rem;
+  color: var(--color-primary);
+  line-height: 1.65;
+  font-weight: 500;
+}
+
+/* ── Centro: imagen + testimonio ── */
+.centerCol {
+  display: flex;
+  justify-content: center;
+}
+
+.centerCard {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+}
+
+.centerImageWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2/3;
+}
+
+.centerImage {
+  object-fit: cover;
+}
+
+/* Testimonio superpuesto */
+.testimonialOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(4px);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.testimonialTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.testimonialAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(155,4,111,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.testimonialName {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-dark);
+  display: block;
+}
+
+.testimonialStars {
+  display: flex;
+  gap: 2px;
+  margin-top: 2px;
+}
+
+.testimonialText {
+  font-size: 0.8rem;
+  color: var(--color-text);
+  line-height: 1.55;
+  font-style: italic;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .stepsColLeft,
+  .stepsColRight {
+    gap: 32px;
+  }
+
+  .centerCol {
+    order: -1;
+  }
+
+  .centerCard {
+    max-width: 360px;
+    margin: 0 auto;
   }
 }
 
-@media (max-width: 768px) {
-  .grid {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
+@media (max-width: 576px) {
+  .section { padding: 56px 16px; }
 }

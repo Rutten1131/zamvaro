@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     'Compra productos premium en Ecuador con pago contraentrega. Sin tarjeta de crédito. Entrega a domicilio o en sucursal en todo Ecuador. ¡Paga solo cuando recibas tu pedido!',
   keywords:
-    'dropshipping ecuador, pago contraentrega ecuador, comprar online ecuador, entrega a domicilio ecuador, zamvaro',
+    'compra contraentrega ecuador, pago contraentrega ecuador, comprar online ecuador, entrega a domicilio ecuador, zamvaro',
   openGraph: {
     title: 'Zamvaro Ecuador | Pago Contraentrega',
     description: 'Compra segura en Ecuador. Paga cuando recibas tu pedido.',
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Zamvaro Ecuador',
-    description: 'Dropshipping en Ecuador — Pago contraentrega. Sin riesgo.',
+    description: 'Ventas online en Ecuador — Pago contraentrega. Sin riesgo.',
   },
   robots: 'index, follow',
 };

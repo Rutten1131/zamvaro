@@ -109,7 +109,7 @@ export default function HowItWorks() {
             <strong>¿Tienes dudas?</strong> Escríbenos por WhatsApp y te asesoramos sin compromiso.
           </p>
           <a
-            href="https://wa.me/593000000000"
+            href="https://wa.me/593939243014"
             target="_blank"
             rel="noopener noreferrer"
             className="btn-whatsapp"

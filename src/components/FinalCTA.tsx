@@ -51,7 +51,7 @@ export default function FinalCTA() {
             transition={{ delay: 0.35, duration: 0.5 }}
           >
             <a
-              href="https://wa.me/593000000000?text=Hola%20Zamvaro%20Ecuador%2C%20quiero%20hacer%20un%20pedido"
+              href="https://wa.me/593939243014?text=Hola%20Zamvaro%20Ecuador%2C%20quiero%20hacer%20un%20pedido"
               target="_blank"
               rel="noopener noreferrer"
               className="btn-whatsapp"

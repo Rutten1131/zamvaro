@@ -164,8 +164,17 @@
   .brand { grid-column: 1 / -1; }
 }
 @media (max-width: 560px) {
-  .footer { padding: 48px 0 0; }
+  .footer { padding: 48px 0 0; text-align: center; }
   .top { grid-template-columns: 1fr; gap: 32px; }
-  .bottom { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .legalLinks { gap: 12px; }
+  .brand { align-items: center; }
+  .brandTagline { max-width: 100%; }
+  .socials { justify-content: center; }
+  .col { align-items: center; }
+  .colLinks { align-items: center; }
+  .contactList { align-items: center; }
+  .contactList li { justify-content: center; }
+  .trustBadges { align-items: center; }
+  .trustBadge { margin: 0 auto; }
+  .bottom { flex-direction: column; align-items: center; text-align: center; gap: 12px; }
+  .legalLinks { justify-content: center; gap: 12px; }
 }

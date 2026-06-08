@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import TrustBar from '@/components/TrustBar';
 import HowItWorks from '@/components/HowItWorks';
+import OrderTimeline from '@/components/OrderTimeline';
 import ProductsPreview from '@/components/ProductsPreview';
 import WhyZamvaro from '@/components/WhyZamvaro';
 import Testimonials from '@/components/Testimonials';
@@ -18,6 +19,7 @@ export default function Home() {
         <Hero />
         <TrustBar />
         <HowItWorks />
+        <OrderTimeline />
         <ProductsPreview />
         <WhyZamvaro />
         <Testimonials />

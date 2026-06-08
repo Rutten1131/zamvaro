@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function ProductProblem({ product }: Props) {
-  const imageSrc = product.image || 'https://zamvaro.com/cdn/shop/files/1.png?v=1777075512';
+  const imageSrc = product.imageProblem || product.image || 'https://zamvaro.com/cdn/shop/files/1.png?v=1777075512';
 
   return (
     <section className={styles.section}>

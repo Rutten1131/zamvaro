@@ -1,7 +1,8 @@
 'use client';
 
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Truck, MessageCircle, Star, CreditCard, RotateCcw } from 'lucide-react';
+import { ShieldCheck, Truck, MessageCircle, Star, CreditCard, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react';
 import styles from './WhyZamvaro.module.css';
 
 const pillars = [
@@ -60,6 +61,29 @@ const cardVariants = {
 } as const;
 
 export default function WhyZamvaro() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
+
+  const goTo = (idx: number) => {
+    setActiveIndex(Math.max(0, Math.min(pillars.length - 1, idx)));
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.changedTouches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    touchEndX.current = e.changedTouches[0].clientX;
+    if (touchStartX.current !== null && touchEndX.current !== null) {
+      const diff = touchStartX.current - touchEndX.current;
+      if (Math.abs(diff) > 40) {
+        if (diff > 0) goTo(activeIndex + 1);
+        else goTo(activeIndex - 1);
+      }
+    }
+  };
+
   return (
     <section className={styles.section}>
       <div className="container">
@@ -82,7 +106,7 @@ export default function WhyZamvaro() {
           </p>
         </motion.div>
 
-        {/* Pillars Grid */}
+        {/* Desktop Grid */}
         <motion.div
           className={styles.grid}
           variants={containerVariants}
@@ -108,6 +132,79 @@ export default function WhyZamvaro() {
             </motion.div>
           ))}
         </motion.div>
+
+        {/* Mobile Slider */}
+        <div className={styles.mobileSlider}>
+          {/* Swipe hint */}
+          <div className={styles.swipeHint}>
+            <span>👈</span>
+            <span>Desliza para ver más</span>
+            <span>👉</span>
+          </div>
+
+          {/* Slide area */}
+          <div
+            className={styles.mobileSlideWrap}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
+            <motion.div
+              key={activeIndex}
+              className={styles.mobileCard}
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -40 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div
+                className={styles.iconWrap}
+                style={{ background: pillars[activeIndex].bg, color: pillars[activeIndex].color }}
+              >
+                {pillars[activeIndex].icon}
+              </div>
+              <h3 className={styles.cardTitle}>{pillars[activeIndex].title}</h3>
+              <p className={styles.cardDesc}>{pillars[activeIndex].description}</p>
+            </motion.div>
+          </div>
+
+          {/* Navigation Arrows */}
+          <div className={styles.mobileNav}>
+            <button
+              className={styles.mobileArrow}
+              onClick={() => goTo(activeIndex - 1)}
+              disabled={activeIndex === 0}
+              aria-label="Anterior"
+            >
+              <ChevronLeft size={20} />
+            </button>
+
+            {/* Dots */}
+            <div className={styles.dots}>
+              {pillars.map((_, i) => (
+                <button
+                  key={i}
+                  className={`${styles.dot} ${i === activeIndex ? styles.dotActive : ''}`}
+                  onClick={() => goTo(i)}
+                  aria-label={`Ir a razón ${i + 1}`}
+                />
+              ))}
+            </div>
+
+            <button
+              className={styles.mobileArrow}
+              onClick={() => goTo(activeIndex + 1)}
+              disabled={activeIndex === pillars.length - 1}
+              aria-label="Siguiente"
+            >
+              <ChevronRight size={20} />
+            </button>
+          </div>
+
+          {/* Counter */}
+          <p className={styles.mobileCounter}>
+            {activeIndex + 1} / {pillars.length}
+          </p>
+        </div>
 
         {/* Trust Banner */}
         <motion.div
