@@ -34,7 +34,7 @@ async function sendMetaCAPIEvent(product: any, formData: any, totalPrice: number
     const userAgent = reqHeaders.get('user-agent') || '';
     const ipAddress = reqHeaders.get('x-forwarded-for') || reqHeaders.get('x-real-ip') || '';
 
-    const eventData = {
+    const eventData: any = {
       data: [
         {
           event_name: 'Purchase',
@@ -61,6 +61,11 @@ async function sendMetaCAPIEvent(product: any, formData: any, totalPrice: number
         },
       ],
     };
+
+    if (process.env.META_TEST_EVENT_CODE) {
+      eventData.test_event_code = process.env.META_TEST_EVENT_CODE;
+    }
+
 
     const url = `https://graph.facebook.com/v19.0/${pixelId}/events?access_token=${accessToken}`;
     const response = await fetch(url, {
