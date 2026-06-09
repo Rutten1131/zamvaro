@@ -1,21 +1,17 @@
 'use client';
 
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Check, X } from 'lucide-react';
 import type { Product } from '@/data/products';
-import CheckoutModal from './CheckoutModal';
 import styles from './ProductComparison.module.css';
 
 interface Props { product: Product; }
 
 export default function ProductComparison({ product }: Props) {
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-
-  const openCheckout = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setIsCheckoutOpen(true);
-  };
+  const whatsappMsg = encodeURIComponent(
+    `Hola Zamvaro Ecuador, quiero comprar el ${product.name} a ${product.price} con pago contraentrega.`
+  );
+  const whatsappUrl = `https://wa.me/${product.whatsappNumber || '593939243014'}?text=${whatsappMsg}`;
 
   return (
     <>
@@ -105,25 +101,20 @@ export default function ProductComparison({ product }: Props) {
                 </div>
               )}
 
-              <button
-                onClick={openCheckout}
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
                 className={styles.ctaBtn}
               >
                 Lo quiero
-              </button>
+              </a>
             </motion.div>
 
           </div>
 
         </div>
       </section>
-
-      {/* Checkout Modal Form */}
-      <CheckoutModal
-        product={product}
-        isOpen={isCheckoutOpen}
-        onClose={() => setIsCheckoutOpen(false)}
-      />
     </>
   );
 }
