@@ -57,6 +57,7 @@ export async function initDatabase() {
         problemFactors JSON,
         problemTagline VARCHAR(255),
         problemHeadline VARCHAR(255),
+        facebookPixelId VARCHAR(50) DEFAULT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
@@ -108,6 +109,7 @@ export async function initDatabase() {
       { name: 'problemFactors', def: 'JSON' },
       { name: 'problemTagline', def: 'VARCHAR(255)' },
       { name: 'problemHeadline', def: 'VARCHAR(255)' },
+      { name: 'facebookPixelId', def: 'VARCHAR(50) DEFAULT NULL' },
     ];
     for (const col of newColumns) {
       try {

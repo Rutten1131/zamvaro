@@ -47,6 +47,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
       problemFactors,
       problemTagline,
       problemHeadline,
+      facebookPixelId,
     } = body;
 
     if (!name || !slug) {
@@ -85,7 +86,8 @@ export async function PUT(request: Request, { params }: RouteParams) {
         primaryColor = ?,
         problemFactors = ?,
         problemTagline = ?,
-        problemHeadline = ?
+        problemHeadline = ?,
+        facebookPixelId = ?
       WHERE id = ?
     `;
 
@@ -121,6 +123,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
       JSON.stringify(problemFactors || []),
       problemTagline || null,
       problemHeadline || null,
+      facebookPixelId || null,
       id,
     ]);
 

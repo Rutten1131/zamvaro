@@ -103,6 +103,7 @@ export async function POST(request: Request) {
       problemFactors,
       problemTagline,
       problemHeadline,
+      facebookPixelId,
     } = body;
 
     if (!name || !slug) {
@@ -116,8 +117,8 @@ export async function POST(request: Request) {
         imageProblem, imageFeatures, imageHowTo,
         isAvailable, slug, bullets, features, testimonials, comparisonTitle, comparisonOursLabel,
         comparisonTheirsLabel, comparison, stats, steps, faqs, guaranteeText, whatsappNumber, primaryColor,
-        problemFactors, problemTagline, problemHeadline
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        problemFactors, problemTagline, problemHeadline, facebookPixelId
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const [result] = await pool.query(query, [
@@ -152,6 +153,7 @@ export async function POST(request: Request) {
       JSON.stringify(problemFactors || []),
       problemTagline || null,
       problemHeadline || null,
+      facebookPixelId || null,
     ]);
 
     const insertId = (result as any).insertId;

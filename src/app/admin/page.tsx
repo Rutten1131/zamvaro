@@ -53,6 +53,7 @@ const emptyProduct = {
   problemFactors: [] as { label: string; detail: string }[],
   problemTagline: '',
   problemHeadline: '',
+  facebookPixelId: '',
 };
 
 
@@ -944,6 +945,18 @@ export default function AdminPage() {
                     value={formData.whatsappNumber || '593939243014'}
                     onChange={(e) => setFormData((prev) => ({ ...prev, whatsappNumber: e.target.value }))}
                   />
+                </div>
+
+                <div className={styles.inputGroup}>
+                  <label className={styles.label}>🎯 Facebook Pixel ID (específico de este producto)</label>
+                  <input
+                    type="text"
+                    className={styles.input}
+                    placeholder="Ej: 1937848746935938"
+                    value={formData.facebookPixelId || ''}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, facebookPixelId: e.target.value }))}
+                  />
+                  <small style={{ color: '#888', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>Deja en blanco para usar el Pixel global del sitio. Si ingresas un ID, solo se activará en la página de este producto.</small>
                 </div>
 
                 <div className={styles.inputGroup} style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '30px' }}>

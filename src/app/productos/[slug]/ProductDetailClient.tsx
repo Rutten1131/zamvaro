@@ -85,6 +85,26 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
       {/* Override de variables CSS para este producto */}
       <style dangerouslySetInnerHTML={{ __html: colorStyle }} />
 
+      {/* Píxel de Facebook específico de este producto (si tiene uno configurado) */}
+      {product.facebookPixelId && (
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              !function(f,b,e,v,n,t,s)
+              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+              n.queue=[];t=b.createElement(e);t.async=!0;
+              t.src=v;s=b.getElementsByTagName(e)[0];
+              s.parentNode.insertBefore(t,s)}(window, document,'script',
+              'https://connect.facebook.net/en_US/fbevents.js');
+              fbq('init', '${product.facebookPixelId}');
+              fbq('track', 'PageView');
+            `,
+          }}
+        />
+      )}
+
       <Navbar />
       {/* Barra de anuncio fija — desaparece al bajar */}
       <AnnouncementBar whatsappNumber={product.whatsappNumber} />
