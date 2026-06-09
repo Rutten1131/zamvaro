@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Star } from 'lucide-react';
 import type { Product } from '@/data/products';
 import styles from './ProductHowTo.module.css';
+import { MessageCircle } from 'lucide-react';
 
 interface Props {
   product: Product;
@@ -109,6 +110,27 @@ export default function ProductHowTo({ product }: Props) {
           </motion.div>
 
         </div>
+
+        {/* CTA WhatsApp debajo de los pasos */}
+        <motion.div
+          className={styles.ctaWrap}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <a
+            href={`/api/wa-click?product=${product.slug}&name=${encodeURIComponent(product.name)}&section=comousar&wa=${product.whatsappNumber || '593939243014'}&msg=${encodeURIComponent(`Hola! 👋 Me interesa ${product.name} que vi en su página. ¿Cómo puedo pedirlo?`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.ctaBtn}
+          >
+            <MessageCircle size={20} />
+            Quiero este producto ahora
+          </a>
+          <p className={styles.ctaHint}>📦 Pago contraentrega · Envío a todo Ecuador</p>
+        </motion.div>
+
       </div>
     </section>
   );

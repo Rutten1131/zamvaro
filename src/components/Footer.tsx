@@ -144,7 +144,7 @@ export default function Footer() {
           </div>
 
           {/* Newsletter */}
-          <div className={styles.col}>
+          <div className={`${styles.col} ${styles.newsletterCol}`}>
             <h4 className={styles.colTitle}>Entérate de nuevos productos para ti</h4>
             <p className={styles.newsletterText}>
               Únete y entérate antes que nadie de nuestros nuevos e innovadores productos con descuentos exclusivos 🚀

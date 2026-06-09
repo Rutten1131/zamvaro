@@ -230,32 +230,97 @@
   .section {
     padding: 48px 16px;
   }
+  .sliderContainer {
+    max-width: 100%;
+  }
+  .sliderWrapper {
+    overflow-x: auto;
+    scrollbar-width: none; /* Firefox */
+    box-shadow: none;
+    border: none;
+    background: transparent;
+    padding: 4px 0;
+  }
+  .sliderWrapper::-webkit-scrollbar {
+    display: none; /* Safari/Chrome */
+  }
+  .sliderTrack {
+    display: flex;
+    gap: 10px;
+    transform: none !important; /* Desactivar movimiento por transform */
+    width: auto !important;
+  }
+  .slide {
+    width: calc(50% - 5px); /* Exactamente 2 columnas de cards en pantalla */
+    min-width: 140px;
+    flex-shrink: 0;
+  }
   .card {
     grid-template-columns: 1fr;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-card);
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
   }
   .imageWrap {
-    aspect-ratio: 1.5;
+    aspect-ratio: 1;
     border-right: none;
     border-bottom: 1px solid var(--color-border);
   }
   .cardContent {
-    padding: 16px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+    gap: 8px;
   }
-  .navBtn {
-    width: 32px;
-    height: 32px;
+  .cardTitle {
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-bottom: 0px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 2.4em; /* Mantener alineación vertical */
+    line-height: 1.25;
   }
-  .navBtnLeft {
-    left: -16px;
+  .cardDesc {
+    display: none; /* Ocultar subtítulo para mantener la card pequeña y limpia */
   }
-  .navBtnRight {
-    right: -16px;
-  }
-  .controlsRow {
+  .cardFooter {
     flex-direction: column;
     align-items: stretch;
+    gap: 6px;
+    margin-top: auto;
+  }
+  .price {
+    font-size: 0.95rem;
+    font-weight: 800;
+    text-align: center;
+    color: var(--color-primary);
+  }
+  .viewBtn {
+    padding: 6px 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-align: center;
+  }
+  .navBtn {
+    display: none !important; /* Ocultar botones de navegación en móvil */
+  }
+  .controlsRow {
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 16px;
   }
   .searchWrap {
-    max-width: none;
+    max-width: 100%;
+    width: 100%;
   }
 }

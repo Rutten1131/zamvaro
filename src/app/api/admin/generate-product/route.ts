@@ -81,7 +81,7 @@ interface Product {
   comparison: ProductComparisonRow[]; // 6 filas comparativas de por qué comprar a Zamvaro es mejor
   stats: ProductStat[]; // 3 estadísticas persuasivas (porcentajes de satisfacción, etc.)
   steps: ProductStep[]; // 3 pasos de uso simplificados y atractivos con emoji
-  faqs: ProductFAQ[]; // 5 preguntas frecuentes respondidas detalladamente, incluyendo envío gratis y pago contraentrega en Ecuador.
+  faqs: ProductFAQ[]; // 5 preguntas frecuentes con respuestas extremadamente cortas, directas y concisas (máximo 1 o 2 líneas cortas por respuesta), cubriendo envío gratis y pago contraentrega en Ecuador.
   guaranteeText: string; // Un texto convincente que garantice la satisfacción del cliente
   whatsappNumber: string; // Siempre "593939243014"
 }

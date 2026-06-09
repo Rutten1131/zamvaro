@@ -81,6 +81,17 @@ export async function initDatabase() {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
 
+    // Crear tabla de clics a WhatsApp para rastreo invisible por producto
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS wa_clicks (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        product_slug VARCHAR(255) NOT NULL,
+        product_name VARCHAR(255) NOT NULL,
+        section VARCHAR(100) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    `);
+
 
     // Agregar columna primaryColor si no existe (migración segura)
     try {

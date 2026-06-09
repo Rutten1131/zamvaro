@@ -239,6 +239,7 @@
 @media (max-width: 560px) {
   .footer { padding: 48px 0 0; text-align: center; }
   .top { grid-template-columns: 1fr; gap: 32px; }
+  .newsletterCol { order: -1; }
   .brand { align-items: center; }
   .brandTagline { max-width: 100%; }
   .socials { justify-content: center; }

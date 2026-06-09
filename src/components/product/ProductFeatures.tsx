@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useState, useRef } from 'react';
+import { MessageCircle } from 'lucide-react';
 import type { Product } from '@/data/products';
 import styles from './ProductFeatures.module.css';
 
@@ -10,22 +11,22 @@ interface Props {
   product: Product;
 }
 
-// Factores de problema por defecto (si el producto no los define)
+// Factores de confianza por defecto (si el producto no los define)
 const DEFAULT_PROBLEM_FACTORS = [
-  { label: 'Calidad', detail: 'inferior del producto' },
-  { label: 'Tiempo', detail: 'perdido cada día' },
-  { label: 'Costo', detail: 'elevado sin resultados' },
-  { label: 'Diseño', detail: 'anticuado e incómodo' },
-  { label: 'Duración', detail: 'muy corta del producto' },
-  { label: 'Soporte', detail: 'sin garantía real' },
+  { label: 'Envío', detail: 'Gratis a todo el país' },
+  { label: 'Pago', detail: 'Contraentrega al recibir' },
+  { label: 'Garantía', detail: 'Satisfacción 100%' },
+  { label: 'Soporte', detail: 'WhatsApp disponible' },
+  { label: 'Calidad', detail: 'Premium importado' },
+  { label: 'Seguridad', detail: 'Compra sin riesgos' },
 ];
 
 export default function ProductFeatures({ product }: Props) {
   if (!product.features || product.features.length < 2) return null;
 
-  const problemFactors = product.problemFactors || DEFAULT_PROBLEM_FACTORS;
-  const problemTagline = product.problemTagline || 'Factores que generan';
-  const problemHeadline = product.problemHeadline || 'malos resultados';
+  const problemFactors = product.problemFactors && product.problemFactors.length > 0 ? product.problemFactors : DEFAULT_PROBLEM_FACTORS;
+  const problemTagline = product.problemTagline || 'Garantías y';
+  const problemHeadline = product.problemHeadline || 'beneficios de compra';
 
   const allFeatures = product.features.slice(0, 4);
   const leftFeatures = product.features.slice(0, 2);
@@ -192,6 +193,26 @@ export default function ProductFeatures({ product }: Props) {
             ))}
           </div>
         </div>
+
+        {/* CTA WhatsApp debajo de características */}
+        <motion.div
+          className={styles.ctaWrap}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <a
+            href={`/api/wa-click?product=${product.slug}&name=${encodeURIComponent(product.name)}&section=caracteristicas&wa=${product.whatsappNumber || '593939243014'}&msg=${encodeURIComponent(`Hola! Me interesa ${product.name}, lo vi en su página web. ¿Puedo hacer mi pedido ahora?`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.ctaBtn}
+          >
+            <MessageCircle size={20} />
+            Pedir ahora por WhatsApp
+          </a>
+          <p className={styles.ctaHint}>🚚 Envío gratis · Paga al recibir</p>
+        </motion.div>
 
       </div>
     </section>

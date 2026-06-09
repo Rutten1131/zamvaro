@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight, Search, Play, Pause } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import type { Product } from '@/data/products';
 import styles from './OtherProductsSlider.module.css';
 
@@ -15,9 +15,7 @@ export default function OtherProductsSlider({ currentProductSlug }: Props) {
   const [products, setProducts] = useState<Product[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetch('/api/products')
@@ -39,47 +37,41 @@ export default function OtherProductsSlider({ currentProductSlug }: Props) {
     p.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Auto-play loop
-  useEffect(() => {
-    if (isPlaying && filteredProducts.length > 1) {
-      timerRef.current = setInterval(() => {
-        setCurrentIndex((prev) => (prev + 1) % filteredProducts.length);
-      }, 4000);
-    } else {
-      if (timerRef.current) clearInterval(timerRef.current);
+  // Mostrar un máximo de 6 productos en total
+  const displayedProducts = filteredProducts.slice(0, 6);
+
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      const cardWidth = scrollContainerRef.current.querySelector(`.${styles.slide}`)?.clientWidth || 240;
+      scrollContainerRef.current.scrollBy({
+        left: -(cardWidth + 16), // Ancho de card + gap
+        behavior: 'smooth',
+      });
     }
-
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [isPlaying, filteredProducts.length]);
-
-  const handlePrev = () => {
-    if (filteredProducts.length === 0) return;
-    setCurrentIndex((prev) => (prev - 1 + filteredProducts.length) % filteredProducts.length);
   };
 
-  const handleNext = () => {
-    if (filteredProducts.length === 0) return;
-    setCurrentIndex((prev) => (prev + 1) % filteredProducts.length);
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      const cardWidth = scrollContainerRef.current.querySelector(`.${styles.slide}`)?.clientWidth || 240;
+      scrollContainerRef.current.scrollBy({
+        left: cardWidth + 16, // Ancho de card + gap
+        behavior: 'smooth',
+      });
+    }
   };
 
   if (loading) return null;
   if (products.length === 0) return null;
 
   return (
-    <section 
-      className={styles.section}
-      onMouseEnter={() => setIsPlaying(false)}
-      onMouseLeave={() => setIsPlaying(true)}
-    >
+    <section className={styles.section}>
       <div className="container">
         <div className={styles.header}>
           <h2 className={styles.title}>Otros Productos que te Encantarán</h2>
           <p className={styles.subtitle}>Explora nuestro catálogo exclusivo en Ecuador</p>
         </div>
 
-        {/* Barra de Búsqueda y Control de Reproducción */}
+        {/* Barra de Búsqueda */}
         <div className={styles.controlsRow}>
           <div className={styles.searchWrap}>
             <Search size={16} className={styles.searchIcon} />
@@ -87,52 +79,32 @@ export default function OtherProductsSlider({ currentProductSlug }: Props) {
               type="text"
               placeholder="Buscar producto..."
               value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setCurrentIndex(0); // Reset a primera posición al buscar
-              }}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className={styles.searchInput}
             />
           </div>
-
-          {filteredProducts.length > 1 && (
-            <button
-              onClick={() => setIsPlaying(!isPlaying)}
-              className={styles.playPauseBtn}
-              title={isPlaying ? 'Pausar reproducción' : 'Iniciar reproducción'}
-            >
-              {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-              <span>{isPlaying ? 'Auto-reproducción activa' : 'Auto-reproducción pausada'}</span>
-            </button>
-          )}
         </div>
 
-        {filteredProducts.length === 0 ? (
+        {displayedProducts.length === 0 ? (
           <p className={styles.noResults}>No se encontraron productos que coincidan con tu búsqueda.</p>
         ) : (
           <div className={styles.sliderContainer}>
-            {/* Botones de Navegación */}
-            {filteredProducts.length > 1 && (
+            {/* Botones de Navegación (Visibles siempre que haya productos) */}
+            {displayedProducts.length > 1 && (
               <>
-                <button onClick={handlePrev} className={`${styles.navBtn} ${styles.navBtnLeft}`} aria-label="Anterior">
+                <button onClick={scrollLeft} className={`${styles.navBtn} ${styles.navBtnLeft}`} aria-label="Anterior">
                   <ChevronLeft size={20} />
                 </button>
-                <button onClick={handleNext} className={`${styles.navBtn} ${styles.navBtnRight}`} aria-label="Siguiente">
+                <button onClick={scrollRight} className={`${styles.navBtn} ${styles.navBtnRight}`} aria-label="Siguiente">
                   <ChevronRight size={20} />
                 </button>
               </>
             )}
 
-            {/* Slider track / wrapper */}
-            <div className={styles.sliderWrapper}>
-              <div 
-                className={styles.sliderTrack}
-                style={{
-                  transform: `translateX(-${currentIndex * 100}%)`,
-                  transition: 'transform 0.5s ease'
-                }}
-              >
-                {filteredProducts.map((prod) => (
+            {/* Contenedor con scroll horizontal táctil y por botones */}
+            <div className={styles.sliderWrapper} ref={scrollContainerRef}>
+              <div className={styles.sliderTrack}>
+                {displayedProducts.map((prod) => (
                   <div key={prod.id} className={styles.slide}>
                     <div className={styles.card}>
                       <div className={styles.imageWrap}>
@@ -145,7 +117,6 @@ export default function OtherProductsSlider({ currentProductSlug }: Props) {
                       </div>
                       <div className={styles.cardContent}>
                         <h3 className={styles.cardTitle}>{prod.name}</h3>
-                        <p className={styles.cardDesc}>{prod.subtitle}</p>
                         <div className={styles.cardFooter}>
                           <span className={styles.price}>{prod.price}</span>
                           <Link href={`/productos/${prod.slug}`} className={styles.viewBtn}>
