@@ -79,7 +79,7 @@ export default function ProductHowTo({ product }: Props) {
                     <div>
                       <strong className={styles.testimonialName}>{testimonial.name}</strong>
                       <div className={styles.testimonialStars}>
-                        {[...Array(testimonial.rating)].map((_, s) => (
+                        {[...Array(Math.max(0, Math.min(5, Math.round(Number(testimonial.rating) || 5))))].map((_, s) => (
                           <Star key={s} size={12} style={{ color: '#F59E0B', fill: '#F59E0B' }} />
                         ))}
                       </div>

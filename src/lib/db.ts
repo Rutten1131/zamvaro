@@ -53,6 +53,7 @@ export async function initDatabase() {
         faqs JSON,
         guaranteeText TEXT,
         whatsappNumber VARCHAR(50),
+        primaryColor VARCHAR(20) DEFAULT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
@@ -67,6 +68,16 @@ export async function initDatabase() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
+
+    // Agregar columna primaryColor si no existe (migración segura)
+    try {
+      await connection.query(`ALTER TABLE products ADD COLUMN primaryColor VARCHAR(20) DEFAULT NULL`);
+      console.log('Columna primaryColor agregada a products.');
+    } catch (e: any) {
+      if (!e.message?.includes('Duplicate column')) {
+        // Ignorar error si la columna ya existe
+      }
+    }
 
     // Verificar si ya hay productos
     const [rows] = await connection.query('SELECT COUNT(*) as count FROM products');
@@ -117,6 +128,99 @@ export async function initDatabase() {
         console.log('Producto inicial insertado con éxito.');
       }
     }
+    // =============================================
+    // TABLAS DEL CHATBOT DE WHATSAPP
+    // =============================================
+
+    // Mapeo anuncio → producto (clave para identificar el producto desde el anuncio)
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS ad_product_mapping (
+        ad_source_id   VARCHAR(100) PRIMARY KEY,
+        product_id     INT NOT NULL,
+        ad_name        VARCHAR(255),
+        campaign_name  VARCHAR(255),
+        adset_name     VARCHAR(255),
+        match_score    FLOAT DEFAULT 0,
+        is_confirmed   BOOLEAN DEFAULT FALSE,
+        created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    `);
+
+    // Sesiones activas del chatbot (estado de cada conversación)
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS whatsapp_sessions (
+        phone            VARCHAR(20) PRIMARY KEY,
+        current_state    VARCHAR(50) DEFAULT 'START',
+        product_id       INT,
+        ad_source_id     VARCHAR(100),
+        ctwa_clid        VARCHAR(255),
+        session_data     JSON,
+        last_interaction TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    `);
+
+    // Base de datos de clientes (capturada por el bot)
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS whatsapp_clients (
+        id             INT AUTO_INCREMENT PRIMARY KEY,
+        phone          VARCHAR(20) UNIQUE NOT NULL,
+        full_name      VARCHAR(255),
+        city           VARCHAR(100),
+        province       VARCHAR(100),
+        street1        VARCHAR(255),
+        street2        VARCHAR(255),
+        neighborhood   VARCHAR(255),
+        reference      TEXT,
+        cedula         VARCHAR(20),
+        total_orders   INT DEFAULT 0,
+        last_order_at  TIMESTAMP NULL,
+        notes          TEXT,
+        created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    `);
+
+    // Pedidos registrados por el bot
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS whatsapp_orders (
+        id               INT AUTO_INCREMENT PRIMARY KEY,
+        client_phone     VARCHAR(20) NOT NULL,
+        product_id       INT NOT NULL,
+        product_name     VARCHAR(255),
+        quantity         INT DEFAULT 1,
+        unit_price       DECIMAL(10,2),
+        total_price      DECIMAL(10,2),
+        ad_source_id     VARCHAR(100),
+        ctwa_clid        VARCHAR(255),
+        client_name      VARCHAR(255),
+        client_city      VARCHAR(100),
+        client_street1   VARCHAR(255),
+        client_street2   VARCHAR(255),
+        client_neighborhood VARCHAR(255),
+        client_reference TEXT,
+        status           ENUM('pending','confirmed','dispatched','delivered','cancelled') DEFAULT 'pending',
+        created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    `);
+
+    // Log completo de mensajes
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS whatsapp_messages_log (
+        id               INT AUTO_INCREMENT PRIMARY KEY,
+        phone            VARCHAR(20) NOT NULL,
+        direction        ENUM('in','out') NOT NULL,
+        message_type     VARCHAR(50) DEFAULT 'text',
+        content          TEXT,
+        media_url        TEXT,
+        state_at_time    VARCHAR(50),
+        created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    `);
+
+    console.log('✅ Tablas del chatbot de WhatsApp verificadas/creadas.');
+
   } catch (error) {
     console.error('Error al inicializar la base de datos:', error);
   } finally {

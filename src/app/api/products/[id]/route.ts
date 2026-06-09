@@ -43,6 +43,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
       faqs,
       guaranteeText,
       whatsappNumber,
+      primaryColor,
     } = body;
 
     if (!name || !slug) {
@@ -77,7 +78,8 @@ export async function PUT(request: Request, { params }: RouteParams) {
         steps = ?,
         faqs = ?,
         guaranteeText = ?,
-        whatsappNumber = ?
+        whatsappNumber = ?,
+        primaryColor = ?
       WHERE id = ?
     `;
 
@@ -109,6 +111,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
       JSON.stringify(faqs || []),
       guaranteeText || null,
       whatsappNumber || null,
+      primaryColor || null,
       id,
     ]);
 

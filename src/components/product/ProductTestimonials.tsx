@@ -48,7 +48,7 @@ export default function ProductTestimonials({ product }: Props) {
                     <span className={styles.name}>{t.name}</span>
                     <span className={styles.city}>📍 {t.city}</span>
                     <div className={styles.stars}>
-                      {[...Array(t.rating)].map((_, s) => (
+                      {[...Array(Math.max(0, Math.min(5, Math.round(Number(t.rating) || 5))))].map((_, s) => (
                         <Star key={s} size={13} className={styles.star} fill="currentColor" />
                       ))}
                     </div>

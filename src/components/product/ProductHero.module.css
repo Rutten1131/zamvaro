@@ -1,5 +1,5 @@
 .hero {
-  padding: 100px 24px 60px;
+  padding: 32px 24px 60px;  /* Reducido: el AnnouncementBar ya tiene un espaciador que limpia el header */
   background: var(--color-white);
   border-bottom: 1px solid var(--color-border);
 }
@@ -17,7 +17,7 @@
   flex-direction: column;
   gap: 12px;
   position: sticky;
-  top: 90px;
+  top: 126px; /* navbar 68 + barra 36 + margen 22 */
 }
 
 .mainImageWrap {
@@ -325,14 +325,33 @@
   line-height: 1.7;
 }
 
-/* ══ RESPONSIVE ══════════════════════════════════════════════ */
+/* Cabecera Móvil y Utilidad Escritorio */
+.mobileHeader {
+  display: none;
+}
+
+.desktopOnly {
+  display: flex !important;
+}
+
 @media (max-width: 900px) {
-  .inner { grid-template-columns: 1fr; gap: 36px; }
+  .inner { grid-template-columns: 1fr; gap: 24px; }
   .gallery { position: static; }
+  
+  .mobileHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  
+  .desktopOnly {
+    display: none !important;
+  }
 }
 
 @media (max-width: 576px) {
-  .hero { padding: 88px 16px 48px; }
+  .hero { padding: 16px 16px 48px; } /* Reducido: el AnnouncementBar ya tiene un espaciador */
   .trustColumns { grid-template-columns: repeat(3, 1fr); gap: 8px; }
   .trustText strong { font-size: 0.72rem; }
   .trustText span { font-size: 0.68rem; }

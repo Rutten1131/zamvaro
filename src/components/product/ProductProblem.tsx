@@ -33,12 +33,6 @@ export default function ProductProblem({ product }: Props) {
               className={styles.image}
               sizes="(max-width: 900px) 100vw, 50vw"
             />
-            <div className={styles.imageOverlay}>
-              <p className={styles.overlayTagline}>{product.name}</p>
-              <h2 className={styles.overlayHeadline}>
-                {product.subtitle}
-              </h2>
-            </div>
           </div>
 
           {/* Texto del problema */}

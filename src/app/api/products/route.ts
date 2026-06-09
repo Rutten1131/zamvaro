@@ -98,6 +98,7 @@ export async function POST(request: Request) {
       faqs,
       guaranteeText,
       whatsappNumber,
+      primaryColor,
     } = body;
 
     if (!name || !slug) {
@@ -110,8 +111,8 @@ export async function POST(request: Request) {
         name, subtitle, hookText, category, price, originalPrice, tag, emoji, image, images,
         imageProblem, imageFeatures, imageHowTo,
         isAvailable, slug, bullets, features, testimonials, comparisonTitle, comparisonOursLabel,
-        comparisonTheirsLabel, comparison, stats, steps, faqs, guaranteeText, whatsappNumber
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        comparisonTheirsLabel, comparison, stats, steps, faqs, guaranteeText, whatsappNumber, primaryColor
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const [result] = await pool.query(query, [
@@ -142,6 +143,7 @@ export async function POST(request: Request) {
       JSON.stringify(faqs || []),
       guaranteeText || null,
       whatsappNumber || null,
+      primaryColor || null,
     ]);
 
     const insertId = (result as any).insertId;

@@ -23,11 +23,11 @@ const emptyProduct = {
   name: '',
   subtitle: '',
   hookText: '',
-  category: 'Belleza',
-  price: '$24.99',
-  originalPrice: '$50.00',
-  tag: 'Más vendido',
-  emoji: '✨',
+  category: '',
+  price: '',
+  originalPrice: '',
+  tag: '',
+  emoji: '',
   image: '',
   images: [] as string[],
   imageProblem: '',
@@ -35,58 +35,168 @@ const emptyProduct = {
   imageHowTo: '',
   isAvailable: true,
   slug: '',
-  bullets: ['', '', '', ''],
-  features: [
-    { emoji: '🔥', title: '', description: '' },
-    { emoji: '✨', title: '', description: '' },
-    { emoji: '🌡️', title: '', description: '' },
-    { emoji: '🤲', title: '', description: '' },
-  ],
-  testimonials: [
-    { name: '', city: 'Quito, Ecuador', rating: 5, text: '', avatar: '👩', date: 'Mayo 2026' },
-    { name: '', city: 'Guayaquil, Ecuador', rating: 5, text: '', avatar: '👱‍♂️', date: 'Mayo 2026' },
-    { name: '', city: 'Cuenca, Ecuador', rating: 5, text: '', avatar: '👩‍🦱', date: 'Mayo 2026' },
-  ],
-  comparisonTitle: '¿Por qué Zamvaro Ecuador es diferente?',
-  comparisonOursLabel: 'Marca Zamvaro',
-  comparisonTheirsLabel: 'Genéricos',
-  comparison: [
-    { label: 'Seca y Alisa al mismo tiempo', ours: true, theirs: false },
-    { label: 'Elimina el frizz con iones negativos', ours: true, theirs: false },
-    { label: 'Listo en menos de 15 minutos', ours: true, theirs: false },
-    { label: 'Sin daño por calor excesivo', ours: true, theirs: false },
-    { label: 'Fácil de usar en casa', ours: true, theirs: false },
-    { label: 'Pago al recibir en Ecuador', ours: true, theirs: false },
-  ],
-  stats: [
-    { value: '97%', label: 'reportan ahorro de tiempo significativo' },
-    { value: '94%', label: 'notan reducción del frizz desde la primera sesión' },
-    { value: '91%', label: 'obtienen resultados de salón sin salir' },
-  ],
-  steps: [
-    { number: '01', emoji: '💆‍♀️', title: 'Prepara tu cabello', description: '' },
-    { number: '02', emoji: '🔄', title: 'Peina por secciones', description: '' },
-    { number: '03', emoji: '💫', title: 'Disfruta el resultado', description: '' },
-  ],
-  faqs: [
-    { question: '¿Funciona para todo tipo de cabello?', answer: '' },
-    { question: '¿Cuánto tarda en dar resultados?', answer: '' },
-    { question: '¿Daña o quema el cabello?', answer: '' },
-    { question: '¿Cómo llega mi pedido y cuándo pago?', answer: 'Hacemos el envío gratis a todo el país. Coordinamos la entrega por WhatsApp y pagas en efectivo cuando el mensajero te entregue el producto.' },
-  ],
-  guaranteeText: 'Garantía de satisfacción total por 30 días. Si no cumple tus expectativas, nos contactas y gestionamos tu cambio o reembolso. Zamvaro Ecuador garantiza tu tranquilidad en cada compra.',
-  whatsappNumber: '593939243014',
+  bullets: [] as string[],
+  features: [] as { emoji: string; title: string; description: string }[],
+  testimonials: [] as { name: string; city: string; rating: number; text: string; avatar: string; date: string }[],
+  comparisonTitle: '',
+  comparisonOursLabel: '',
+  comparisonTheirsLabel: '',
+  comparison: [] as { label: string; ours: boolean; theirs: boolean }[],
+  stats: [] as { value: string; label: string }[],
+  steps: [] as { number: string; emoji: string; title: string; description: string }[],
+  faqs: [] as { question: string; answer: string }[],
+  guaranteeText: '',
+  whatsappNumber: '',
+  primaryColor: '#9B046F',
 };
+
 
 export default function AdminPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   
-  const [activeTab, setActiveTab] = useState<'list' | 'edit'>('list');
+  const [activeTab, setActiveTab] = useState<'list' | 'edit' | 'chatbot'>('list');
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [statusMsg, setStatusMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // Chatbot states
+  const [chatbotData, setChatbotData] = useState<any>({
+    stats: { total_sessions: 0, total_clients: 0, total_orders: 0, confirmed_orders: 0 },
+    recentMessages: [],
+    mappings: []
+  });
+  const [chatbotSubTab, setChatbotSubTab] = useState<'dashboard' | 'mappings' | 'sessions' | 'logs'>('dashboard');
+  const [chatbotLoading, setChatbotLoading] = useState(false);
+  const [sessionsList, setSessionsList] = useState<any[]>([]);
+  const [clientsList, setClientsList] = useState<any[]>([]);
+  const [ordersList, setOrdersList] = useState<any[]>([]);
+
+  // Mapping Form state
+  const [mappingForm, setMappingForm] = useState({
+    ad_source_id: '',
+    product_id: '',
+    ad_name: '',
+    campaign_name: '',
+    adset_name: '',
+    is_confirmed: true
+  });
+
+  const fetchChatbotData = async () => {
+    setChatbotLoading(true);
+    try {
+      const res = await fetch('/api/admin/chatbot');
+      if (res.ok) {
+        const data = await res.json();
+        setChatbotData(data);
+      }
+    } catch (err) {
+      console.error('Error fetching chatbot dashboard data:', err);
+    } finally {
+      setChatbotLoading(false);
+    }
+  };
+
+  const fetchChatbotSessions = async () => {
+    setChatbotLoading(true);
+    try {
+      const res = await fetch('/api/admin/chatbot?action=sessions');
+      if (res.ok) {
+        const data = await res.json();
+        setSessionsList(data);
+      }
+    } catch (err) {
+      console.error('Error fetching chatbot sessions:', err);
+    } finally {
+      setChatbotLoading(false);
+    }
+  };
+
+  const fetchChatbotClients = async () => {
+    setChatbotLoading(true);
+    try {
+      const res = await fetch('/api/admin/chatbot?action=clients');
+      if (res.ok) {
+        const data = await res.json();
+        setClientsList(data);
+      }
+    } catch (err) {
+      console.error('Error fetching chatbot clients:', err);
+    } finally {
+      setChatbotLoading(false);
+    }
+  };
+
+  const fetchChatbotOrders = async () => {
+    setChatbotLoading(true);
+    try {
+      const res = await fetch('/api/admin/chatbot?action=orders');
+      if (res.ok) {
+        const data = await res.json();
+        setOrdersList(data);
+      }
+    } catch (err) {
+      console.error('Error fetching chatbot orders:', err);
+    } finally {
+      setChatbotLoading(false);
+    }
+  };
+
+  const handleSaveMapping = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!mappingForm.ad_source_id || !mappingForm.product_id) {
+      setStatusMsg({ type: 'error', text: 'ID del anuncio y Producto son obligatorios.' });
+      return;
+    }
+    setChatbotLoading(true);
+    try {
+      const res = await fetch('/api/admin/chatbot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(mappingForm),
+      });
+      if (res.ok) {
+        setStatusMsg({ type: 'success', text: 'Mapeo guardado correctamente.' });
+        setMappingForm({
+          ad_source_id: '',
+          product_id: '',
+          ad_name: '',
+          campaign_name: '',
+          adset_name: '',
+          is_confirmed: true
+        });
+        fetchChatbotData();
+      } else {
+        const data = await res.json();
+        setStatusMsg({ type: 'error', text: data.message || 'Error al guardar mapeo.' });
+      }
+    } catch (err) {
+      setStatusMsg({ type: 'error', text: 'Error de conexión.' });
+    } finally {
+      setChatbotLoading(false);
+    }
+  };
+
+  const handleDeleteMapping = async (ad_source_id: string) => {
+    if (!confirm('¿Estás seguro de que deseas eliminar este mapeo?')) return;
+    setChatbotLoading(true);
+    try {
+      const res = await fetch(`/api/admin/chatbot?ad_source_id=${ad_source_id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        setStatusMsg({ type: 'success', text: 'Mapeo eliminado.' });
+        fetchChatbotData();
+      } else {
+        setStatusMsg({ type: 'error', text: 'Error al eliminar mapeo.' });
+      }
+    } catch (err) {
+      setStatusMsg({ type: 'error', text: 'Error de conexión.' });
+    } finally {
+      setChatbotLoading(false);
+    }
+  };
   
   // Estado para el formulario de producto
   const [formData, setFormData] = useState<typeof emptyProduct & { id?: number }>(emptyProduct);
@@ -502,6 +612,16 @@ export default function AdminPage() {
           >
             <Plus size={16} /> {formData.id !== undefined ? 'Editar Producto' : 'Nuevo Producto'}
           </button>
+
+          <button
+            className={`${styles.tab} ${activeTab === 'chatbot' ? styles.tabActive : ''}`}
+            onClick={() => {
+              setActiveTab('chatbot');
+              fetchChatbotData();
+            }}
+          >
+            <Sparkles size={16} /> Chatbot WhatsApp
+          </button>
         </div>
 
         {/* VISTA: Listado de Productos */}
@@ -741,6 +861,64 @@ export default function AdminPage() {
                   value={formData.hookText}
                   onChange={(e) => setFormData((prev) => ({ ...prev, hookText: e.target.value }))}
                 />
+              </div>
+
+              {/* ===================== COLOR PRINCIPAL DE LA PÁGINA ===================== */}
+              <h2 className={styles.formSectionTitle}>
+                🎨 Color Principal de la Página
+              </h2>
+              <div style={{ background: 'rgba(139,92,246,0.04)', padding: '24px', borderRadius: '16px', border: '2px solid rgba(139,92,246,0.15)', marginBottom: '24px' }}>
+                <p style={{ fontSize: '0.85rem', color: 'var(--color-text-light)', marginBottom: '18px', lineHeight: 1.6 }}>
+                  Este color reemplaza el morado-rosado en <strong>toda la página del producto</strong>: botones, badges, gradientes, estrellas, borde de sección, etc. También se usa como fondo de la sección «Problema».
+                </p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
+                  {/* Color Picker */}
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                    <input
+                      type="color"
+                      value={formData.primaryColor || '#9B046F'}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, primaryColor: e.target.value }))}
+                      style={{ width: '72px', height: '72px', border: 'none', borderRadius: '12px', cursor: 'pointer', padding: '4px', background: 'transparent' }}
+                    />
+                    <span style={{ fontSize: '0.7rem', color: 'var(--color-text-light)', fontWeight: 600 }}>Selector</span>
+                  </div>
+                  {/* Preset Colors */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-text)' }}>Colores predefinidos:</span>
+                    <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                      {[
+                        { label: 'Morado (default)', color: '#9B046F' },
+                        { label: 'Azul eléctrico', color: '#1D4ED8' },
+                        { label: 'Naranja vibrante', color: '#EA580C' },
+                        { label: 'Verde esmeralda', color: '#059669' },
+                        { label: 'Rojo intenso', color: '#DC2626' },
+                        { label: 'Añil oscuro', color: '#4338CA' },
+                        { label: 'Teal profundo', color: '#0D9488' },
+                        { label: 'Fucsia fuerte', color: '#C026D3' },
+                      ].map(({ label, color }) => (
+                        <button
+                          key={color}
+                          type="button"
+                          title={label}
+                          onClick={() => setFormData((prev) => ({ ...prev, primaryColor: color }))}
+                          style={{
+                            width: '36px', height: '36px', borderRadius: '50%', background: color,
+                            border: formData.primaryColor === color ? '3px solid #111' : '2px solid rgba(0,0,0,0.1)',
+                            cursor: 'pointer', transition: 'transform 0.15s',
+                            transform: formData.primaryColor === color ? 'scale(1.2)' : 'scale(1)',
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  {/* Live Preview */}
+                  <div style={{ marginLeft: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ background: formData.primaryColor || '#9B046F', color: 'white', padding: '10px 22px', borderRadius: '999px', fontWeight: 700, fontSize: '0.9rem' }}>
+                      Vista previa botón
+                    </div>
+                    <span style={{ fontSize: '0.7rem', color: 'var(--color-text-light)', fontWeight: 600 }}>Color seleccionado: <strong>{formData.primaryColor || '#9B046F'}</strong></span>
+                  </div>
+                </div>
               </div>
 
               {/* ===================== IMÁGENES POR SECCIÓN ===================== */}
@@ -1152,13 +1330,14 @@ export default function AdminPage() {
                         <label className={styles.label}>Estrellas</label>
                         <input
                           type="number"
-                          min="1"
+                          min="0"
                           max="5"
+                          step="0.1"
                           className={styles.input}
                           value={testimonial.rating}
                           onChange={(e) => {
                             const newTestimonials = [...formData.testimonials];
-                            newTestimonials[index] = { ...newTestimonials[index], rating: parseInt(e.target.value) || 5 };
+                            newTestimonials[index] = { ...newTestimonials[index], rating: parseFloat(e.target.value) || 5 };
                             setFormData((prev) => ({ ...prev, testimonials: newTestimonials }));
                           }}
                         />
@@ -1581,6 +1760,425 @@ export default function AdminPage() {
               </button>
             </div>
           </form>
+        )}
+
+        {/* VISTA: Chatbot WhatsApp */}
+        {activeTab === 'chatbot' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            
+            {/* Sub-tabs de Chatbot */}
+            <div style={{ display: 'flex', gap: '8px', background: 'rgba(0,0,0,0.02)', padding: '6px', borderRadius: '12px', width: 'fit-content' }}>
+              <button
+                type="button"
+                style={{
+                  padding: '8px 16px', borderRadius: '8px', border: 'none', cursor: 'pointer',
+                  fontWeight: 600, fontSize: '0.85rem',
+                  background: chatbotSubTab === 'dashboard' ? 'white' : 'transparent',
+                  color: chatbotSubTab === 'dashboard' ? 'var(--color-primary)' : 'var(--color-text-light)',
+                  boxShadow: chatbotSubTab === 'dashboard' ? '0 2px 8px rgba(0,0,0,0.05)' : 'none',
+                  transition: 'all 0.2s'
+                }}
+                onClick={() => { setChatbotSubTab('dashboard'); fetchChatbotData(); }}
+              >
+                📊 Dashboard
+              </button>
+              <button
+                type="button"
+                style={{
+                  padding: '8px 16px', borderRadius: '8px', border: 'none', cursor: 'pointer',
+                  fontWeight: 600, fontSize: '0.85rem',
+                  background: chatbotSubTab === 'mappings' ? 'white' : 'transparent',
+                  color: chatbotSubTab === 'mappings' ? 'var(--color-primary)' : 'var(--color-text-light)',
+                  boxShadow: chatbotSubTab === 'mappings' ? '0 2px 8px rgba(0,0,0,0.05)' : 'none',
+                  transition: 'all 0.2s'
+                }}
+                onClick={() => { setChatbotSubTab('mappings'); fetchChatbotData(); }}
+              >
+                🔗 Mapeos de Anuncios
+              </button>
+              <button
+                type="button"
+                style={{
+                  padding: '8px 16px', borderRadius: '8px', border: 'none', cursor: 'pointer',
+                  fontWeight: 600, fontSize: '0.85rem',
+                  background: chatbotSubTab === 'sessions' ? 'white' : 'transparent',
+                  color: chatbotSubTab === 'sessions' ? 'var(--color-primary)' : 'var(--color-text-light)',
+                  boxShadow: chatbotSubTab === 'sessions' ? '0 2px 8px rgba(0,0,0,0.05)' : 'none',
+                  transition: 'all 0.2s'
+                }}
+                onClick={() => { setChatbotSubTab('sessions'); fetchChatbotSessions(); }}
+              >
+                💬 Conversaciones Activas
+              </button>
+              <button
+                type="button"
+                style={{
+                  padding: '8px 16px', borderRadius: '8px', border: 'none', cursor: 'pointer',
+                  fontWeight: 600, fontSize: '0.85rem',
+                  background: chatbotSubTab === 'logs' ? 'white' : 'transparent',
+                  color: chatbotSubTab === 'logs' ? 'var(--color-primary)' : 'var(--color-text-light)',
+                  boxShadow: chatbotSubTab === 'logs' ? '0 2px 8px rgba(0,0,0,0.05)' : 'none',
+                  transition: 'all 0.2s'
+                }}
+                onClick={() => { setChatbotSubTab('logs'); fetchChatbotClients(); fetchChatbotOrders(); }}
+              >
+                📁 Clientes y Pedidos
+              </button>
+            </div>
+
+            {chatbotLoading && (
+              <div style={{ textAlign: 'center', padding: '40px' }}>
+                <div className={styles.spinner} style={{ borderColor: 'rgba(139, 92, 246, 0.3)', borderTopColor: 'var(--color-primary)', margin: '0 auto 10px' }}></div>
+                <span>Cargando datos del chatbot...</span>
+              </div>
+            )}
+
+            {/* SUB-VISTA: Dashboard */}
+            {!chatbotLoading && chatbotSubTab === 'dashboard' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+                
+                {/* Tarjetas de Estadísticas */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
+                  <div style={{ background: 'white', padding: '24px', borderRadius: '20px', border: '1px solid rgba(0,0,0,0.05)', boxShadow: 'var(--shadow-sm)' }}>
+                    <div style={{ color: 'var(--color-text-light)', fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', marginBottom: '8px' }}>Conversaciones Totales</div>
+                    <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--color-primary)' }}>{chatbotData.stats?.total_sessions || 0}</div>
+                  </div>
+                  <div style={{ background: 'white', padding: '24px', borderRadius: '20px', border: '1px solid rgba(0,0,0,0.05)', boxShadow: 'var(--shadow-sm)' }}>
+                    <div style={{ color: 'var(--color-text-light)', fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', marginBottom: '8px' }}>Clientes Capturados</div>
+                    <div style={{ fontSize: '2rem', fontWeight: 800, color: '#10b981' }}>{chatbotData.stats?.total_clients || 0}</div>
+                  </div>
+                  <div style={{ background: 'white', padding: '24px', borderRadius: '20px', border: '1px solid rgba(0,0,0,0.05)', boxShadow: 'var(--shadow-sm)' }}>
+                    <div style={{ color: 'var(--color-text-light)', fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', marginBottom: '8px' }}>Pedidos por Chatbot</div>
+                    <div style={{ fontSize: '2rem', fontWeight: 800, color: '#f59e0b' }}>{chatbotData.stats?.total_orders || 0}</div>
+                  </div>
+                  <div style={{ background: 'white', padding: '24px', borderRadius: '20px', border: '1px solid rgba(0,0,0,0.05)', boxShadow: 'var(--shadow-sm)' }}>
+                    <div style={{ color: 'var(--color-text-light)', fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', marginBottom: '8px' }}>Pedidos Confirmados</div>
+                    <div style={{ fontSize: '2rem', fontWeight: 800, color: '#3b82f6' }}>{chatbotData.stats?.confirmed_orders || 0}</div>
+                  </div>
+                </div>
+
+                {/* Mensajes Recientes */}
+                <div className={styles.cardList} style={{ padding: '24px', background: 'white' }}>
+                  <h3 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '16px', color: 'var(--color-text)' }}>💬 Historial de Mensajes Recientes</h3>
+                  <div style={{ maxHeight: '400px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '10px', paddingRight: '8px' }}>
+                    {chatbotData.recentMessages && chatbotData.recentMessages.map((msg: any) => (
+                      <div
+                        key={msg.id}
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignSelf: msg.direction === 'in' ? 'flex-start' : 'flex-end',
+                          maxWidth: '75%',
+                          background: msg.direction === 'in' ? 'rgba(0,0,0,0.04)' : 'rgba(139, 92, 246, 0.08)',
+                          padding: '12px 16px',
+                          borderRadius: msg.direction === 'in' ? '16px 16px 16px 4px' : '16px 16px 4px 16px',
+                          border: '1px solid rgba(0,0,0,0.02)'
+                        }}
+                      >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '20px', marginBottom: '4px', fontSize: '0.75rem', color: 'var(--color-text-light)', fontWeight: 600 }}>
+                          <span>{msg.direction === 'in' ? `📥 Cliente (${msg.phone})` : `📤 Bot (Zamvaro)`}</span>
+                          <span>{new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        </div>
+                        <div style={{ fontSize: '0.9rem', whiteSpace: 'pre-wrap', color: 'var(--color-text)' }}>
+                          {msg.content}
+                        </div>
+                        {msg.media_url && (
+                          <div style={{ marginTop: '8px', fontSize: '0.8rem', color: 'var(--color-primary)' }}>
+                            📎 <a href={msg.media_url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>Ver archivo adjunto</a>
+                          </div>
+                        )}
+                        <div style={{ fontSize: '0.7rem', color: 'var(--color-text-light)', alignSelf: 'flex-end', marginTop: '4px' }}>
+                          Estado: {msg.state_at_time || 'START'}
+                        </div>
+                      </div>
+                    ))}
+                    {(!chatbotData.recentMessages || chatbotData.recentMessages.length === 0) && (
+                      <div style={{ textAlign: 'center', color: 'var(--color-text-light)', padding: '20px' }}>No hay mensajes registrados aún.</div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* SUB-VISTA: Mapeos de Anuncios */}
+            {!chatbotLoading && chatbotSubTab === 'mappings' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+                
+                {/* Formulario de mapeo */}
+                <div className={styles.cardList} style={{ padding: '24px', background: 'white' }}>
+                  <h3 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '16px', color: 'var(--color-text)' }}>🔗 Crear Mapeo de Anuncio a Producto</h3>
+                  <form onSubmit={handleSaveMapping} className={styles.formGrid}>
+                    <div className={styles.inputGroup}>
+                      <label className={styles.label}>ID del Anuncio (source_id) *</label>
+                      <input
+                        type="text"
+                        className={styles.input}
+                        placeholder="Ej: 52548385879075"
+                        value={mappingForm.ad_source_id}
+                        onChange={(e) => setMappingForm({ ...mappingForm, ad_source_id: e.target.value })}
+                        required
+                      />
+                    </div>
+
+                    <div className={styles.inputGroup}>
+                      <label className={styles.label}>Producto a Asignar *</label>
+                      <select
+                        className={styles.input}
+                        value={mappingForm.product_id}
+                        onChange={(e) => setMappingForm({ ...mappingForm, product_id: e.target.value })}
+                        required
+                      >
+                        <option value="">Selecciona un producto...</option>
+                        {products.map((p) => (
+                          <option key={p.id} value={p.id}>{p.emoji} {p.name} ({p.price})</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className={styles.inputGroup}>
+                      <label className={styles.label}>Nombre del Anuncio (Opcional)</label>
+                      <input
+                        type="text"
+                        className={styles.input}
+                        placeholder="Ej: Collagen Peptides 1"
+                        value={mappingForm.ad_name}
+                        onChange={(e) => setMappingForm({ ...mappingForm, ad_name: e.target.value })}
+                      />
+                    </div>
+
+                    <div className={styles.inputGroup}>
+                      <label className={styles.label}>Campaña (Opcional)</label>
+                      <input
+                        type="text"
+                        className={styles.input}
+                        placeholder="Ej: Testeo (03/06)"
+                        value={mappingForm.campaign_name}
+                        onChange={(e) => setMappingForm({ ...mappingForm, campaign_name: e.target.value })}
+                      />
+                    </div>
+
+                    <div className={styles.inputGroup}>
+                      <label className={styles.label}>Conjunto de Anuncios (Opcional)</label>
+                      <input
+                        type="text"
+                        className={styles.input}
+                        placeholder="Ej: Collagen Peptides Toplux"
+                        value={mappingForm.adset_name}
+                        onChange={(e) => setMappingForm({ ...mappingForm, adset_name: e.target.value })}
+                      />
+                    </div>
+
+                    <div className={styles.inputGroup} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '30px' }}>
+                      <input
+                        type="checkbox"
+                        id="isConfirmedCheck"
+                        checked={mappingForm.is_confirmed}
+                        onChange={(e) => setMappingForm({ ...mappingForm, is_confirmed: e.target.checked })}
+                        style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                      />
+                      <label htmlFor="isConfirmedCheck" style={{ fontWeight: 600, cursor: 'pointer' }}>Confirmado por admin</label>
+                    </div>
+
+                    <div style={{ gridColumn: '1 / -1', marginTop: '10px' }}>
+                      <button type="submit" className={styles.button} style={{ width: 'auto' }}>
+                        <Save size={16} /> Guardar Configuración de Mapeo
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                {/* Listado de Mappings */}
+                <div className={styles.cardList}>
+                  <table className={styles.table}>
+                    <thead>
+                      <tr>
+                        <th>ID Anuncio</th>
+                        <th>Campaña / Conjunto</th>
+                        <th>Nombre Anuncio</th>
+                        <th>Producto Asignado</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {chatbotData.mappings && chatbotData.mappings.map((map: any) => {
+                        const assignedProd = products.find((p) => p.id === map.product_id);
+                        return (
+                          <tr key={map.ad_source_id}>
+                            <td style={{ fontFamily: 'monospace', fontWeight: 600 }}>{map.ad_source_id}</td>
+                            <td>
+                              <div style={{ fontWeight: 600 }}>{map.campaign_name || '—'}</div>
+                              <div style={{ fontSize: '0.8rem', color: 'var(--color-text-light)' }}>{map.adset_name || '—'}</div>
+                            </td>
+                            <td>{map.ad_name || '—'}</td>
+                            <td>
+                              {assignedProd ? (
+                                <span style={{ fontWeight: 700 }}>{assignedProd.emoji} {assignedProd.name}</span>
+                              ) : (
+                                <span style={{ color: 'red' }}>ID {map.product_id} (No encontrado)</span>
+                              )}
+                            </td>
+                            <td>
+                              <span className={`${styles.badge} ${map.is_confirmed ? styles.badgeSuccess : styles.badgeWarning}`}>
+                                {map.is_confirmed ? 'Confirmado' : 'Fuzzy Match'}
+                              </span>
+                              {map.match_score > 0 && (
+                                <span style={{ fontSize: '0.75rem', color: 'var(--color-text-light)', marginLeft: '6px' }}>({map.match_score.toFixed(0)}%)</span>
+                              )}
+                            </td>
+                            <td>
+                              <button
+                                type="button"
+                                className={`${styles.iconBtn} ${styles.iconBtnDanger}`}
+                                onClick={() => handleDeleteMapping(map.ad_source_id)}
+                                title="Eliminar Mapeo"
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                      {(!chatbotData.mappings || chatbotData.mappings.length === 0) && (
+                        <tr>
+                          <td colSpan={6} style={{ textAlign: 'center', padding: '20px' }}>No hay mapeos de anuncios configurados.</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+
+              </div>
+            )}
+
+            {/* SUB-VISTA: Conversaciones Activas */}
+            {!chatbotLoading && chatbotSubTab === 'sessions' && (
+              <div className={styles.cardList}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th>WhatsApp</th>
+                      <th>Estado Bot</th>
+                      <th>Producto</th>
+                      <th>Última Interacción</th>
+                      <th>Datos de Sesión</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sessionsList.map((session: any) => (
+                      <tr key={session.phone}>
+                        <td style={{ fontWeight: 700 }}>{session.phone}</td>
+                        <td>
+                          <span style={{
+                            background: session.current_state === 'COMPLETED' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(139, 92, 246, 0.1)',
+                            color: session.current_state === 'COMPLETED' ? '#10b981' : 'var(--color-primary)',
+                            padding: '4px 10px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 700
+                          }}>
+                            {session.current_state}
+                          </span>
+                        </td>
+                        <td>{session.product_name || 'Desconocido'}</td>
+                        <td>{new Date(session.last_interaction).toLocaleString()}</td>
+                        <td>
+                          <pre style={{ fontSize: '0.8rem', background: 'rgba(0,0,0,0.02)', padding: '6px', borderRadius: '8px', overflowX: 'auto', maxWidth: '300px' }}>
+                            {JSON.stringify(session.session_data, null, 2)}
+                          </pre>
+                        </td>
+                      </tr>
+                    ))}
+                    {sessionsList.length === 0 && (
+                      <tr>
+                        <td colSpan={5} style={{ textAlign: 'center', padding: '20px' }}>No hay conversaciones registradas.</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* SUB-VISTA: Clientes y Pedidos */}
+            {!chatbotLoading && chatbotSubTab === 'logs' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+                
+                {/* Clientes */}
+                <div className={styles.cardList}>
+                  <div style={{ padding: '20px 24px', borderBottom: '1px solid rgba(0,0,0,0.05)', fontWeight: 800 }}>👤 Clientes Capturados por WhatsApp</div>
+                  <table className={styles.table}>
+                    <thead>
+                      <tr>
+                        <th>Nombre</th>
+                        <th>WhatsApp</th>
+                        <th>Ciudad</th>
+                        <th>Dirección / Ref</th>
+                        <th>Pedidos</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {clientsList.map((client: any) => (
+                        <tr key={client.id}>
+                          <td style={{ fontWeight: 700 }}>{client.full_name || '—'}</td>
+                          <td>{client.phone}</td>
+                          <td>{client.city || '—'}</td>
+                          <td>
+                            <div>{client.street1 || '—'} {client.street2 ? `y ${client.street2}` : ''}</div>
+                            <div style={{ fontSize: '0.8rem', color: 'var(--color-text-light)' }}>Barrio: {client.neighborhood || '—'}</div>
+                          </td>
+                          <td>{client.total_orders} pedido(s)</td>
+                        </tr>
+                      ))}
+                      {clientsList.length === 0 && (
+                        <tr>
+                          <td colSpan={5} style={{ textAlign: 'center', padding: '20px' }}>No hay clientes registrados aún.</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Pedidos */}
+                <div className={styles.cardList}>
+                  <div style={{ padding: '20px 24px', borderBottom: '1px solid rgba(0,0,0,0.05)', fontWeight: 800 }}>🛒 Pedidos Registrados</div>
+                  <table className={styles.table}>
+                    <thead>
+                      <tr>
+                        <th>ID Pedido</th>
+                        <th>Cliente</th>
+                        <th>Producto</th>
+                        <th>Monto</th>
+                        <th>Dirección de Entrega</th>
+                        <th>Fecha</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {ordersList.map((order: any) => (
+                        <tr key={order.id}>
+                          <td>#{order.id}</td>
+                          <td>
+                            <div style={{ fontWeight: 700 }}>{order.client_name || '—'}</div>
+                            <div style={{ fontSize: '0.8rem', color: 'var(--color-text-light)' }}>{order.client_phone}</div>
+                          </td>
+                          <td>{order.product_name}</td>
+                          <td style={{ fontWeight: 700 }}>${order.total_price}</td>
+                          <td>
+                            <div>{order.client_street1} y {order.client_street2}</div>
+                            <div style={{ fontSize: '0.8rem', color: 'var(--color-text-light)' }}>{order.client_city} ({order.client_neighborhood || '—'})</div>
+                          </td>
+                          <td>{new Date(order.created_at).toLocaleString()}</td>
+                        </tr>
+                      ))}
+                      {ordersList.length === 0 && (
+                        <tr>
+                          <td colSpan={6} style={{ textAlign: 'center', padding: '20px' }}>No hay pedidos registrados aún.</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+
+              </div>
+            )}
+
+          </div>
         )}
       </div>
     </div>

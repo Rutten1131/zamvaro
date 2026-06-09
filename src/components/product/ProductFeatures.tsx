@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { useState, useRef } from 'react';
 import type { Product } from '@/data/products';
 import styles from './ProductFeatures.module.css';
 
@@ -22,9 +23,29 @@ const PROBLEM_FACTORS = [
 export default function ProductFeatures({ product }: Props) {
   if (!product.features || product.features.length < 2) return null;
 
+  const allFeatures = product.features.slice(0, 4);
   const leftFeatures = product.features.slice(0, 2);
   const rightFeatures = product.features.slice(2, 4);
   const imageSrc = product.imageFeatures || product.image || '';
+
+  // --- Slider state (mobile only) ---
+  const [current, setCurrent] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+
+  const goTo = (idx: number) => {
+    const count = allFeatures.length;
+    setCurrent((idx + count) % count);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) goTo(current + (diff > 0 ? 1 : -1));
+    touchStartX.current = null;
+  };
 
   return (
     <section className={styles.section}>
@@ -46,7 +67,7 @@ export default function ProductFeatures({ product }: Props) {
           </p>
         </motion.div>
 
-        {/* Layout 3 columnas */}
+        {/* ── DESKTOP: Layout 3 columnas ── */}
         <div className={styles.layout}>
 
           {/* Columna izquierda */}
@@ -117,6 +138,57 @@ export default function ProductFeatures({ product }: Props) {
           </motion.div>
 
         </div>
+
+        {/* ── MOBILE: Slider de cards ── */}
+        <div
+          className={styles.mobileSlider}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          {/* Flechas */}
+          <button
+            className={`${styles.sliderArrow} ${styles.sliderArrowLeft}`}
+            onClick={() => goTo(current - 1)}
+            aria-label="Anterior"
+          >
+            ‹
+          </button>
+          <button
+            className={`${styles.sliderArrow} ${styles.sliderArrowRight}`}
+            onClick={() => goTo(current + 1)}
+            aria-label="Siguiente"
+          >
+            ›
+          </button>
+
+          {/* Track */}
+          <div className={styles.sliderTrack}>
+            {allFeatures.map((f, i) => (
+              <div
+                key={i}
+                className={`${styles.sliderCard} ${i === current ? styles.sliderCardActive : ''}`}
+                style={{ transform: `translateX(${(i - current) * 100}%)` }}
+              >
+                <span className={styles.sliderIcon}>{f.emoji}</span>
+                <h3 className={styles.sliderTitle}>{f.title}</h3>
+                <p className={styles.sliderDesc}>{f.description}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Dots */}
+          <div className={styles.sliderDots}>
+            {allFeatures.map((_, i) => (
+              <button
+                key={i}
+                className={`${styles.sliderDot} ${i === current ? styles.sliderDotActive : ''}`}
+                onClick={() => goTo(i)}
+                aria-label={`Ir a ${i + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+
       </div>
     </section>
   );

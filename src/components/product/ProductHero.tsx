@@ -28,6 +28,25 @@ export default function ProductHero({ product }: ProductHeroProps) {
       <section className={styles.hero}>
         <div className={`container ${styles.inner}`}>
 
+          {/* CABECERA PARA MÓVIL (Visible solo en pantallas pequeñas) */}
+          <div className={styles.mobileHeader}>
+            <div className={styles.starsRow}>
+              <div className={styles.starIcons}>
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={15} className={styles.star} fill="currentColor" />
+                ))}
+              </div>
+              <span className={styles.reviewCount}>387 reseñas verificadas</span>
+            </div>
+            <h1 className={styles.title}>{product.name}</h1>
+            <div className={styles.priceRow}>
+              <span className={styles.price}>{product.price}</span>
+              {product.originalPrice && (
+                <span className={styles.originalPrice}>{product.originalPrice}</span>
+              )}
+            </div>
+          </div>
+
           {/* COLUMNA IZQUIERDA: Galería de imágenes estilo e-commerce premium */}
           <div className={styles.gallery}>
             <div className={styles.mainImageWrap}>
@@ -80,7 +99,7 @@ export default function ProductHero({ product }: ProductHeroProps) {
             transition={{ duration: 0.6 }}
           >
             {/* 1. Estrellas de Reseña en la parte superior */}
-            <div className={styles.starsRow}>
+            <div className={`${styles.starsRow} ${styles.desktopOnly}`}>
               <div className={styles.starIcons}>
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} size={15} className={styles.star} fill="currentColor" />
@@ -90,13 +109,13 @@ export default function ProductHero({ product }: ProductHeroProps) {
             </div>
 
             {/* 2. Título del producto en H1 */}
-            <h1 className={styles.title}>{product.name}</h1>
+            <h1 className={`${styles.title} ${styles.desktopOnly}`}>{product.name}</h1>
 
             {/* 3. Subtítulo o Propuesta de valor */}
             <p className={styles.subtitle}>{product.subtitle}</p>
 
             {/* 4. Precio */}
-            <div className={styles.priceRow}>
+            <div className={`${styles.priceRow} ${styles.desktopOnly}`}>
               <span className={styles.price}>{product.price}</span>
               {product.originalPrice && (
                 <span className={styles.originalPrice}>{product.originalPrice}</span>
