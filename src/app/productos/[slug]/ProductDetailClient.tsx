@@ -16,6 +16,7 @@ import ProductFAQ from '@/components/product/ProductFAQ';
 import StickyWhatsApp from '@/components/product/StickyWhatsApp';
 import AnnouncementBar from '@/components/product/AnnouncementBar';
 import OtherProductsSlider from '@/components/product/OtherProductsSlider';
+import SalesPopWidget from '@/components/product/SalesPopWidget';
 
 interface ProductDetailClientProps {
   product: any;
@@ -117,6 +118,9 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
 
         {/* 11. Floating sticky CTA button */}
         <StickyWhatsApp product={product} />
+
+        {/* 12. Sales pop-up social proof widget */}
+        <SalesPopWidget product={product} />
       </main>
       <Footer />
     </>

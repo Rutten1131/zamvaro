@@ -1,0 +1,96 @@
+.container {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 9999;
+  max-width: 340px;
+  width: calc(100% - 40px);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: auto;
+  user-select: none;
+}
+
+@media (max-width: 576px) {
+  .container {
+    left: 16px;
+    bottom: 80px; /* Evitar tapar el StickyWhatsApp en celular si estuviera en la parte inferior */
+    max-width: 320px;
+    width: calc(100% - 32px);
+  }
+}
+
+.imageWrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: #fcfcfc;
+}
+
+.img {
+  object-fit: cover;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-right: 14px;
+}
+
+.title {
+  font-size: 0.76rem;
+  color: #4b5563;
+  line-height: 1.3;
+}
+
+.highlight {
+  font-weight: 700;
+  color: #111827;
+}
+
+.prodName {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--color-primary, #E61C23);
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.time {
+  font-size: 0.68rem;
+  color: #9ca3af;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+  border-radius: 50%;
+}
+
+.closeBtn:hover {
+  color: #374151;
+  background: rgba(0, 0, 0, 0.05);
+}

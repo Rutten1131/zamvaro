@@ -34,20 +34,26 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
     {
       quantity: 1,
       price: basePrice,
-      label: product.name,
-      sub: `1 unidad por $${basePrice.toFixed(2)}`,
+      originalPrice: basePrice,
+      title: `Compra 1 ${product.name} en OFERTA!`,
+      badge: 'OFERTA 😜',
+      badgeClass: styles.badgeOffer,
     },
     {
       quantity: 2,
       price: product.slug?.includes('esterilizador') || product.slug?.includes('secador') ? 40.00 : parseFloat((basePrice * 2 * 0.8).toFixed(2)),
-      label: `Lleva 2 unidades (2x40) 🏷️`,
-      sub: `2 unidades por $${product.slug?.includes('esterilizador') || product.slug?.includes('secador') ? '40.00' : (basePrice * 2 * 0.8).toFixed(2)}`,
+      originalPrice: basePrice * 2,
+      title: `Compra 2 ${product.name}`,
+      badge: 'OFERTA ESPECIAL 🤩',
+      badgeClass: styles.badgeSpecial,
     },
     {
       quantity: 3,
       price: product.slug?.includes('esterilizador') || product.slug?.includes('secador') ? 54.00 : parseFloat((basePrice * 3 * 0.72).toFixed(2)),
-      label: `Lleva 3 unidades (3x54) 🔥`,
-      sub: `3 unidades por $${product.slug?.includes('esterilizador') || product.slug?.includes('secador') ? '54.00' : (basePrice * 3 * 0.72).toFixed(2)}`,
+      originalPrice: basePrice * 3,
+      title: `¡Compra 3 ${product.name} en OFERTON!`,
+      badge: 'EL MÁS VENDIDO 🤩🔥',
+      badgeClass: styles.badgeBest,
     },
   ];
 
@@ -123,7 +129,7 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
           formData,
           totalPrice,
           quantity: totalQuantity,
-          offer: activeOffer.label,
+          offer: activeOffer.title,
         }),
       });
 
@@ -150,6 +156,9 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
     }
   };
 
+  const originalSubtotal = basePrice * totalQuantity;
+  const discountAmount = originalSubtotal - totalPrice;
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -166,80 +175,75 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
           >
             {/* Cabecera */}
             <div className={styles.header}>
-              <h3 className={styles.headerTitle}>PAGO CONTRA REEMBOLSO</h3>
+              <h3 className={styles.headerTitle}>¡Pedir HOY! ¡Pagar al recibir! 🚚</h3>
               <button onClick={onClose} className={styles.closeBtn} aria-label="Cerrar modal">
                 <X size={20} />
               </button>
             </div>
 
             <div className={styles.scrollableContent}>
-              {/* Banner de Compra Segura */}
-              <div className={styles.banner}>
-                <div className={styles.bannerBadge}>
-                  <span>🔒 COMPRA SEGURA</span>
-                  <strong>Satisfacción garantizada</strong>
-                </div>
-                <div className={styles.bannerGarantia}>
-                  <span>GARANTÍA DE</span>
-                  <strong>+100.000</strong>
-                  <span>SATISFACCIÓN</span>
-                </div>
-                <div className={styles.bannerDelivery}>
-                  <span>Tiempo de entrega</span>
-                  <strong>3-5 días</strong>
-                  <span>hábiles</span>
-                </div>
-              </div>
 
               {/* Selección de Ofertas */}
               <div className={styles.offersSection}>
-                <h4 className={styles.sectionTitle}>Selecciona tu oferta especial:</h4>
                 <div className={styles.offersList}>
-                  {offers.map((offer, index) => (
-                    <button
-                      key={index}
-                      type="button"
-                      className={`${styles.offerCard} ${selectedOfferIndex === index ? styles.offerCardActive : ''}`}
-                      onClick={() => setSelectedOfferIndex(index)}
-                    >
-                      <div className={styles.offerRadio}>
-                        <div className={`${styles.radioCircle} ${selectedOfferIndex === index ? styles.radioChecked : ''}`} />
-                      </div>
-                      <div className={styles.offerContent}>
-                        <span className={styles.offerLabel}>{offer.label}</span>
-                        <span className={styles.offerSub}>{offer.sub}</span>
-                      </div>
-                    </button>
-                  ))}
+                  {offers.map((offer, index) => {
+                    const isSelected = selectedOfferIndex === index;
+                    const hasDiscount = offer.originalPrice > offer.price;
+                    return (
+                      <button
+                        key={index}
+                        type="button"
+                        className={`${styles.offerCard} ${isSelected ? styles.offerCardActive : ''} ${index === 2 ? styles.offerCardBest : ''}`}
+                        onClick={() => setSelectedOfferIndex(index)}
+                      >
+                        <div className={styles.offerThumb}>
+                          <Image
+                            src={product.image || ''}
+                            alt={offer.title}
+                            width={54}
+                            height={54}
+                            className={styles.offerImg}
+                          />
+                        </div>
+                        <div className={styles.offerInfo}>
+                          <span className={styles.offerTitle}>{offer.title}</span>
+                          <span className={`${styles.offerBadge} ${offer.badgeClass}`}>
+                            {offer.badge}
+                          </span>
+                        </div>
+                        <div className={styles.offerPrices}>
+                          {hasDiscount && (
+                            <span className={styles.offerOriginalPrice}>
+                              ${offer.originalPrice.toFixed(2)}
+                            </span>
+                          )}
+                          <span className={styles.offerCurrentPrice}>
+                            ${offer.price.toFixed(2)}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
               {/* Resumen del Producto */}
               <div className={styles.productSummary}>
-                <div className={styles.prodRow}>
-                  <div className={styles.prodThumb}>
-                    <Image
-                      src={product.image || ''}
-                      alt={product.name}
-                      width={44}
-                      height={44}
-                      className={styles.prodImg}
-                    />
-                    <span className={styles.prodQty}>{totalQuantity}</span>
-                  </div>
-                  <div className={styles.prodName}>{product.name}</div>
-                  <div className={styles.prodPrice}>${basePrice.toFixed(2)}</div>
-                </div>
-
                 <div className={styles.pricingLines}>
                   <div className={styles.priceLine}>
                     <span>Subtotal</span>
-                    <span>${totalPrice.toFixed(2)}</span>
+                    <span>${originalSubtotal.toFixed(2)}</span>
                   </div>
                   <div className={styles.priceLine}>
                     <span>Envío</span>
                     <span className={styles.shippingFree}>Gratis</span>
                   </div>
+                  {discountAmount > 0 && (
+                    <div className={`${styles.priceLine} ${styles.discountLine}`}>
+                      <span>Descuentos 🏷️</span>
+                      <span className={styles.discountAmount}>-${discountAmount.toFixed(2)}</span>
+                    </div>
+                  )}
                   <div className={`${styles.priceLine} ${styles.totalLine}`}>
                     <span>Total</span>
                     <span>${totalPrice.toFixed(2)}</span>

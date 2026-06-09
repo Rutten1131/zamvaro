@@ -25,22 +25,37 @@ export default function ProductHero({ product }: ProductHeroProps) {
 
   const timelineDates = (() => {
     const months = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+    
     const formatDate = (date: Date) => {
       const day = String(date.getDate()).padStart(2, '0');
       const month = months[date.getMonth()];
       return `${day} ${month}`;
     };
+
+    const addBusinessDays = (date: Date, days: number): Date => {
+      const result = new Date(date);
+      let count = 0;
+      while (count < days) {
+        result.setDate(result.getDate() + 1);
+        const dayOfWeek = result.getDay();
+        if (dayOfWeek !== 0 && dayOfWeek !== 6) { // 0 = Domingo, 6 = Sábado
+          count++;
+        }
+      }
+      return result;
+    };
+
     const today = new Date();
-    const date2 = new Date(today);
-    date2.setDate(today.getDate() + 2);
-    const date3Start = new Date(today);
-    date3Start.setDate(today.getDate() + 2);
-    const date3End = new Date(today);
-    date3End.setDate(today.getDate() + 5);
+    // Despacho en 2 días laborables
+    const dispatchDate = addBusinessDays(today, 2);
+    // Entrega estimada en 2 a 5 días laborables
+    const deliveryStartDate = addBusinessDays(today, 2);
+    const deliveryEndDate = addBusinessDays(today, 5);
+
     return {
       todayStr: formatDate(today),
-      dispatchStr: formatDate(date2),
-      deliveryStr: `${formatDate(date3Start)} - ${formatDate(date3End)}`
+      dispatchStr: formatDate(dispatchDate),
+      deliveryStr: `${formatDate(deliveryStartDate)} - ${formatDate(deliveryEndDate)}`
     };
   })();
 

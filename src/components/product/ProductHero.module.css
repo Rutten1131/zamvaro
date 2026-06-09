@@ -176,8 +176,8 @@
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   letter-spacing: 0.03em;
   text-align: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  animation: attentionCta 3s ease-in-out infinite;
+  box-shadow: 0 6px 24px rgba(230, 28, 35, 0.35);
+  animation: attentionCta 2s ease-in-out infinite;
   text-decoration: none;
   position: relative;
   overflow: hidden;
@@ -192,38 +192,38 @@
   background: linear-gradient(
     to right,
     rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.45) 50%,
+    rgba(255, 255, 255, 0.6) 50%,
     rgba(255, 255, 255, 0) 100%
   );
   transform: skewX(-25deg);
-  animation: shineCta 5s infinite;
+  animation: shineCta 3s infinite;
 }
 .ctaBtn:hover {
   background: var(--color-primary-dark, #C91018);
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 10px 32px rgba(230, 28, 35, 0.5);
 }
 
 @keyframes attentionCta {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 20px rgba(230, 28, 35, 0.3);
   }
   50% {
-    transform: scale(1.04);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.22);
+    transform: scale(1.06);
+    box-shadow: 0 12px 35px rgba(230, 28, 35, 0.6);
+  }
+  40%, 60% {
+    transform: scale(1.06) rotate(-1.5deg);
   }
   45%, 55% {
-    transform: scale(1.04) rotate(-0.5deg);
-  }
-  48%, 52% {
-    transform: scale(1.04) rotate(0.5deg);
+    transform: scale(1.06) rotate(1.5deg);
   }
 }
 
 @keyframes shineCta {
   0% { left: -150%; }
-  15% { left: 150%; }
+  20% { left: 150%; }
   100% { left: 150%; }
 }
 
@@ -438,6 +438,33 @@
   
   .desktopOnly {
     display: none !important;
+  }
+
+  /* Reordenar elementos para que el botón de compra aparezca arriba de las viñetas */
+  .info {
+    display: flex;
+    flex-direction: column;
+  }
+  .info > * {
+    order: 10;
+  }
+  .subtitle {
+    order: 1 !important;
+  }
+  .ctaBtn {
+    order: 2 !important;
+  }
+  .bullets {
+    order: 3 !important;
+  }
+  .timelineContainer {
+    order: 4 !important;
+  }
+  .heroTestimonial {
+    order: 5 !important;
+  }
+  .accordions {
+    order: 6 !important;
   }
 }
 

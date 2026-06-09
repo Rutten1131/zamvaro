@@ -251,17 +251,10 @@
   margin-bottom: 20px;
 }
 
-.sectionTitle {
-  font-size: 0.82rem;
-  font-weight: 800;
-  color: #1a1a1a;
-  margin-bottom: 8px;
-}
-
 .offersList {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .offerCard {
@@ -270,62 +263,131 @@
   align-items: center;
   gap: 12px;
   padding: 10px 14px;
-  background: #fdfbf7;
-  border: 1px solid #eaeaea;
+  background: #ffffff;
+  border: 1.5px solid #eaeaea;
   border-radius: 8px;
   cursor: pointer;
   text-align: left;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  outline: none;
 }
 
 .offerCardActive {
-  background: rgba(58, 129, 242, 0.05);
-  border: 2px solid var(--color-primary, #3a81f2);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-color: #84cc16 !important;
+  box-shadow: 0 4px 12px rgba(132, 204, 22, 0.12);
 }
 
-.offerRadio {
+/* El ofertón (3er producto) */
+.offerCardBest {
+  background-color: #f7fee7; /* Fondo verdoso suave */
+  border: 1.5px solid #d9f99d;
+}
+
+.offerCardBest.offerCardActive {
+  background-color: #f0fdf4; /* Un poco más verde cuando se selecciona */
+  border: 2px solid #84cc16 !important;
+}
+
+.offerThumb {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #eaeaea;
   flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: #fafafa;
 }
 
-.radioCircle {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 2px solid #ccc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
+.offerImg {
+  object-fit: cover;
 }
 
-.radioChecked {
-  border-color: var(--color-primary, #3a81f2);
-  background: var(--color-primary, #3a81f2);
-  box-shadow: inset 0 0 0 3px white;
-}
-
-.offerContent {
+.offerInfo {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 4px;
+  flex: 1;
 }
 
-.offerLabel {
+.offerTitle {
   font-size: 0.85rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.3;
+}
+
+.offerBadge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  border-radius: 4px;
+  padding: 2.5px 6px;
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  text-transform: uppercase;
+}
+
+.badgeOffer {
+  background-color: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.badgeSpecial {
+  background-color: #fef9c3;
+  color: #854d0e;
+  border: 1px solid #fef08a;
+}
+
+.badgeBest {
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
+}
+
+.offerPrices {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.offerOriginalPrice {
+  font-size: 0.76rem;
+  color: #888;
+  text-decoration: line-through;
+  margin-bottom: 2px;
+}
+
+.offerCurrentPrice {
+  font-size: 0.95rem;
   font-weight: 800;
   color: #1a1a1a;
 }
 
-.offerSub {
-  font-size: 0.76rem;
-  color: #666;
+/* ── Descuentos y Summary ── */
+.productSummary {
+  background-color: #f4f4f5 !important;
+  border: 1px solid #e4e4e7 !important;
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 20px;
 }
 
-/* ── Formulario ── */
+.discountLine {
+  color: #dc2626 !important;
+  font-weight: 600;
+}
+
+.discountAmount {
+  color: #dc2626 !important;
+  font-weight: 700;
+}
+
 .form {
   display: flex;
   flex-direction: column;
