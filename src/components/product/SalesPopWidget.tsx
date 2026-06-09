@@ -12,27 +12,28 @@ interface Props {
 }
 
 const CITIES = [
-  'Quito', 'Guayaquil', 'Cuenca', 'Santo Domingo', 'Machala', 
-  'Manta', 'Portoviejo', 'Loja', 'Ambato', 'Riobamba', 
-  'Ibarra', 'Quevedo', 'Babahoyo', 'Sangolquí', 'Latacunga'
+  'Ecuador', 'Quito', 'Guayaquil', 'Cuenca', 'Santo Domingo', 'Machala', 
+  'Manta', 'Portoviejo', 'Loja', 'Ambato', 'Riobamba', 'Ecuador',
+  'Ibarra', 'Quevedo', 'Babahoyo', 'Sangolquí', 'Latacunga', 'Ecuador'
 ];
 
 const NAMES = [
-  'María G.', 'Juan C.', 'Lorena M.', 'Carlos T.', 'Sofía P.', 
-  'Luis V.', 'Diana A.', 'Gabriel S.', 'Elena R.', 'Pedro M.', 
-  'Ana B.', 'Diego L.', 'Carmen S.', 'Patricia R.', 'Andrés M.'
+  'Mariuxi', 'Katy', 'Jefferson', 'Paola', 'Gisella', 'Eduardo', 
+  'Christian', 'Gaby', 'Stalin', 'Santiago', 'Jonathan', 'Alejandra', 
+  'Johanna', 'Carlos', 'Mayra', 'Juan', 'Diana', 'Tatiana', 'Bryan',
+  'Evelyn', 'Esteban', 'Gabriela', 'Alex', 'Verónica'
 ];
 
 const ACTIONS = [
-  'agregó este producto al carrito.',
-  'compró este producto.',
-  'compró este producto hace unos minutos.',
-  'realizó un pedido de este producto.'
+  'compró',
+  'agregó al carrito',
+  'compró',
+  'realizó un pedido'
 ];
 
 const TIMES = [
-  'hace 10 segundos', 'hace 45 segundos', 'hace 1 minuto', 
-  'hace 2 minutos', 'hace 3 minutos', 'hace 5 minutos'
+  '10 segundos', '45 segundos', '1 minuto', 
+  '2 minutos', '5 minutos', '17 horas', '3 horas', '12 horas'
 ];
 
 export default function SalesPopWidget({ product }: Props) {
@@ -132,19 +133,19 @@ export default function SalesPopWidget({ product }: Props) {
               alt={popData.productName}
               fill
               className={styles.img}
-              sizes="52px"
+              sizes="56px"
             />
           </div>
 
           <div className={styles.content}>
             <div className={styles.title}>
-              <span className={styles.highlight}>{popData.name}</span> en <span className={styles.highlight}>{popData.city}</span> {popData.action}
+              <span className={styles.highlight}>{popData.name}</span> en {popData.city} {popData.action}
             </div>
             <div className={styles.prodName}>
               {popData.productName}
             </div>
             <div className={styles.time}>
-              {popData.time}
+              Hace {popData.time}
             </div>
           </div>
 
