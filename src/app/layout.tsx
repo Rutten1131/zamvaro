@@ -3,6 +3,7 @@ import './globals.css';
 import FacebookPixel from '@/components/FacebookPixel';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://zamvaro.vercel.app'),
   title: 'Zamvaro Ecuador | Compra con Pago Contraentrega',
   description:
     'Compra productos premium en Ecuador con pago contraentrega. Sin tarjeta de crédito. Entrega a domicilio o en sucursal en todo Ecuador. ¡Paga solo cuando recibas tu pedido!',
@@ -14,11 +15,20 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'es_EC',
     siteName: 'Zamvaro Ecuador',
+    images: [
+      {
+        url: '/hero-zamvaro.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Zamvaro Ecuador',
+      }
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Zamvaro Ecuador',
     description: 'Ventas online en Ecuador — Pago contraentrega. Sin riesgo.',
+    images: ['/hero-zamvaro.jpg'],
   },
   robots: 'index, follow',
 };
