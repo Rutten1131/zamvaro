@@ -58,6 +58,12 @@
 }
 
 @media (max-width: 640px) {
-  .inner { flex-direction: column; text-align: center; align-items: center; }
-  .badges { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+  .section { padding: 32px 16px; }
+  .inner { flex-direction: column; text-align: center; align-items: center; gap: 20px; }
+  .shieldWrap { width: 60px; height: 60px; }
+  .shieldEmoji { font-size: 1.8rem; }
+  .title { font-size: 1.15rem; }
+  .text { font-size: 0.85rem; line-height: 1.5; }
+  .badges { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 6px; }
+  .badge { font-size: 0.72rem; padding: 6px 12px; }
 }

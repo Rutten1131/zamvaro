@@ -14,7 +14,9 @@ import {
   List,
   Eye,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  Mail,
+  Send
 } from 'lucide-react';
 import styles from './admin.module.css';
 
@@ -48,6 +50,9 @@ const emptyProduct = {
   guaranteeText: '',
   whatsappNumber: '',
   primaryColor: '#9B046F',
+  problemFactors: [] as { label: string; detail: string }[],
+  problemTagline: '',
+  problemHeadline: '',
 };
 
 
@@ -56,10 +61,98 @@ export default function AdminPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   
-  const [activeTab, setActiveTab] = useState<'list' | 'edit' | 'chatbot'>('list');
+  const [activeTab, setActiveTab] = useState<'list' | 'edit' | 'chatbot' | 'newsletter'>('list');
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [statusMsg, setStatusMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // Newsletter states
+  const [subscribers, setSubscribers] = useState<any[]>([]);
+  const [newsletterLoading, setNewsletterLoading] = useState(false);
+  const [newsletterForm, setNewsletterForm] = useState({
+    subject: '',
+    title: '',
+    body: '',
+    imageUrl: '',
+    buttonText: '',
+    buttonUrl: '',
+  });
+
+  const fetchSubscribers = async () => {
+    setNewsletterLoading(true);
+    try {
+      const res = await fetch('/api/admin/newsletter');
+      if (res.ok) {
+        const data = await res.json();
+        setSubscribers(data);
+      }
+    } catch (err) {
+      console.error('Error fetching subscribers:', err);
+    } finally {
+      setNewsletterLoading(false);
+    }
+  };
+
+  const handleDeleteSubscriber = async (id: number) => {
+    if (!confirm('¿Estás seguro de que deseas eliminar este suscriptor?')) return;
+    setNewsletterLoading(true);
+    try {
+      const res = await fetch(`/api/admin/newsletter?id=${id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        setStatusMsg({ type: 'success', text: 'Suscriptor eliminado correctamente.' });
+        fetchSubscribers();
+      } else {
+        setStatusMsg({ type: 'error', text: 'Error al eliminar suscriptor.' });
+      }
+    } catch (err) {
+      setStatusMsg({ type: 'error', text: 'Error de conexión.' });
+    } finally {
+      setNewsletterLoading(false);
+    }
+  };
+
+  const handleSendNewsletter = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newsletterForm.subject || !newsletterForm.body) {
+      setStatusMsg({ type: 'error', text: 'Asunto y cuerpo del mensaje son obligatorios.' });
+      return;
+    }
+    if (subscribers.length === 0) {
+      setStatusMsg({ type: 'error', text: 'No hay suscriptores a quienes enviar el boletín.' });
+      return;
+    }
+    if (!confirm(`¿Estás seguro de enviar este boletín a ${subscribers.length} suscriptores?`)) return;
+
+    setNewsletterLoading(true);
+    setStatusMsg(null);
+    try {
+      const res = await fetch('/api/admin/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newsletterForm),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setStatusMsg({ type: 'success', text: `Boletín enviado con éxito a ${data.count} suscriptores. 🎉` });
+        setNewsletterForm({
+          subject: '',
+          title: '',
+          body: '',
+          imageUrl: '',
+          buttonText: '',
+          buttonUrl: '',
+        });
+      } else {
+        setStatusMsg({ type: 'error', text: data.error || 'Error al enviar el boletín.' });
+      }
+    } catch (err) {
+      setStatusMsg({ type: 'error', text: 'Error al conectar con el servidor.' });
+    } finally {
+      setNewsletterLoading(false);
+    }
+  };
 
   // Chatbot states
   const [chatbotData, setChatbotData] = useState<any>({
@@ -82,6 +175,7 @@ export default function AdminPage() {
     adset_name: '',
     is_confirmed: true
   });
+
 
   const fetchChatbotData = async () => {
     setChatbotLoading(true);
@@ -217,6 +311,7 @@ export default function AdminPage() {
       if (res.ok) {
         setIsLoggedIn(true);
         fetchProducts();
+        fetchSubscribers();
       } else {
         setIsLoggedIn(false);
       }
@@ -255,6 +350,7 @@ export default function AdminPage() {
         setIsLoggedIn(true);
         setStatusMsg({ type: 'success', text: 'Sesión iniciada. Cargando dashboard...' });
         fetchProducts();
+        fetchSubscribers();
       } else {
         setStatusMsg({ type: 'error', text: data.message || 'Credenciales incorrectas' });
       }
@@ -621,6 +717,16 @@ export default function AdminPage() {
             }}
           >
             <Sparkles size={16} /> Chatbot WhatsApp
+          </button>
+
+          <button
+            className={`${styles.tab} ${activeTab === 'newsletter' ? styles.tabActive : ''}`}
+            onClick={() => {
+              setActiveTab('newsletter');
+              fetchSubscribers();
+            }}
+          >
+            <Mail size={16} /> Boletín / Newsletter
           </button>
         </div>
 
@@ -2177,6 +2283,160 @@ export default function AdminPage() {
 
               </div>
             )}
+
+          </div>
+        )}
+
+        {/* VISTA: Boletín / Newsletter */}
+        {activeTab === 'newsletter' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+            
+            {/* Newsletter Grid layout */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '30px' }}>
+              
+              {/* Formulario de Redacción */}
+              <div className={styles.cardList} style={{ padding: '24px', background: 'white' }}>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Mail size={20} className={styles.primaryText} style={{ color: 'var(--color-primary)' }} /> Redactar Boletín Informativo
+                </h3>
+                <form onSubmit={handleSendNewsletter} className={styles.formGrid} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <div className={styles.inputGroup}>
+                    <label className={styles.label}>Asunto del Correo *</label>
+                    <input
+                      type="text"
+                      className={styles.input}
+                      placeholder="Ej: ¡Nuevo Esterilizador UV inteligente ya disponible! 🚀"
+                      value={newsletterForm.subject}
+                      onChange={(e) => setNewsletterForm({ ...newsletterForm, subject: e.target.value })}
+                      required
+                      disabled={newsletterLoading}
+                    />
+                  </div>
+
+                  <div className={styles.inputGroup}>
+                    <label className={styles.label}>Título del Boletín (Cabecera dentro del correo)</label>
+                    <input
+                      type="text"
+                      className={styles.input}
+                      placeholder="Ej: Oferta de lanzamiento: 15% de descuento adicional"
+                      value={newsletterForm.title}
+                      onChange={(e) => setNewsletterForm({ ...newsletterForm, title: e.target.value })}
+                      disabled={newsletterLoading}
+                    />
+                  </div>
+
+                  <div className={styles.inputGroup}>
+                    <label className={styles.label}>URL de la Imagen de Banner (Opcional)</label>
+                    <input
+                      type="url"
+                      className={styles.input}
+                      placeholder="Ej: https://zambaro.com/banner.jpg"
+                      value={newsletterForm.imageUrl}
+                      onChange={(e) => setNewsletterForm({ ...newsletterForm, imageUrl: e.target.value })}
+                      disabled={newsletterLoading}
+                    />
+                  </div>
+
+                  <div className={styles.inputGroup}>
+                    <label className={styles.label}>Cuerpo del Mensaje (Soporta múltiples líneas) *</label>
+                    <textarea
+                      className={styles.textarea}
+                      placeholder="Escribe el contenido del correo aquí..."
+                      rows={8}
+                      value={newsletterForm.body}
+                      onChange={(e) => setNewsletterForm({ ...newsletterForm, body: e.target.value })}
+                      required
+                      disabled={newsletterLoading}
+                      style={{ minHeight: '150px' }}
+                    />
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    <div className={styles.inputGroup}>
+                      <label className={styles.label}>Texto de Botón CTA (Opcional)</label>
+                      <input
+                        type="text"
+                        className={styles.input}
+                        placeholder="Ej: Comprar Ahora"
+                        value={newsletterForm.buttonText}
+                        onChange={(e) => setNewsletterForm({ ...newsletterForm, buttonText: e.target.value })}
+                        disabled={newsletterLoading}
+                      />
+                    </div>
+                    <div className={styles.inputGroup}>
+                      <label className={styles.label}>Enlace de Botón CTA (Opcional)</label>
+                      <input
+                        type="url"
+                        className={styles.input}
+                        placeholder="Ej: https://zambaro.com/productos/esterilizador"
+                        value={newsletterForm.buttonUrl}
+                        onChange={(e) => setNewsletterForm({ ...newsletterForm, buttonUrl: e.target.value })}
+                        disabled={newsletterLoading}
+                      />
+                    </div>
+                  </div>
+
+                  <button type="submit" className={styles.button} style={{ marginTop: '10px' }} disabled={newsletterLoading}>
+                    {newsletterLoading ? <div className={styles.spinner}></div> : <><Send size={16} /> Enviar a todos los suscriptores ({subscribers.length})</>}
+                  </button>
+                </form>
+              </div>
+
+              {/* Lista de Suscriptores */}
+              <div className={styles.cardList} style={{ padding: '24px', background: 'white' }}>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>👥 Suscriptores Registrados</span>
+                  <span style={{ fontSize: '0.85rem', background: 'rgba(139, 92, 246, 0.1)', color: 'var(--color-primary)', padding: '4px 10px', borderRadius: '12px' }}>
+                    {subscribers.length} correos
+                  </span>
+                </h3>
+
+                <div style={{ maxHeight: '550px', overflowY: 'auto' }}>
+                  {newsletterLoading && subscribers.length === 0 ? (
+                    <div style={{ padding: '20px', textAlign: 'center' }}>Cargando suscriptores...</div>
+                  ) : (
+                    <table className={styles.table}>
+                      <thead>
+                        <tr>
+                          <th>Correo Electrónico</th>
+                          <th>Fecha de Registro</th>
+                          <th style={{ width: '80px', textAlign: 'center' }}>Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {subscribers.map((sub: any) => (
+                          <tr key={sub.id}>
+                            <td style={{ fontWeight: 600 }}>{sub.email}</td>
+                            <td style={{ fontSize: '0.85rem', color: 'var(--color-text-light)' }}>
+                              {new Date(sub.created_at).toLocaleDateString('es-EC', { day: '2-digit', month: 'short', year: 'numeric' })}
+                            </td>
+                            <td style={{ textAlign: 'center' }}>
+                              <button
+                                type="button"
+                                className={`${styles.iconBtn} ${styles.iconBtnDanger}`}
+                                onClick={() => handleDeleteSubscriber(sub.id)}
+                                title="Eliminar Suscriptor"
+                                disabled={newsletterLoading}
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                        {subscribers.length === 0 && (
+                          <tr>
+                            <td colSpan={3} style={{ textAlign: 'center', padding: '25px', color: 'var(--color-text-light)' }}>
+                              No hay ningún correo suscrito en el boletín.
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  )}
+                </div>
+              </div>
+
+            </div>
 
           </div>
         )}

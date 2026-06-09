@@ -89,7 +89,7 @@ async function sendMetaCAPIEvent(product: any, formData: any, totalPrice: number
 
 export async function POST(req: Request) {
   try {
-    const { product, formData, totalPrice } = await req.json();
+    const { product, formData, totalPrice, quantity, offer } = await req.json();
 
     if (!formData || !product) {
       return NextResponse.json({ error: 'Datos incompletos.' }, { status: 400 });
@@ -121,7 +121,17 @@ export async function POST(req: Request) {
           <td>${product.name}</td>
         </tr>
         <tr>
-          <td><strong>Precio:</strong></td>
+          <td><strong>Cantidad:</strong></td>
+          <td>${quantity || 1}</td>
+        </tr>
+        ${offer ? `
+        <tr>
+          <td><strong>Oferta:</strong></td>
+          <td>${offer}</td>
+        </tr>
+        ` : ''}
+        <tr>
+          <td><strong>Precio Total:</strong></td>
           <td>$${totalPrice.toFixed(2)}</td>
         </tr>
         <tr style="background-color: #f2f2f2;">

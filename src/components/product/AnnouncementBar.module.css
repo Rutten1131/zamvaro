@@ -1,12 +1,12 @@
 /* ─── Barra de anuncio fija ─── */
 .bar {
   position: fixed;
-  /* top se inyecta dinámicamente según altura real del Navbar */
+  top: 0;
   left: 0;
   right: 0;
-  z-index: 990;
+  z-index: 1001;
   height: 40px;
-  background: linear-gradient(90deg, #C80000 0%, #E61C23 40%, #E61C23 60%, #C80000 100%);
+  background: linear-gradient(90deg, var(--color-primary-dark, #C80000) 0%, var(--color-primary, #E61C23) 40%, var(--color-primary, #E61C23) 60%, var(--color-primary-dark, #C80000) 100%);
   background-size: 200% 100%;
   animation: shimmer 4s ease infinite;
   transform: translateY(0);
@@ -73,7 +73,7 @@
 /* ─── CTA ─── */
 .cta {
   background: rgba(255,255,255,0.95);
-  color: #C80000;
+  color: var(--color-primary, #C80000);
   font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.03em;

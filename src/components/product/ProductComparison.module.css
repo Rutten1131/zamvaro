@@ -32,14 +32,14 @@
 .title {
   font-size: clamp(1.8rem, 3vw, 2.4rem);
   font-weight: 800;
-  color: #1a1a1a;
+  color: var(--color-dark);
   line-height: 1.15;
   margin-bottom: 12px;
 }
 
 .subtitle {
   font-size: 0.98rem;
-  color: #555555;
+  color: var(--color-text-light);
   line-height: 1.5;
 }
 
@@ -82,7 +82,7 @@
   font-size: 0.88rem;
   font-weight: 800;
   color: white;
-  background: #2D5A27;
+  background: var(--color-primary-dark);
   text-align: left;
 }
 
@@ -92,16 +92,16 @@
 }
 
 .oursCell {
-  background: rgba(45, 90, 39, 0.02);
+  background: var(--color-border);
 }
 
 .checkIcon {
-  color: #2D5A27;
+  color: var(--color-primary);
   margin: 0 auto;
 }
 
 .xIcon {
-  color: #1a1a1a;
+  color: var(--color-dark);
   margin: 0 auto;
 }
 
@@ -116,7 +116,7 @@
 .statsTitle {
   font-size: clamp(1.8rem, 3vw, 2.4rem);
   font-weight: 800;
-  color: #1a1a1a;
+  color: var(--color-dark);
   line-height: 1.15;
 }
 
@@ -131,7 +131,7 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  border-bottom: 1px solid #eaeaea;
+  border-bottom: 1px solid var(--color-border);
   padding-bottom: 16px;
 }
 
@@ -145,7 +145,7 @@
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  border: 3.5px solid #2d5059;
+  border: 3.5px solid var(--color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -154,12 +154,12 @@
 .badgeVal {
   font-size: 0.88rem;
   font-weight: 800;
-  color: #1a1a1a;
+  color: var(--color-primary);
 }
 
 .statLabel {
   font-size: 0.95rem;
-  color: #1a1a1a;
+  color: var(--color-dark);
   line-height: 1.45;
   font-weight: 500;
 }
@@ -168,7 +168,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #000000;
+  background: var(--color-primary);
   color: #ffffff;
   font-size: 0.95rem;
   font-weight: 800;
@@ -178,11 +178,13 @@
   transition: all 0.2s ease;
   align-self: flex-start;
   text-transform: capitalize;
+  box-shadow: var(--shadow-md);
 }
 
 .ctaBtn:hover {
-  background: #333333;
+  background: var(--color-primary-dark);
   transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
 /* ==========================================================================

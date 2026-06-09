@@ -162,7 +162,7 @@
 .sliderTrack {
   position: relative;
   width: 100%;
-  height: 430px; /* Incrementado para dar espacio total al texto más largo */
+  height: 275px; /* Ajustado para dar espacio suficiente y que no se corte el texto */
   overflow: hidden;
   border-radius: var(--radius-lg);
 }
@@ -296,15 +296,25 @@
 
 @media (max-width: 576px) {
   .section { padding: 56px 16px; }
-
   /* Ocultar columnas laterales en móvil, mostrar slider */
   .layout .featuresCol {
     display: none;
   }
-
   /* Mostrar el slider */
   .mobileSlider {
     display: block;
     margin-top: -20px;
+  }
+  .sliderIcon {
+    font-size: 2.2rem;
+    margin-bottom: 2px;
+  }
+  .sliderTitle {
+    font-size: 1.05rem;
+    line-height: 1.25;
+  }
+  .sliderDesc {
+    font-size: 0.84rem;
+    line-height: 1.5;
   }
 }

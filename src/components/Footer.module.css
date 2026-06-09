@@ -6,8 +6,8 @@
 
 .top {
   display: grid;
-  grid-template-columns: 2fr 1fr 1.2fr;
-  gap: 60px;
+  grid-template-columns: 1.5fr 1fr 1.2fr 1.5fr;
+  gap: 40px;
   padding-bottom: 48px;
 }
 
@@ -123,6 +123,79 @@
   padding: 6px 12px;
   border-radius: var(--radius-full);
   width: fit-content;
+}
+
+/* Newsletter Styles */
+.newsletterText {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.6;
+}
+
+.newsletterForm {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: 4px 6px 4px 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+}
+
+.newsletterForm:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb, 155, 4, 111), 0.2);
+}
+
+.newsletterInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 0.875rem;
+  outline: none;
+  padding: 8px 0;
+  width: 100%;
+}
+
+.newsletterInput::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.newsletterBtn {
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  width: 32px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.newsletterBtn:hover {
+  background: var(--color-primary-dark);
+  transform: scale(1.05);
+}
+
+.newsletterBtn:active {
+  transform: scale(0.95);
+}
+
+.successMsg {
+  color: #10B981;
+  font-size: 0.8rem;
+  margin-top: 8px;
+}
+
+.errorMsg {
+  color: #EF4444;
+  font-size: 0.8rem;
+  margin-top: 8px;
 }
 
 /* Divider */

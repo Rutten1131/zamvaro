@@ -1,8 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, Send } from 'lucide-react';
 import styles from './Footer.module.css';
 
 const navLinks = [
@@ -17,6 +18,37 @@ const legalLinks = [
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    setLoading(true);
+    setErrorMsg('');
+    setSuccess(false);
+
+    try {
+      const res = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setSuccess(true);
+        setEmail('');
+      } else {
+        setErrorMsg(data.error || 'Ocurrió un error.');
+      }
+    } catch (err) {
+      setErrorMsg('Error al conectar con el servidor.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <footer className={styles.footer}>
@@ -109,6 +141,30 @@ export default function Footer() {
               <span className={styles.trustBadge}>💵 Pago Contraentrega</span>
               <span className={styles.trustBadge}>🔒 Compra Segura</span>
             </div>
+          </div>
+
+          {/* Newsletter */}
+          <div className={styles.col}>
+            <h4 className={styles.colTitle}>Entérate de nuevos productos para ti</h4>
+            <p className={styles.newsletterText}>
+              Únete y entérate antes que nadie de nuestros nuevos e innovadores productos con descuentos exclusivos 🚀
+            </p>
+            <form onSubmit={handleSubscribe} className={styles.newsletterForm}>
+              <input
+                type="email"
+                placeholder="Tu correo electrónico"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className={styles.newsletterInput}
+                disabled={loading}
+              />
+              <button type="submit" className={styles.newsletterBtn} disabled={loading} aria-label="Suscribirse">
+                <Send size={16} />
+              </button>
+            </form>
+            {success && <p className={styles.successMsg}>¡Te has suscrito correctamente! 🎉</p>}
+            {errorMsg && <p className={styles.errorMsg}>{errorMsg}</p>}
           </div>
         </div>
 

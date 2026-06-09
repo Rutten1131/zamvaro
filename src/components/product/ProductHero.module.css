@@ -24,10 +24,16 @@
   position: relative;
   width: 100%;
   aspect-ratio: 1;
+  max-height: 330px; /* Limit image height on mobile to show content above-the-fold */
   border-radius: var(--radius-xl);
   overflow: hidden;
   background: #f9f8f7;
   border: 1px solid var(--color-border);
+}
+@media (min-width: 900px) {
+  .mainImageWrap {
+    max-height: none;
+  }
 }
 
 .mainImage {
@@ -131,15 +137,17 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 0;
-  border-top: 1px solid var(--color-border);
-  padding-top: 16px;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--color-border);
+  margin-top: 4px;
 }
 .bullet {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   color: var(--color-dark);
   line-height: 1.4;
 }
@@ -150,13 +158,13 @@
   margin-top: 3px;
 }
 
-/* 6. Botón Principal (Rojo como el referente) */
+/* 6. Botón Principal (Color dinámico de plantilla) */
 .ctaBtn {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: #E61C23;
+  background: var(--color-primary, #E61C23);
   color: white;
   font-family: var(--font-body);
   font-size: 1rem;
@@ -165,56 +173,139 @@
   border-radius: var(--radius-md);
   border: none;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   letter-spacing: 0.03em;
   text-align: center;
-  box-shadow: 0 4px 20px rgba(230,28,35,0.35);
-  animation: pulseCta 2.5s ease-in-out infinite;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  animation: attentionCta 3s ease-in-out infinite;
   text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+.ctaBtn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.45) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  animation: shineCta 5s infinite;
 }
 .ctaBtn:hover {
-  background: #C91018;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(230,28,35,0.45);
+  background: var(--color-primary-dark, #C91018);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
 }
 
-@keyframes pulseCta {
-  0%, 100% { box-shadow: 0 4px 20px rgba(230,28,35,0.35); }
-  50% { box-shadow: 0 6px 28px rgba(230,28,35,0.55); }
+@keyframes attentionCta {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.22);
+  }
+  45%, 55% {
+    transform: scale(1.04) rotate(-0.5deg);
+  }
+  48%, 52% {
+    transform: scale(1.04) rotate(0.5deg);
+  }
 }
 
-/* 7. Trust columns 3-columnas */
-.trustColumns {
+@keyframes shineCta {
+  0% { left: -150%; }
+  15% { left: 150%; }
+  100% { left: 150%; }
+}
+
+/* Envío Gratis Badge */
+.freeShippingBadge {
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: #10B981;
+  background: rgba(16, 185, 129, 0.08);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Shipping Timeline */
+.timelineContainer {
+  background: #fdfbf7;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 8px 0;
+}
+.timelineHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.timelineClockIcon {
+  color: var(--color-text-light);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.timelineHeader p {
+  font-size: 0.85rem;
+  color: var(--color-dark);
+  line-height: 1.4;
+  margin: 0;
+}
+.timelineSteps {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-  padding: 16px 0;
-  border-top: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
+  position: relative;
 }
-.trustItem {
+.timelineStep {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   gap: 6px;
+  z-index: 1;
 }
-.trustIcon {
-  color: var(--color-text-light);
-}
-.trustText {
+.timelineIconWrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
   display: flex;
-  flex-direction: column;
-  line-height: 1.3;
-}
-.trustText strong {
-  font-size: 0.78rem;
-  font-weight: 700;
+  align-items: center;
+  justify-content: center;
   color: var(--color-dark);
+  transition: var(--transition);
 }
-.trustText span {
-  font-size: 0.73rem;
+.timelineStepLabel {
+  font-size: 0.78rem;
+  font-weight: 600;
   color: var(--color-text-light);
+}
+.timelineStepDate {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--color-dark);
 }
 
 /* 8. Testimonio del Hero */
@@ -351,9 +442,22 @@
 }
 
 @media (max-width: 576px) {
-  .hero { padding: 16px 16px 48px; } /* Reducido: el AnnouncementBar ya tiene un espaciador */
-  .trustColumns { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .trustText strong { font-size: 0.72rem; }
-  .trustText span { font-size: 0.68rem; }
+  .hero { padding: 12px 16px 32px; }
+  .mobileHeader {
+    gap: 4px !important;
+    margin-bottom: 4px !important;
+  }
+  .mobileHeader .title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    margin: 2px 0;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
   .thumb { width: 52px; height: 52px; }
+  .freeShippingBadge {
+    font-size: 0.68rem;
+    padding: 2px 6px;
+    margin-left: 6px;
+  }
 }

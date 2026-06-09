@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { Star, ChevronLeft, ChevronRight, Truck, RotateCcw, ShieldCheck } from 'lucide-react';
+import { Star, ChevronLeft, ChevronRight, Truck, RotateCcw, ShieldCheck, ShoppingBag, MapPin, Clock } from 'lucide-react';
 import type { Product } from '@/data/products';
 import CheckoutModal from './CheckoutModal';
 import styles from './ProductHero.module.css';
@@ -22,6 +22,27 @@ export default function ProductHero({ product }: ProductHeroProps) {
     e.preventDefault();
     setIsCheckoutOpen(true);
   };
+
+  const timelineDates = (() => {
+    const months = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+    const formatDate = (date: Date) => {
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = months[date.getMonth()];
+      return `${day} ${month}`;
+    };
+    const today = new Date();
+    const date2 = new Date(today);
+    date2.setDate(today.getDate() + 2);
+    const date3Start = new Date(today);
+    date3Start.setDate(today.getDate() + 2);
+    const date3End = new Date(today);
+    date3End.setDate(today.getDate() + 5);
+    return {
+      todayStr: formatDate(today),
+      dispatchStr: formatDate(date2),
+      deliveryStr: `${formatDate(date3Start)} - ${formatDate(date3End)}`
+    };
+  })();
 
   return (
     <>
@@ -44,6 +65,7 @@ export default function ProductHero({ product }: ProductHeroProps) {
               {product.originalPrice && (
                 <span className={styles.originalPrice}>{product.originalPrice}</span>
               )}
+              <span className={styles.freeShippingBadge}>Envío Gratis 🚚</span>
             </div>
           </div>
 
@@ -120,6 +142,7 @@ export default function ProductHero({ product }: ProductHeroProps) {
               {product.originalPrice && (
                 <span className={styles.originalPrice}>{product.originalPrice}</span>
               )}
+              <span className={styles.freeShippingBadge}>Envío Gratis 🚚</span>
             </div>
 
             {/* 5. Bullets de beneficios con viñeta de destello naranja/amarillo */}
@@ -139,27 +162,35 @@ export default function ProductHero({ product }: ProductHeroProps) {
               COMPRAR AHORA Y PAGAR EN CASA 🚚
             </button>
 
-            {/* 7. Columnas de confianza (Envío, Devolución, Garantía) */}
-            <div className={styles.trustColumns}>
-              <div className={styles.trustItem}>
-                <Truck size={22} className={styles.trustIcon} />
-                <div className={styles.trustText}>
-                  <strong>Envío rápido a todo</strong>
-                  <span>Ecuador</span>
-                </div>
+            {/* Dynamic Shipping Timeline */}
+            <div className={styles.timelineContainer}>
+              <div className={styles.timelineHeader}>
+                <Clock size={16} className={styles.timelineClockIcon} />
+                <p>
+                  Los pedidos se procesan en días laborables y tardan de <strong>2 a 5 días laborables</strong>.
+                </p>
               </div>
-              <div className={styles.trustItem}>
-                <RotateCcw size={22} className={styles.trustIcon} />
-                <div className={styles.trustText}>
-                  <strong>Devoluciones</strong>
-                  <span>gratuitas 30 días</span>
+              <div className={styles.timelineSteps}>
+                <div className={styles.timelineStep}>
+                  <div className={styles.timelineIconWrap}>
+                    <ShoppingBag size={18} />
+                  </div>
+                  <span className={styles.timelineStepLabel}>Pedido</span>
+                  <span className={styles.timelineStepDate}>{timelineDates.todayStr}</span>
                 </div>
-              </div>
-              <div className={styles.trustItem}>
-                <ShieldCheck size={22} className={styles.trustIcon} />
-                <div className={styles.trustText}>
-                  <strong>Garantía de</strong>
-                  <span>satisfacción 100%</span>
+                <div className={styles.timelineStep}>
+                  <div className={styles.timelineIconWrap}>
+                    <Truck size={18} />
+                  </div>
+                  <span className={styles.timelineStepLabel}>Empaque y Despacho</span>
+                  <span className={styles.timelineStepDate}>{timelineDates.dispatchStr}</span>
+                </div>
+                <div className={styles.timelineStep}>
+                  <div className={styles.timelineIconWrap}>
+                    <MapPin size={18} />
+                  </div>
+                  <span className={styles.timelineStepLabel}>Entrega</span>
+                  <span className={styles.timelineStepDate}>{timelineDates.deliveryStr}</span>
                 </div>
               </div>
             </div>
@@ -193,9 +224,6 @@ export default function ProductHero({ product }: ProductHeroProps) {
             <div className={styles.accordions}>
               <AccordionItem title="🌐 Información de envío">
                 Envío GRATIS y pago Contra Entrega en toda Ecuador. ¡Tu alivio llega a tu puerta!
-              </AccordionItem>
-              <AccordionItem title="↩ Política de devolución">
-                Si por cualquier motivo no estás satisfecho con tu compra, dispones de 30 días de garantía para devoluciones sin complicaciones.
               </AccordionItem>
             </div>
           </motion.div>

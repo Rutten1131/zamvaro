@@ -44,6 +44,18 @@ export default function AnnouncementBar({ whatsappNumber }: Props) {
 
   const BAR_HEIGHT = 40; // px — altura de la barra
 
+  useEffect(() => {
+    const header = document.querySelector('header') as HTMLElement | null;
+    if (header) {
+      header.style.transition = 'top 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+      if (visible) {
+        header.style.top = `${BAR_HEIGHT}px`;
+      } else {
+        header.style.top = '0';
+      }
+    }
+  }, [visible]);
+
   return (
     <>
       {/* Espaciador estático que empuja el contenido hacia abajo */}
@@ -60,7 +72,6 @@ export default function AnnouncementBar({ whatsappNumber }: Props) {
       {/* Barra fija */}
       <div
         className={`${styles.bar} ${!visible ? styles.barHidden : ''}`}
-        style={{ top: `${navHeight}px` }}
         role="banner"
         aria-label="Compra por WhatsApp"
       >

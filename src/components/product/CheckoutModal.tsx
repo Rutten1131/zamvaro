@@ -26,9 +26,48 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
     city: '',
   });
   const [loading, setLoading] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const basePrice = parseFloat(product.price.replace(/[^\d.]/g, '')) || 24.99;
-  const totalPrice = basePrice;
+
+  const offers = [
+    {
+      quantity: 1,
+      price: basePrice,
+      label: product.name,
+      sub: `1 unidad por $${basePrice.toFixed(2)}`,
+    },
+    {
+      quantity: 2,
+      price: product.slug?.includes('esterilizador') || product.slug?.includes('secador') ? 40.00 : parseFloat((basePrice * 2 * 0.8).toFixed(2)),
+      label: `Lleva 2 unidades (2x40) 🏷️`,
+      sub: `2 unidades por $${product.slug?.includes('esterilizador') || product.slug?.includes('secador') ? '40.00' : (basePrice * 2 * 0.8).toFixed(2)}`,
+    },
+    {
+      quantity: 3,
+      price: product.slug?.includes('esterilizador') || product.slug?.includes('secador') ? 54.00 : parseFloat((basePrice * 3 * 0.72).toFixed(2)),
+      label: `Lleva 3 unidades (3x54) 🔥`,
+      sub: `3 unidades por $${product.slug?.includes('esterilizador') || product.slug?.includes('secador') ? '54.00' : (basePrice * 3 * 0.72).toFixed(2)}`,
+    },
+  ];
+
+  const [selectedOfferIndex, setSelectedOfferIndex] = useState(0);
+  const activeOffer = offers[selectedOfferIndex];
+  const totalPrice = activeOffer.price;
+  const totalQuantity = activeOffer.quantity;
+
+  // Prevent background scrolling when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      setTermsAccepted(false); // Reset checkbox on open
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   // Registrar el inicio del proceso de pago (InitiateCheckout)
   useEffect(() => {
@@ -65,6 +104,11 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
       return;
     }
 
+    if (!termsAccepted) {
+      alert('Por favor, confirme que sus datos son correctos marcando la casilla correspondiente.');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -78,6 +122,8 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
           product,
           formData,
           totalPrice,
+          quantity: totalQuantity,
+          offer: activeOffer.label,
         }),
       });
 
@@ -103,8 +149,6 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
       setLoading(false);
     }
   };
-
-
 
   return (
     <AnimatePresence>
@@ -147,6 +191,29 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
                 </div>
               </div>
 
+              {/* Selección de Ofertas */}
+              <div className={styles.offersSection}>
+                <h4 className={styles.sectionTitle}>Selecciona tu oferta especial:</h4>
+                <div className={styles.offersList}>
+                  {offers.map((offer, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      className={`${styles.offerCard} ${selectedOfferIndex === index ? styles.offerCardActive : ''}`}
+                      onClick={() => setSelectedOfferIndex(index)}
+                    >
+                      <div className={styles.offerRadio}>
+                        <div className={`${styles.radioCircle} ${selectedOfferIndex === index ? styles.radioChecked : ''}`} />
+                      </div>
+                      <div className={styles.offerContent}>
+                        <span className={styles.offerLabel}>{offer.label}</span>
+                        <span className={styles.offerSub}>{offer.sub}</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               {/* Resumen del Producto */}
               <div className={styles.productSummary}>
                 <div className={styles.prodRow}>
@@ -158,7 +225,7 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
                       height={44}
                       className={styles.prodImg}
                     />
-                    <span className={styles.prodQty}>1</span>
+                    <span className={styles.prodQty}>{totalQuantity}</span>
                   </div>
                   <div className={styles.prodName}>{product.name}</div>
                   <div className={styles.prodPrice}>${basePrice.toFixed(2)}</div>
@@ -167,7 +234,7 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
                 <div className={styles.pricingLines}>
                   <div className={styles.priceLine}>
                     <span>Subtotal</span>
-                    <span>${basePrice.toFixed(2)}</span>
+                    <span>${totalPrice.toFixed(2)}</span>
                   </div>
                   <div className={styles.priceLine}>
                     <span>Envío</span>
@@ -335,6 +402,22 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
                       disabled={loading}
                     />
                   </div>
+                </div>
+
+                {/* Casilla de verificación de datos correctos */}
+                <div className={styles.checkboxGroup}>
+                  <label className={styles.checkboxLabel}>
+                    <input
+                      type="checkbox"
+                      name="termsAccepted"
+                      checked={termsAccepted}
+                      onChange={(e) => setTermsAccepted(e.target.checked)}
+                      required
+                      className={styles.checkboxInput}
+                      disabled={loading}
+                    />
+                    <span>Mis datos son correctos y pagaré al momento de la entrega 📦</span>
+                  </label>
                 </div>
 
                 {/* Botón de Confirmación de Pedido */}

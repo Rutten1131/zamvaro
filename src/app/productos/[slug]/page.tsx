@@ -17,6 +17,7 @@ import ProductHowTo from '@/components/product/ProductHowTo';
 import ProductFAQ from '@/components/product/ProductFAQ';
 import StickyWhatsApp from '@/components/product/StickyWhatsApp';
 import AnnouncementBar from '@/components/product/AnnouncementBar';
+import OtherProductsSlider from '@/components/product/OtherProductsSlider';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -170,7 +171,10 @@ export default function ProductDetailPage({ params }: PageProps) {
         {/* 9. Frequently Asked Questions */}
         <ProductFAQ product={product} />
 
-        {/* 10. Floating sticky CTA button */}
+        {/* 10. Other products slider */}
+        <OtherProductsSlider currentProductSlug={product.slug} />
+
+        {/* 11. Floating sticky CTA button */}
         <StickyWhatsApp product={product} />
       </main>
       <Footer />

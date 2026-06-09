@@ -42,6 +42,7 @@ export async function GET(request: Request) {
         stats: typeof prod.stats === 'string' ? JSON.parse(prod.stats) : prod.stats || [],
         steps: typeof prod.steps === 'string' ? JSON.parse(prod.steps) : prod.steps || [],
         faqs: typeof prod.faqs === 'string' ? JSON.parse(prod.faqs) : prod.faqs || [],
+        problemFactors: typeof prod.problemFactors === 'string' ? JSON.parse(prod.problemFactors) : prod.problemFactors || [],
       };
     });
 
@@ -99,6 +100,9 @@ export async function POST(request: Request) {
       guaranteeText,
       whatsappNumber,
       primaryColor,
+      problemFactors,
+      problemTagline,
+      problemHeadline,
     } = body;
 
     if (!name || !slug) {
@@ -111,8 +115,9 @@ export async function POST(request: Request) {
         name, subtitle, hookText, category, price, originalPrice, tag, emoji, image, images,
         imageProblem, imageFeatures, imageHowTo,
         isAvailable, slug, bullets, features, testimonials, comparisonTitle, comparisonOursLabel,
-        comparisonTheirsLabel, comparison, stats, steps, faqs, guaranteeText, whatsappNumber, primaryColor
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        comparisonTheirsLabel, comparison, stats, steps, faqs, guaranteeText, whatsappNumber, primaryColor,
+        problemFactors, problemTagline, problemHeadline
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const [result] = await pool.query(query, [
@@ -144,6 +149,9 @@ export async function POST(request: Request) {
       guaranteeText || null,
       whatsappNumber || null,
       primaryColor || null,
+      JSON.stringify(problemFactors || []),
+      problemTagline || null,
+      problemHeadline || null,
     ]);
 
     const insertId = (result as any).insertId;

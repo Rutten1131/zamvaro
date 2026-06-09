@@ -54,6 +54,9 @@ export async function initDatabase() {
         guaranteeText TEXT,
         whatsappNumber VARCHAR(50),
         primaryColor VARCHAR(20) DEFAULT NULL,
+        problemFactors JSON,
+        problemTagline VARCHAR(255),
+        problemHeadline VARCHAR(255),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
@@ -69,6 +72,16 @@ export async function initDatabase() {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
 
+    // Crear tabla de suscriptores al newsletter si no existe
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS newsletter_subscribers (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        email VARCHAR(255) NOT NULL UNIQUE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    `);
+
+
     // Agregar columna primaryColor si no existe (migración segura)
     try {
       await connection.query(`ALTER TABLE products ADD COLUMN primaryColor VARCHAR(20) DEFAULT NULL`);
@@ -76,6 +89,21 @@ export async function initDatabase() {
     } catch (e: any) {
       if (!e.message?.includes('Duplicate column')) {
         // Ignorar error si la columna ya existe
+      }
+    }
+
+    // Agregar columnas de problemFactors si no existen (migración segura)
+    const newColumns = [
+      { name: 'problemFactors', def: 'JSON' },
+      { name: 'problemTagline', def: 'VARCHAR(255)' },
+      { name: 'problemHeadline', def: 'VARCHAR(255)' },
+    ];
+    for (const col of newColumns) {
+      try {
+        await connection.query(`ALTER TABLE products ADD COLUMN ${col.name} ${col.def}`);
+        console.log(`Columna ${col.name} agregada a products.`);
+      } catch (e: any) {
+        // Ignorar si ya existe
       }
     }
 

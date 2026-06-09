@@ -3,12 +3,16 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+  background: var(--color-white, #ffffff);
   box-shadow: 0 -3px 20px rgba(0, 0, 0, 0.08);
   border-top: 1px solid var(--color-border);
   padding: 8px 20px;
   z-index: 999;
+  /* Prevent browser scroll jitter / layout shifts */
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  will-change: transform;
+  contain: layout paint;
 }
 
 .container {
@@ -47,7 +51,7 @@
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   background: #25d366;
   color: var(--color-white);
   padding: 8px 18px;
@@ -57,10 +61,19 @@
   text-decoration: none;
   box-shadow: 0 3px 12px rgba(37, 211, 102, 0.25);
   transition: var(--transition);
+  white-space: nowrap;
+}
+
+.btnIcon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  fill: #ffffff;
+  display: block;
 }
 
 .btn:hover {
-  transform: translateY(-2.01px);
+  transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(37, 211, 102, 0.35);
 }
 

@@ -44,6 +44,9 @@ export async function PUT(request: Request, { params }: RouteParams) {
       guaranteeText,
       whatsappNumber,
       primaryColor,
+      problemFactors,
+      problemTagline,
+      problemHeadline,
     } = body;
 
     if (!name || !slug) {
@@ -79,7 +82,10 @@ export async function PUT(request: Request, { params }: RouteParams) {
         faqs = ?,
         guaranteeText = ?,
         whatsappNumber = ?,
-        primaryColor = ?
+        primaryColor = ?,
+        problemFactors = ?,
+        problemTagline = ?,
+        problemHeadline = ?
       WHERE id = ?
     `;
 
@@ -112,6 +118,9 @@ export async function PUT(request: Request, { params }: RouteParams) {
       guaranteeText || null,
       whatsappNumber || null,
       primaryColor || null,
+      JSON.stringify(problemFactors || []),
+      problemTagline || null,
+      problemHeadline || null,
       id,
     ]);
 

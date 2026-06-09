@@ -10,18 +10,22 @@ interface Props {
   product: Product;
 }
 
-// Factores de problema adaptados al Cepillo Secador
-const PROBLEM_FACTORS = [
-  { label: 'Frizz', detail: 'difícil de controlar' },
-  { label: 'Calor', detail: 'excesivo que daña' },
-  { label: 'Tiempo', detail: 'perdido cada mañana' },
-  { label: 'Herramientas', detail: 'múltiples y pesadas' },
-  { label: 'Cabello', detail: 'sin volumen ni brillo' },
-  { label: 'Costo', detail: 'de salón de belleza' },
+// Factores de problema por defecto (si el producto no los define)
+const DEFAULT_PROBLEM_FACTORS = [
+  { label: 'Calidad', detail: 'inferior del producto' },
+  { label: 'Tiempo', detail: 'perdido cada día' },
+  { label: 'Costo', detail: 'elevado sin resultados' },
+  { label: 'Diseño', detail: 'anticuado e incómodo' },
+  { label: 'Duración', detail: 'muy corta del producto' },
+  { label: 'Soporte', detail: 'sin garantía real' },
 ];
 
 export default function ProductFeatures({ product }: Props) {
   if (!product.features || product.features.length < 2) return null;
+
+  const problemFactors = product.problemFactors || DEFAULT_PROBLEM_FACTORS;
+  const problemTagline = product.problemTagline || 'Factores que generan';
+  const problemHeadline = product.problemHeadline || 'malos resultados';
 
   const allFeatures = product.features.slice(0, 4);
   const leftFeatures = product.features.slice(0, 2);
@@ -60,10 +64,10 @@ export default function ProductFeatures({ product }: Props) {
           transition={{ duration: 0.6 }}
         >
           <h2 className={styles.title}>
-            Descubre el poder de una <span className={styles.highlight}>tecnología única</span>
+            Tecnología <span className={styles.highlight}>única para ti</span>
           </h2>
           <p className={styles.subtitle}>
-            Componentes activos que trabajan en sinergia para darte el cabello que siempre quisiste.
+            Componentes avanzados que trabajan en sinergia.
           </p>
         </motion.div>
 
@@ -97,8 +101,8 @@ export default function ProductFeatures({ product }: Props) {
           >
             <div className={styles.centerCard}>
               <div className={styles.centerCardHeader}>
-                <p className={styles.centerTagline}>Factores que generan</p>
-                <p className={styles.centerHeadline}>malos resultados en casa</p>
+                <p className={styles.centerTagline}>{problemTagline}</p>
+                <p className={styles.centerHeadline}>{problemHeadline}</p>
               </div>
               <div className={styles.centerImageWrap}>
                 <Image
@@ -110,7 +114,7 @@ export default function ProductFeatures({ product }: Props) {
                 />
               </div>
               <div className={styles.factorsGrid}>
-                {PROBLEM_FACTORS.map((f, i) => (
+                {problemFactors.map((f, i) => (
                   <div key={i} className={styles.factorItem}>
                     <span className={styles.factorLabel}>{f.label}</span>
                     <span className={styles.factorDetail}>{f.detail}</span>

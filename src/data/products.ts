@@ -36,6 +36,11 @@ export interface ProductFAQ {
   answer: string;
 }
 
+export interface ProductProblemFactor {
+  label: string;
+  detail: string;
+}
+
 export interface Product {
   id: number;
   name: string;
@@ -65,6 +70,9 @@ export interface Product {
   faqs?: ProductFAQ[];
   guaranteeText?: string;
   whatsappNumber?: string;
+  problemFactors?: ProductProblemFactor[];
+  problemTagline?: string;
+  problemHeadline?: string;
 }
 
 export const products: Product[] = [
@@ -208,6 +216,16 @@ export const products: Product[] = [
     ],
     guaranteeText: 'Si el cepillo no cumple tus expectativas, nos escribes y lo resolvemos. Tu satisfacción es nuestra prioridad. Zamvaro Ecuador garantiza tu tranquilidad en cada compra.',
     whatsappNumber: '593939243014',
+    problemTagline: 'Factores que generan',
+    problemHeadline: 'malos resultados en casa',
+    problemFactors: [
+      { label: 'Frizz', detail: 'difícil de controlar' },
+      { label: 'Calor', detail: 'excesivo que daña' },
+      { label: 'Tiempo', detail: 'perdido cada mañana' },
+      { label: 'Herramientas', detail: 'múltiples y pesadas' },
+      { label: 'Cabello', detail: 'sin volumen ni brillo' },
+      { label: 'Costo', detail: 'de salón de belleza' },
+    ],
   },
   {
     id: 2,
