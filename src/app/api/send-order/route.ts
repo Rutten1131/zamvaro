@@ -8,7 +8,8 @@ function sha256(data: string): string {
 }
 
 async function sendMetaCAPIEvent(product: any, formData: any, totalPrice: number, reqHeaders: Headers) {
-  const pixelId = process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID;
+  // Usa el píxel específico del producto si está configurado, sino el global
+  const pixelId = product.facebookPixelId || process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID;
   const accessToken = process.env.META_ACCESS_TOKEN;
 
   if (!pixelId || !accessToken) {
