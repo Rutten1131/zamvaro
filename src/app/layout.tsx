@@ -3,7 +3,7 @@ import './globals.css';
 import FacebookPixel from '@/components/FacebookPixel';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://zamvaro.vercel.app'),
+  metadataBase: new URL('https://www.zamvaro.com'),
   title: 'Zamvaro Ecuador | Compra con Pago Contraentrega',
   description:
     'Compra productos premium en Ecuador con pago contraentrega. Sin tarjeta de crédito. Entrega a domicilio o en sucursal en todo Ecuador. ¡Paga solo cuando recibas tu pedido!',
@@ -31,6 +31,9 @@ export const metadata: Metadata = {
     images: ['/hero-zamvaro.jpg'],
   },
   robots: 'index, follow',
+  other: {
+    'facebook-domain-verification': '830tdlsadiol1r3zb0081aj4iifg88',
+  },
 };
 
 export default function RootLayout({
