@@ -99,13 +99,25 @@ export default function ProductHero({ product }: ProductHeroProps) {
           {/* COLUMNA IZQUIERDA: Galería de imágenes estilo e-commerce premium */}
           <div className={styles.gallery}>
             <div className={styles.mainImageWrap}>
-              <Image
-                src={images[currentImg]}
-                alt={product.name}
-                fill
-                className={styles.mainImage}
-                priority
-              />
+              {images.map((img, idx) => (
+                <Image
+                  key={idx}
+                  src={img}
+                  alt={`${product.name} - Vista ${idx + 1}`}
+                  fill
+                  className={styles.mainImage}
+                  style={{
+                    opacity: idx === currentImg ? 1 : 0,
+                    pointerEvents: idx === currentImg ? 'auto' : 'none',
+                    transition: 'opacity 0.25s ease-in-out',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                  }}
+                  priority={idx === 0}
+                  unoptimized={img?.toLowerCase().includes('.gif')}
+                />
+              ))}
               {images.length > 1 && (
                 <>
                   <button
@@ -133,7 +145,14 @@ export default function ProductHero({ product }: ProductHeroProps) {
                     className={`${styles.thumb} ${i === currentImg ? styles.thumbActive : ''}`}
                     onClick={() => setCurrentImg(i)}
                   >
-                    <Image src={img} alt={`Vista ${i + 1}`} width={80} height={80} className={styles.thumbImg} />
+                    <Image
+                      src={img}
+                      alt={`Vista ${i + 1}`}
+                      width={80}
+                      height={80}
+                      className={styles.thumbImg}
+                      unoptimized={img?.toLowerCase().includes('.gif')}
+                    />
                   </button>
                 ))}
               </div>

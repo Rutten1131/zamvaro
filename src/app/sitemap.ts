@@ -30,13 +30,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let productPages: MetadataRoute.Sitemap = [];
   try {
     const [rows] = await pool.query<any[]>(
-      'SELECT slug, updated_at FROM products WHERE is_available = 1'
+      'SELECT slug, created_at FROM products WHERE isAvailable = 1'
     );
     productPages = rows
       .filter((p: any) => p.slug)
       .map((p: any) => ({
         url: `${BASE_URL}/productos/${p.slug}`,
-        lastModified: p.updated_at ? new Date(p.updated_at) : new Date(),
+        lastModified: p.created_at ? new Date(p.created_at) : new Date(),
         changeFrequency: 'weekly' as const,
         priority: 0.9,
       }));

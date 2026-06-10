@@ -142,7 +142,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
         />
       )}
 
-      <Navbar />
+      <Navbar isProductPage={true} whatsappNumber={product.whatsappNumber} />
       {/* Barra de anuncio fija — desaparece al bajar */}
       <AnnouncementBar whatsappNumber={product.whatsappNumber} />
       <main style={{ background: 'var(--color-bg)' }}>

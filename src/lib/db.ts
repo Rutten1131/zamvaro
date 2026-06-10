@@ -16,7 +16,25 @@ const pool = mysql.createPool({
 
 export default pool;
 
+// Flag para evitar re-ejecutar el setup costoso en cada request
+let dbInitialized = false;
+let dbInitPromise: Promise<void> | null = null;
+
 export async function initDatabase() {
+  // Si ya está inicializado, salir inmediatamente sin ninguna query
+  if (dbInitialized) return;
+
+  // Si hay una inicialización en curso (por requests concurrentes), esperar esa misma
+  if (dbInitPromise) {
+    await dbInitPromise;
+    return;
+  }
+
+  dbInitPromise = _runInitDatabase();
+  await dbInitPromise;
+}
+
+async function _runInitDatabase() {
   let connection;
   try {
     connection = await pool.getConnection();
@@ -261,9 +279,12 @@ export async function initDatabase() {
     `);
 
     console.log('✅ Tablas del chatbot de WhatsApp verificadas/creadas.');
+    dbInitialized = true; // Marcar como inicializado para evitar re-ejecución
 
   } catch (error) {
     console.error('Error al inicializar la base de datos:', error);
+    // No marcar como inicializado si hubo error, para reintentar en la siguiente request
+    dbInitPromise = null;
   } finally {
     if (connection) connection.release();
   }

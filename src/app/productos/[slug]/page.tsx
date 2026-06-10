@@ -7,13 +7,27 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+// ── Cache en memoria: evita golpear la BD en cada visita al mismo producto ──
+// Expira cada 60 segundos para reflejar cambios del admin sin reiniciar el server.
+const productCache = new Map<string, { data: any; expiresAt: number }>();
+const CACHE_TTL_MS = 60_000; // 60 segundos
+
 async function getProductBySlug(slug: string) {
+  // 1. Servir desde cache si aún es válido
+  const cached = productCache.get(slug);
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.data;
+  }
+
+  // 2. Inicializar DB (solo la primera vez, gracias al flag en db.ts)
   await initDatabase();
+
   const [rows] = await pool.query('SELECT * FROM products WHERE slug = ? LIMIT 1', [slug]);
   const productsArray = rows as any[];
   if (productsArray.length === 0) return null;
+
   const prod = productsArray[0];
-  return {
+  const result = {
     ...prod,
     isAvailable: Boolean(prod.isAvailable),
     images: typeof prod.images === 'string' ? JSON.parse(prod.images) : prod.images || [],
@@ -26,6 +40,11 @@ async function getProductBySlug(slug: string) {
     faqs: typeof prod.faqs === 'string' ? JSON.parse(prod.faqs) : prod.faqs || [],
     problemFactors: typeof prod.problemFactors === 'string' ? JSON.parse(prod.problemFactors) : prod.problemFactors || [],
   };
+
+  // 3. Guardar en cache
+  productCache.set(slug, { data: result, expiresAt: Date.now() + CACHE_TTL_MS });
+
+  return result;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -38,7 +57,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  // Si la url de la imagen no es absoluta, Vercel/Next la resolverá relativamente
   const ogImageUrl = product.image || '/hero-zamvaro.jpg';
 
   return {

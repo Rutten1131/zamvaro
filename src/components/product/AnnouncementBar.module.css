@@ -89,9 +89,8 @@
 }
 
 /* ─── Responsive ─── */
-@media (max-width: 576px) {
-  .badge { display: none; }
-  .extraText { display: none; }
-  .text  { font-size: 0.76rem; }
-  .cta   { font-size: 0.72rem; padding: 2px 10px; }
+@media (max-width: 768px) {
+  .container {
+    display: none !important;
+  }
 }

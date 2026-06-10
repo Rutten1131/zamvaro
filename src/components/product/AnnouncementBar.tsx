@@ -57,7 +57,7 @@ export default function AnnouncementBar({ whatsappNumber }: Props) {
   }, [visible]);
 
   return (
-    <>
+    <div className={styles.container}>
       {/* Espaciador estático que empuja el contenido hacia abajo */}
       <div
         style={{
@@ -84,6 +84,6 @@ export default function AnnouncementBar({ whatsappNumber }: Props) {
           <span className={styles.cta}>Pedir ahora&nbsp;→</span>
         </a>
       </div>
-    </>
+    </div>
   );
 }

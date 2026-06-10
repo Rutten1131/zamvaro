@@ -429,6 +429,7 @@ export default function AdminPage() {
     setLoading(true);
     const formDataUpload = new FormData();
     formDataUpload.append('file', files[0]);
+    formDataUpload.append('productSlug', formData.slug || formData.name || 'general');
 
     try {
       const res = await fetch('/api/upload', {
@@ -460,6 +461,7 @@ export default function AdminPage() {
       for (let i = 0; i < files.length; i++) {
         const formDataUpload = new FormData();
         formDataUpload.append('file', files[i]);
+        formDataUpload.append('productSlug', formData.slug || formData.name || 'general');
         
         const res = await fetch('/api/upload', {
           method: 'POST',
@@ -491,6 +493,7 @@ export default function AdminPage() {
     try {
       const formDataUpload = new FormData();
       formDataUpload.append('file', file);
+      formDataUpload.append('productSlug', formData.slug || formData.name || 'general');
       const res = await fetch('/api/upload', { method: 'POST', body: formDataUpload });
       const data = await res.json();
       if (data.success) {
@@ -1223,12 +1226,82 @@ export default function AdminPage() {
                       Fotos cargadas ({formData.images.length}) — La primera es la portada del catálogo:
                     </p>
                     <div className={styles.imageGallery} style={{ flexWrap: 'wrap', gap: '12px' }}>
-                      {formData.images.map((img, idx) => (
-                        <div key={idx} className={styles.galleryThumbContainer} style={{ position: 'relative' }}>
+                       {formData.images.map((img, idx) => (
+                        <div
+                          key={idx}
+                          className={styles.galleryThumbContainer}
+                          style={{ position: 'relative', cursor: 'grab' }}
+                          draggable
+                          onDragStart={(e) => {
+                            e.dataTransfer.setData('text/plain', idx.toString());
+                          }}
+                          onDragOver={(e) => {
+                            e.preventDefault();
+                          }}
+                          onDrop={(e) => {
+                            e.preventDefault();
+                            const fromIdx = parseInt(e.dataTransfer.getData('text/plain'), 10);
+                            const toIdx = idx;
+                            if (isNaN(fromIdx) || fromIdx === toIdx) return;
+                            const newImages = [...formData.images];
+                            const [movedItem] = newImages.splice(fromIdx, 1);
+                            newImages.splice(toIdx, 0, movedItem);
+                            setFormData((prev) => ({
+                              ...prev,
+                              images: newImages,
+                              image: newImages[0] || '',
+                            }));
+                          }}
+                        >
                           <img src={img} alt={`Foto ${idx + 1}`} className={styles.galleryThumb} style={{ border: idx === 0 ? '3px solid var(--color-primary)' : '1px solid rgba(0,0,0,0.1)', borderRadius: '8px' }} />
                           {idx === 0 && (
                             <span style={{ position: 'absolute', bottom: '2px', left: '2px', right: '2px', background: 'var(--color-primary)', color: 'white', fontSize: '9px', textAlign: 'center', borderRadius: '3px', padding: '1px 2px', fontWeight: 700 }}>PORTADA</span>
                           )}
+                          
+                          {/* Navigation buttons to move left/right */}
+                          <div style={{ position: 'absolute', top: '2px', left: '2px', display: 'flex', gap: '2px', zIndex: 10 }}>
+                            {idx > 0 && (
+                              <button
+                                type="button"
+                                style={{ background: 'rgba(0,0,0,0.7)', color: 'white', border: 'none', borderRadius: '4px', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', cursor: 'pointer', fontWeight: 'bold' }}
+                                onClick={() => {
+                                  const newImages = [...formData.images];
+                                  const temp = newImages[idx];
+                                  newImages[idx] = newImages[idx - 1];
+                                  newImages[idx - 1] = temp;
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    images: newImages,
+                                    image: newImages[0] || '',
+                                  }));
+                                }}
+                                title="Mover a la izquierda"
+                              >
+                                ◀
+                              </button>
+                            )}
+                            {idx < formData.images.length - 1 && (
+                              <button
+                                type="button"
+                                style={{ background: 'rgba(0,0,0,0.7)', color: 'white', border: 'none', borderRadius: '4px', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', cursor: 'pointer', fontWeight: 'bold' }}
+                                onClick={() => {
+                                  const newImages = [...formData.images];
+                                  const temp = newImages[idx];
+                                  newImages[idx] = newImages[idx + 1];
+                                  newImages[idx + 1] = temp;
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    images: newImages,
+                                    image: newImages[0] || '',
+                                  }));
+                                }}
+                                title="Mover a la derecha"
+                              >
+                                ▶
+                              </button>
+                            )}
+                          </div>
+
                           <button
                             type="button"
                             className={styles.removeThumb}
