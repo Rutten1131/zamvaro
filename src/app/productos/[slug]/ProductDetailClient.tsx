@@ -100,6 +100,13 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
               'https://connect.facebook.net/en_US/fbevents.js');
               fbq('init', '${product.facebookPixelId}');
               fbq('track', 'PageView');
+              fbq('track', 'ViewContent', {
+                content_name: '${(product.name || '').replace(/'/g, "\\'")}',
+                content_ids: ['${product.id}'],
+                content_type: 'product',
+                value: ${parseFloat((product.price || '0').toString().replace(/[^0-9.]/g, '')) || 0},
+                currency: 'USD'
+              });
             `,
           }}
         />

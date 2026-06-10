@@ -21,6 +21,18 @@ export default function ProductHero({ product }: ProductHeroProps) {
   const openCheckout = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsCheckoutOpen(true);
+    // Evento InitiateCheckout — igual que Shopify
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      const price = parseFloat((product.price || '0').toString().replace(/[^0-9.]/g, '')) || 0;
+      (window as any).fbq('track', 'InitiateCheckout', {
+        content_name: product.name,
+        content_ids: [String(product.id)],
+        content_type: 'product',
+        value: price,
+        currency: 'USD',
+        num_items: 1,
+      });
+    }
   };
 
   const timelineDates = (() => {
