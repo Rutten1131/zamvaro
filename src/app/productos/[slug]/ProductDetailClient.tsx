@@ -18,6 +18,9 @@ import AnnouncementBar from '@/components/product/AnnouncementBar';
 import OtherProductsSlider from '@/components/product/OtherProductsSlider';
 import SalesPopWidget from '@/components/product/SalesPopWidget';
 
+import { useEffect } from 'react';
+import * as fpixel from '@/lib/fpixel';
+
 interface ProductDetailClientProps {
   product: any;
 }
@@ -79,6 +82,33 @@ function buildColorStyle(primaryColor: string): string {
 export default function ProductDetailClient({ product }: ProductDetailClientProps) {
   const primaryColor: string = product.primaryColor || '#9B046F';
   const colorStyle = buildColorStyle(primaryColor);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    // 1. Capturar fbclid de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const fbclid = urlParams.get('fbclid');
+
+    if (fbclid) {
+      const creationTime = Date.now();
+      const fbcValue = `fb.1.${creationTime}.${fbclid}`;
+
+      // Configurar cookie _fbc
+      fpixel.setCookie('_fbc', fbcValue, 90);
+
+      // Guardar en sessionStorage para respaldo
+      sessionStorage.setItem('fbclid', fbclid);
+      sessionStorage.setItem('_fbc', fbcValue);
+    }
+
+    // 2. Guardar respaldo de _fbp en sessionStorage si ya existe
+    const existingFbp = fpixel.getCookie('_fbp');
+    if (existingFbp) {
+      sessionStorage.setItem('_fbp', existingFbp);
+    }
+  }, []);
+
 
   return (
     <>

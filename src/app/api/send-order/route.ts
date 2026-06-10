@@ -7,7 +7,24 @@ function sha256(data: string): string {
   return crypto.createHash('sha256').update(data.trim().toLowerCase()).digest('hex');
 }
 
-async function sendMetaCAPIEvent(product: any, formData: any, totalPrice: number, reqHeaders: Headers) {
+function getCookieFromHeaders(headers: Headers, name: string): string {
+  const cookieHeader = headers.get('cookie') || '';
+  const cookies = cookieHeader.split(';').map(c => c.trim());
+  const target = cookies.find(c => c.startsWith(`${name}=`));
+  if (target) {
+    return target.substring(name.length + 1);
+  }
+  return '';
+}
+
+async function sendMetaCAPIEvent(
+  product: any, 
+  formData: any, 
+  totalPrice: number, 
+  reqHeaders: Headers,
+  fbTracking?: any,
+  eventId?: string
+) {
   // Usa el píxel específico del producto si está configurado, sino el global
   const pixelId = product.facebookPixelId || process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID;
   const accessToken = process.env.META_ACCESS_TOKEN;
@@ -35,13 +52,23 @@ async function sendMetaCAPIEvent(product: any, formData: any, totalPrice: number
     const userAgent = reqHeaders.get('user-agent') || '';
     const ipAddress = reqHeaders.get('x-forwarded-for') || reqHeaders.get('x-real-ip') || '';
 
+    // Obtener fbp y fbc desde los parámetros del cliente o de los headers como fallback
+    const fbp = fbTracking?.fbp || getCookieFromHeaders(reqHeaders, '_fbp') || '';
+    let fbc = fbTracking?.fbc || getCookieFromHeaders(reqHeaders, '_fbc') || '';
+    const fbclid = fbTracking?.fbclid || '';
+
+    if (!fbc && fbclid) {
+      fbc = `fb.1.${Date.now()}.${fbclid}`;
+    }
+
     const eventData: any = {
       data: [
         {
           event_name: 'Purchase',
           event_time: Math.floor(Date.now() / 1000),
+          event_id: eventId || undefined,
           action_source: 'website',
-          event_source_url: 'https://zambaro.com', // fallback domain
+          event_source_url: 'https://www.zamvaro.com',
           user_data: {
             fn: [sha256(firstName)],
             ln: lastName ? [sha256(lastName)] : [],
@@ -51,6 +78,8 @@ async function sendMetaCAPIEvent(product: any, formData: any, totalPrice: number
             country: [sha256('ec')],
             client_ip_address: ipAddress || undefined,
             client_user_agent: userAgent || undefined,
+            fbp: fbp || undefined,
+            fbc: fbc || undefined,
           },
           custom_data: {
             currency: 'USD',
@@ -66,7 +95,6 @@ async function sendMetaCAPIEvent(product: any, formData: any, totalPrice: number
     if (process.env.META_TEST_EVENT_CODE) {
       eventData.test_event_code = process.env.META_TEST_EVENT_CODE;
     }
-
 
     const url = `https://graph.facebook.com/v19.0/${pixelId}/events?access_token=${accessToken}`;
     const response = await fetch(url, {
@@ -90,7 +118,7 @@ async function sendMetaCAPIEvent(product: any, formData: any, totalPrice: number
 
 export async function POST(req: Request) {
   try {
-    const { product, formData, totalPrice, quantity, offer } = await req.json();
+    const { product, formData, totalPrice, quantity, offer, fbTracking, eventId } = await req.json();
 
     if (!formData || !product) {
       return NextResponse.json({ error: 'Datos incompletos.' }, { status: 400 });
@@ -190,7 +218,7 @@ export async function POST(req: Request) {
     await transporter.sendMail(mailOptions);
 
     // Enviar evento de compra a la API de Conversiones de Meta (CAPI) en segundo plano
-    await sendMetaCAPIEvent(product, formData, totalPrice, req.headers);
+    await sendMetaCAPIEvent(product, formData, totalPrice, req.headers, fbTracking, eventId);
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
@@ -198,3 +226,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: error.message || 'Error al enviar el correo.' }, { status: 500 });
   }
 }
+

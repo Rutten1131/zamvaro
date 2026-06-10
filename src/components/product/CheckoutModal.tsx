@@ -118,7 +118,20 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
     setLoading(true);
 
     try {
-      // Enviar los datos del pedido al servidor de Next.js para despachar el correo por SMTP
+      // Generar un ID único para la deduplicación del evento Purchase
+      const eventId = 'pur_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now();
+
+      // Capturar cookies de seguimiento de Facebook
+      const fbp = fpixel.getCookie('_fbp') || (typeof window !== 'undefined' ? sessionStorage.getItem('_fbp') : '') || '';
+      let fbc = fpixel.getCookie('_fbc') || (typeof window !== 'undefined' ? sessionStorage.getItem('_fbc') : '') || '';
+      const fbclid = (typeof window !== 'undefined' ? sessionStorage.getItem('fbclid') : '') || '';
+
+      // Si tenemos el fbclid pero no la cookie _fbc, la construimos
+      if (!fbc && fbclid) {
+        fbc = `fb.1.${Date.now()}.${fbclid}`;
+      }
+
+      // Enviar los datos del pedido al servidor de Next.js para despachar el correo por SMTP y disparar CAPI
       const response = await fetch('/api/send-order', {
         method: 'POST',
         headers: {
@@ -130,6 +143,12 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
           totalPrice,
           quantity: totalQuantity,
           offer: activeOffer.title,
+          fbTracking: {
+            fbp,
+            fbc,
+            fbclid
+          },
+          eventId
         }),
       });
 
@@ -137,13 +156,15 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
         throw new Error('Error al enviar los datos del pedido.');
       }
 
-      // Registrar la compra exitosa (Purchase) en Meta Pixel
+      // Registrar la compra exitosa (Purchase) en Meta Pixel con deduplicación (eventID)
       fpixel.event('Purchase', {
         content_name: product.name,
         content_ids: [product.id.toString()],
         content_type: 'product',
         value: totalPrice,
         currency: 'USD',
+      }, {
+        eventID: eventId
       });
 
       alert('¡Tu pedido fue registrado con éxito! 🎉 Nos comunicaremos contigo pronto para confirmar tu entrega. Gracias por confiar en Zamvaro Ecuador.');
