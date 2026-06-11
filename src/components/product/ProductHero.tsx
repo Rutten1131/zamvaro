@@ -138,23 +138,28 @@ export default function ProductHero({ product }: ProductHeroProps) {
               )}
             </div>
             {images.length > 1 && (
-              <div className={styles.thumbs}>
-                {images.map((img, i) => (
-                  <button
-                    key={i}
-                    className={`${styles.thumb} ${i === currentImg ? styles.thumbActive : ''}`}
-                    onClick={() => setCurrentImg(i)}
-                  >
-                    <Image
-                      src={img}
-                      alt={`Vista ${i + 1}`}
-                      width={80}
-                      height={80}
-                      className={styles.thumbImg}
-                      unoptimized={img?.toLowerCase().includes('.gif')}
-                    />
-                  </button>
-                ))}
+              <div className={styles.thumbsContainer}>
+                <div className={styles.thumbs}>
+                  {images.map((img, i) => (
+                    <button
+                      key={i}
+                      className={`${styles.thumb} ${i === currentImg ? styles.thumbActive : ''}`}
+                      onClick={() => setCurrentImg(i)}
+                    >
+                      <Image
+                        src={img}
+                        alt={`Vista ${i + 1}`}
+                        width={80}
+                        height={80}
+                        className={styles.thumbImg}
+                        unoptimized={img?.toLowerCase().includes('.gif')}
+                      />
+                    </button>
+                  ))}
+                </div>
+                <div className={styles.scrollIndicator}>
+                  <ChevronRight size={16} />
+                </div>
               </div>
             )}
           </div>
