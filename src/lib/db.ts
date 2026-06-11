@@ -76,6 +76,7 @@ async function _runInitDatabase() {
         problemTagline VARCHAR(255),
         problemHeadline VARCHAR(255),
         facebookPixelId VARCHAR(50) DEFAULT NULL,
+        template VARCHAR(50) DEFAULT 'basica',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
@@ -128,6 +129,7 @@ async function _runInitDatabase() {
       { name: 'problemTagline', def: 'VARCHAR(255)' },
       { name: 'problemHeadline', def: 'VARCHAR(255)' },
       { name: 'facebookPixelId', def: 'VARCHAR(50) DEFAULT NULL' },
+      { name: 'template', def: "VARCHAR(50) DEFAULT 'basica'" },
     ];
     for (const col of newColumns) {
       try {

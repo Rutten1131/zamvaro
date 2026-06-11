@@ -48,6 +48,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
       problemTagline,
       problemHeadline,
       facebookPixelId,
+      template,
     } = body;
 
     if (!name || !slug) {
@@ -87,7 +88,8 @@ export async function PUT(request: Request, { params }: RouteParams) {
         problemFactors = ?,
         problemTagline = ?,
         problemHeadline = ?,
-        facebookPixelId = ?
+        facebookPixelId = ?,
+        template = ?
       WHERE id = ?
     `;
 
@@ -124,6 +126,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
       problemTagline || null,
       problemHeadline || null,
       facebookPixelId || null,
+      template || 'basica',
       id,
     ]);
 

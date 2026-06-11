@@ -1,6 +1,14 @@
 import type { Metadata } from 'next';
+import { Poppins } from 'next/font/google';
 import './globals.css';
 import FacebookPixel from '@/components/FacebookPixel';
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
+  display: 'swap',
+  variable: '--font-body',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.zamvaro.com'),
@@ -42,8 +50,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es">
-      <body>
+    <html lang="es" className={poppins.variable}>
+      <body className={poppins.className}>
         <FacebookPixel />
         {children}
       </body>

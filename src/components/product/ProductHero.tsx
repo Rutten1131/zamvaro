@@ -100,23 +100,35 @@ export default function ProductHero({ product }: ProductHeroProps) {
           <div className={styles.gallery}>
             <div className={styles.mainImageWrap}>
               {images.map((img, idx) => (
-                <Image
-                  key={idx}
-                  src={img}
-                  alt={`${product.name} - Vista ${idx + 1}`}
-                  fill
-                  className={styles.mainImage}
-                  style={{
-                    opacity: idx === currentImg ? 1 : 0,
-                    pointerEvents: idx === currentImg ? 'auto' : 'none',
-                    transition: 'opacity 0.25s ease-in-out',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                  }}
-                  priority={idx === 0}
-                  unoptimized={img?.toLowerCase().includes('.gif')}
-                />
+                idx === currentImg && (
+                  img.toLowerCase().endsWith('.mp4') || img.toLowerCase().endsWith('.webm') ? (
+                    <video
+                      key={idx}
+                      src={img}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className={styles.mainImage}
+                      style={{ objectFit: 'cover', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}
+                    />
+                  ) : (
+                    <Image
+                      key={idx}
+                      src={img}
+                      alt={`${product.name} - Vista ${idx + 1}`}
+                      fill
+                      className={styles.mainImage}
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                      }}
+                      priority={idx === 0}
+                      unoptimized={img?.toLowerCase().includes('.gif')}
+                    />
+                  )
+                )
               ))}
               {images.length > 1 && (
                 <>
@@ -146,14 +158,24 @@ export default function ProductHero({ product }: ProductHeroProps) {
                       className={`${styles.thumb} ${i === currentImg ? styles.thumbActive : ''}`}
                       onClick={() => setCurrentImg(i)}
                     >
-                      <Image
-                        src={img}
-                        alt={`Vista ${i + 1}`}
-                        width={80}
-                        height={80}
-                        className={styles.thumbImg}
-                        unoptimized={img?.toLowerCase().includes('.gif')}
-                      />
+                      {img.toLowerCase().endsWith('.mp4') || img.toLowerCase().endsWith('.webm') ? (
+                        <video
+                          src={img}
+                          muted
+                          playsInline
+                          className={styles.thumbImg}
+                          style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                        />
+                      ) : (
+                        <Image
+                          src={img}
+                          alt={`Vista ${i + 1}`}
+                          width={80}
+                          height={80}
+                          className={styles.thumbImg}
+                          unoptimized={img?.toLowerCase().includes('.gif')}
+                        />
+                      )}
                     </button>
                   ))}
                 </div>
@@ -165,12 +187,7 @@ export default function ProductHero({ product }: ProductHeroProps) {
           </div>
 
           {/* COLUMNA DERECHA: Estructura de información exacta al referente */}
-          <motion.div
-            className={styles.info}
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-          >
+          <div className={styles.info}>
             {/* 1. Estrellas de Reseña en la parte superior */}
             <div className={`${styles.starsRow} ${styles.desktopOnly}`}>
               <div className={styles.starIcons}>
@@ -277,7 +294,7 @@ export default function ProductHero({ product }: ProductHeroProps) {
                 Envío GRATIS y pago Contra Entrega en toda Ecuador. ¡Tu alivio llega a tu puerta!
               </AccordionItem>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 

@@ -26,13 +26,25 @@ export default function ProductProblem({ product }: Props) {
         >
           {/* Imagen con overlay de texto */}
           <div className={styles.imageWrap}>
-            <Image
-              src={imageSrc}
-              alt={product.name}
-              fill
-              className={styles.image}
-              sizes="(max-width: 900px) 100vw, 50vw"
-            />
+            {imageSrc.toLowerCase().endsWith('.mp4') || imageSrc.toLowerCase().endsWith('.webm') ? (
+              <video
+                src={imageSrc}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className={styles.image}
+                style={{ objectFit: 'cover', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}
+              />
+            ) : (
+              <Image
+                src={imageSrc}
+                alt={product.name}
+                fill
+                className={styles.image}
+                sizes="(max-width: 900px) 100vw, 50vw"
+              />
+            )}
           </div>
 
           {/* Texto del problema */}

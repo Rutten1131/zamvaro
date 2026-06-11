@@ -65,13 +65,25 @@ export default function ProductHowTo({ product }: Props) {
           >
             <div className={styles.centerCard}>
               <div className={styles.centerImageWrap}>
-                <Image
-                  src={imageSrc}
-                  alt={product.name}
-                  fill
-                  className={styles.centerImage}
-                  sizes="(max-width: 900px) 90vw, 340px"
-                />
+                {imageSrc.toLowerCase().endsWith('.mp4') || imageSrc.toLowerCase().endsWith('.webm') ? (
+                  <video
+                    src={imageSrc}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className={styles.centerImage}
+                    style={{ objectFit: 'cover', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}
+                  />
+                ) : (
+                  <Image
+                    src={imageSrc}
+                    alt={product.name}
+                    fill
+                    className={styles.centerImage}
+                    sizes="(max-width: 900px) 90vw, 340px"
+                  />
+                )}
               </div>
               {testimonial && (
                 <div className={styles.testimonialOverlay}>

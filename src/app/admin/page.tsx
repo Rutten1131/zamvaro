@@ -54,6 +54,7 @@ const emptyProduct = {
   problemTagline: '',
   problemHeadline: '',
   facebookPixelId: '',
+  template: 'basica',
 };
 
 
@@ -775,32 +776,45 @@ export default function AdminPage() {
                         </span>
                       </td>
                       <td>
-                        <div className={styles.actions}>
-                          <a
-                            href={`/productos/${product.slug}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={styles.iconBtn}
-                            title="Ver en la web"
-                          >
-                            <Eye size={16} />
-                          </a>
-                          
-                          <button
-                            className={styles.iconBtn}
-                            onClick={() => handleEditClick(product)}
-                            title="Editar"
-                          >
-                            <Edit2 size={16} />
-                          </button>
-                          
-                          <button
-                            className={`${styles.iconBtn} ${styles.iconBtnDanger}`}
-                            onClick={() => handleDeleteClick(product.id)}
-                            title="Eliminar"
-                          >
-                            <Trash2 size={16} />
-                          </button>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', minWidth: '160px' }}>
+                          {/* Fila 1: Botones de Vista */}
+                          <div style={{ display: 'flex', gap: '6px' }}>
+                            <a
+                              href={`/productos/${product.slug}?template=basica`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title="Ver Plantilla Básica"
+                              style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '5px 10px', borderRadius: '8px', border: '1px solid rgba(139,92,246,0.3)', background: 'rgba(139,92,246,0.08)', color: '#7c3aed', fontSize: '11px', fontWeight: 700, textDecoration: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}
+                            >
+                              <Eye size={12} /> Básica
+                            </a>
+                            <a
+                              href={`/productos/${product.slug}?template=ganadora`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title="Ver Plantilla Ganadora"
+                              style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '5px 10px', borderRadius: '8px', border: '1px solid rgba(217,119,6,0.3)', background: 'rgba(217,119,6,0.08)', color: '#b45309', fontSize: '11px', fontWeight: 700, textDecoration: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}
+                            >
+                              <Eye size={12} /> Ganadora
+                            </a>
+                          </div>
+                          {/* Fila 2: Botones de Acción */}
+                          <div style={{ display: 'flex', gap: '6px' }}>
+                            <button
+                              onClick={() => handleEditClick(product)}
+                              title="Editar producto"
+                              style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '5px 10px', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.1)', background: 'white', color: '#374151', fontSize: '11px', fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}
+                            >
+                              <Edit2 size={12} /> Editar
+                            </button>
+                            <button
+                              onClick={() => handleDeleteClick(product.id)}
+                              title="Eliminar producto"
+                              style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '5px 10px', borderRadius: '8px', border: '1px solid rgba(239,68,68,0.2)', background: 'rgba(239,68,68,0.06)', color: '#ef4444', fontSize: '11px', fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}
+                            >
+                              <Trash2 size={12} /> Eliminar
+                            </button>
+                          </div>
                         </div>
                       </td>
                     </tr>
@@ -821,7 +835,58 @@ export default function AdminPage() {
         {/* VISTA: Editor / Creador de Producto */}
         {activeTab === 'edit' && (
           <form onSubmit={handleSaveProduct}>
-            
+
+            {/* === SELECTOR DE PLANTILLA PROMINENTE (al inicio) === */}
+            <div style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.08), rgba(236,72,153,0.06))', border: '2px solid rgba(139,92,246,0.2)', borderRadius: '20px', padding: '24px', marginBottom: '24px' }}>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--color-primary)', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                📄 Elegir Tipo de Plantilla
+              </h3>
+              <p style={{ fontSize: '0.82rem', color: 'var(--color-text-light)', marginBottom: '18px' }}>
+                Selecciona cómo se verá la página pública de este producto. Puedes cambiarlo en cualquier momento.
+              </p>
+              <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
+                {/* Card Básica */}
+                <button
+                  type="button"
+                  onClick={() => setFormData((prev) => ({ ...prev, template: 'basica' }))}
+                  style={{
+                    flex: 1, minWidth: '220px', padding: '18px 20px', borderRadius: '16px', cursor: 'pointer',
+                    border: (formData.template || 'basica') === 'basica' ? '2.5px solid #7c3aed' : '2px solid rgba(0,0,0,0.1)',
+                    background: (formData.template || 'basica') === 'basica' ? 'rgba(139,92,246,0.10)' : 'white',
+                    boxShadow: (formData.template || 'basica') === 'basica' ? '0 0 0 4px rgba(139,92,246,0.12)' : 'none',
+                    transition: 'all 0.2s', textAlign: 'left'
+                  }}
+                >
+                  <div style={{ fontSize: '1.8rem', marginBottom: '6px' }}>🏠</div>
+                  <div style={{ fontWeight: 800, fontSize: '1rem', color: (formData.template || 'basica') === 'basica' ? '#7c3aed' : '#111', marginBottom: '4px' }}>Plantilla Básica</div>
+                  <div style={{ fontSize: '0.78rem', color: '#666', lineHeight: 1.4 }}>Página completa con secciones: Hero, Problema, Características, Cómo usar, Comparativa, Testimonios, FAQ y botón WhatsApp.</div>
+                  {(formData.template || 'basica') === 'basica' && (
+                    <div style={{ marginTop: '10px', background: '#7c3aed', color: 'white', padding: '4px 10px', borderRadius: '20px', fontSize: '0.72rem', fontWeight: 700, display: 'inline-block' }}>✓ SELECCIONADA</div>
+                  )}
+                </button>
+
+                {/* Card Ganadora */}
+                <button
+                  type="button"
+                  onClick={() => setFormData((prev) => ({ ...prev, template: 'ganadora' }))}
+                  style={{
+                    flex: 1, minWidth: '220px', padding: '18px 20px', borderRadius: '16px', cursor: 'pointer',
+                    border: formData.template === 'ganadora' ? '2.5px solid #d97706' : '2px solid rgba(0,0,0,0.1)',
+                    background: formData.template === 'ganadora' ? 'rgba(217,119,6,0.09)' : 'white',
+                    boxShadow: formData.template === 'ganadora' ? '0 0 0 4px rgba(217,119,6,0.12)' : 'none',
+                    transition: 'all 0.2s', textAlign: 'left'
+                  }}
+                >
+                  <div style={{ fontSize: '1.8rem', marginBottom: '6px' }}>🏆</div>
+                  <div style={{ fontWeight: 800, fontSize: '1rem', color: formData.template === 'ganadora' ? '#d97706' : '#111', marginBottom: '4px' }}>Plantilla Ganadora</div>
+                  <div style={{ fontSize: '0.78rem', color: '#666', lineHeight: 1.4 }}>Landing page directa de alta conversión con formulario de pedido COD integrado (sin carrito, pago contraentrega).</div>
+                  {formData.template === 'ganadora' && (
+                    <div style={{ marginTop: '10px', background: '#d97706', color: 'white', padding: '4px 10px', borderRadius: '20px', fontSize: '0.72rem', fontWeight: 700, display: 'inline-block' }}>✓ SELECCIONADA</div>
+                  )}
+                </button>
+              </div>
+            </div>
+
             {/* Sección de IA */}
             <div className={styles.aiSection}>
               <h3 className={styles.aiTitle}>
@@ -962,6 +1027,8 @@ export default function AdminPage() {
                   <small style={{ color: '#888', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>Deja en blanco para usar el Pixel global del sitio. Si ingresas un ID, solo se activará en la página de este producto.</small>
                 </div>
 
+
+
                 <div className={styles.inputGroup} style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '30px' }}>
                   <input
                     type="checkbox"
@@ -1044,114 +1111,118 @@ export default function AdminPage() {
               </div>
 
               {/* ===================== IMÁGENES POR SECCIÓN ===================== */}
-              <h2 className={styles.formSectionTitle}>
-                🖼️ Imágenes por Sección de la Página
-              </h2>
-              <p style={{ fontSize: '0.85rem', color: 'var(--color-text-light)', marginBottom: '20px', lineHeight: 1.6 }}>
-                Cada sección de la página del producto tiene su propia imagen. Aquí puedes configurarlas de forma independiente.
-              </p>
+              {formData.template === 'basica' && (
+                <>
+                  <h2 className={styles.formSectionTitle}>
+                    🖼️ Imágenes por Sección de la Página
+                  </h2>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--color-text-light)', marginBottom: '20px', lineHeight: 1.6 }}>
+                    Cada sección de la página del producto tiene su propia imagen. Aquí puedes configurarlas de forma independiente.
+                  </p>
 
-              {/* --- SECCIÓN 1: PROBLEMA --- */}
-              <div style={{ background: 'rgba(255,100,0,0.04)', padding: '20px', borderRadius: '16px', border: '2px solid rgba(255,100,0,0.15)', marginBottom: '20px' }}>
-                <label className={styles.label} style={{ color: '#e05a00', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                  🔥 Sección 1 — PROBLEMA
-                </label>
-                <p style={{ fontSize: '0.8rem', color: 'var(--color-text-light)', marginBottom: '14px' }}>
-                  Aparece en la sección <strong>"¿Cansada de perder 40 minutos...?"</strong> — es la imagen de fondo/banner de esa sección.
-                </p>
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap', marginBottom: '10px' }}>
-                  <label style={{ cursor: 'pointer', background: 'rgba(255,100,0,0.12)', color: '#c04a00', border: '1px solid rgba(255,100,0,0.3)', padding: '8px 16px', borderRadius: '8px', fontWeight: 600, fontSize: '0.85rem' }}>
-                    📁 Subir imagen
-                    <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleSectionImageUpload(e, 'imageProblem')} />
-                  </label>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--color-text-light)' }}>o pega una URL:</span>
-                  <input
-                    type="text"
-                    className={styles.input}
-                    style={{ flex: 1, minWidth: '180px' }}
-                    placeholder="https://ejemplo.com/imagen-problema.jpg"
-                    value={formData.imageProblem || ''}
-                    onChange={(e) => setFormData((prev) => ({ ...prev, imageProblem: e.target.value }))}
-                  />
-                  {formData.imageProblem && (
-                    <button type="button" onClick={() => setFormData((prev) => ({ ...prev, imageProblem: '' }))} style={{ background: '#ff4444', color: 'white', border: 'none', borderRadius: '6px', padding: '6px 10px', cursor: 'pointer', fontWeight: 700 }}>✕ Quitar</button>
-                  )}
-                </div>
-                {formData.imageProblem && (
-                  <div style={{ marginTop: '10px' }}>
-                    <img src={formData.imageProblem} alt="Preview Problema" style={{ maxHeight: '120px', borderRadius: '10px', border: '2px solid rgba(255,100,0,0.3)', objectFit: 'cover' }} />
-                    <p style={{ fontSize: '0.7rem', color: 'var(--color-text-light)', marginTop: '4px' }}>✅ Imagen cargada para la sección Problema</p>
+                  {/* --- SECCIÓN 1: PROBLEMA --- */}
+                  <div style={{ background: 'rgba(255,100,0,0.04)', padding: '20px', borderRadius: '16px', border: '2px solid rgba(255,100,0,0.15)', marginBottom: '20px' }}>
+                    <label className={styles.label} style={{ color: '#e05a00', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                      🔥 Sección 1 — PROBLEMA
+                    </label>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--color-text-light)', marginBottom: '14px' }}>
+                      Aparece en la sección <strong>"¿Cansada de perder 40 minutos...?"</strong> — es la imagen de fondo/banner de esa sección.
+                    </p>
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap', marginBottom: '10px' }}>
+                      <label style={{ cursor: 'pointer', background: 'rgba(255,100,0,0.12)', color: '#c04a00', border: '1px solid rgba(255,100,0,0.3)', padding: '8px 16px', borderRadius: '8px', fontWeight: 600, fontSize: '0.85rem' }}>
+                        📁 Subir imagen
+                        <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleSectionImageUpload(e, 'imageProblem')} />
+                      </label>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--color-text-light)' }}>o pega una URL:</span>
+                      <input
+                        type="text"
+                        className={styles.input}
+                        style={{ flex: 1, minWidth: '180px' }}
+                        placeholder="https://ejemplo.com/imagen-problema.jpg"
+                        value={formData.imageProblem || ''}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, imageProblem: e.target.value }))}
+                      />
+                      {formData.imageProblem && (
+                        <button type="button" onClick={() => setFormData((prev) => ({ ...prev, imageProblem: '' }))} style={{ background: '#ff4444', color: 'white', border: 'none', borderRadius: '6px', padding: '6px 10px', cursor: 'pointer', fontWeight: 700 }}>✕ Quitar</button>
+                      )}
+                    </div>
+                    {formData.imageProblem && (
+                      <div style={{ marginTop: '10px' }}>
+                        <img src={formData.imageProblem} alt="Preview Problema" style={{ maxHeight: '120px', borderRadius: '10px', border: '2px solid rgba(255,100,0,0.3)', objectFit: 'cover' }} />
+                        <p style={{ fontSize: '0.7rem', color: 'var(--color-text-light)', marginTop: '4px' }}>✅ Imagen cargada para la sección Problema</p>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
 
-              {/* --- SECCIÓN 2: FEATURES / TECNOLOGÍA --- */}
-              <div style={{ background: 'rgba(100,0,255,0.04)', padding: '20px', borderRadius: '16px', border: '2px solid rgba(100,0,255,0.15)', marginBottom: '20px' }}>
-                <label className={styles.label} style={{ color: '#5c00cc', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                  ✨ Sección 2 — TECNOLOGÍA / FEATURES
-                </label>
-                <p style={{ fontSize: '0.8rem', color: 'var(--color-text-light)', marginBottom: '14px' }}>
-                  Aparece en la sección <strong>"Descubre el poder de una tecnología única"</strong> — imagen o banner de esa área.
-                </p>
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap', marginBottom: '10px' }}>
-                  <label style={{ cursor: 'pointer', background: 'rgba(100,0,255,0.1)', color: '#5c00cc', border: '1px solid rgba(100,0,255,0.25)', padding: '8px 16px', borderRadius: '8px', fontWeight: 600, fontSize: '0.85rem' }}>
-                    📁 Subir imagen
-                    <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleSectionImageUpload(e, 'imageFeatures')} />
-                  </label>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--color-text-light)' }}>o pega una URL:</span>
-                  <input
-                    type="text"
-                    className={styles.input}
-                    style={{ flex: 1, minWidth: '180px' }}
-                    placeholder="https://ejemplo.com/imagen-features.jpg"
-                    value={formData.imageFeatures || ''}
-                    onChange={(e) => setFormData((prev) => ({ ...prev, imageFeatures: e.target.value }))}
-                  />
-                  {formData.imageFeatures && (
-                    <button type="button" onClick={() => setFormData((prev) => ({ ...prev, imageFeatures: '' }))} style={{ background: '#ff4444', color: 'white', border: 'none', borderRadius: '6px', padding: '6px 10px', cursor: 'pointer', fontWeight: 700 }}>✕ Quitar</button>
-                  )}
-                </div>
-                {formData.imageFeatures && (
-                  <div style={{ marginTop: '10px' }}>
-                    <img src={formData.imageFeatures} alt="Preview Features" style={{ maxHeight: '120px', borderRadius: '10px', border: '2px solid rgba(100,0,255,0.3)', objectFit: 'cover' }} />
-                    <p style={{ fontSize: '0.7rem', color: 'var(--color-text-light)', marginTop: '4px' }}>✅ Imagen cargada para la sección Tecnología</p>
+                  {/* --- SECCIÓN 2: FEATURES / TECNOLOGÍA --- */}
+                  <div style={{ background: 'rgba(100,0,255,0.04)', padding: '20px', borderRadius: '16px', border: '2px solid rgba(100,0,255,0.15)', marginBottom: '20px' }}>
+                    <label className={styles.label} style={{ color: '#5c00cc', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                      ✨ Sección 2 — TECNOLOGÍA / FEATURES
+                    </label>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--color-text-light)', marginBottom: '14px' }}>
+                      Aparece en la sección <strong>"Descubre el poder de una tecnología única"</strong> — imagen o banner de esa área.
+                    </p>
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap', marginBottom: '10px' }}>
+                      <label style={{ cursor: 'pointer', background: 'rgba(100,0,255,0.1)', color: '#5c00cc', border: '1px solid rgba(100,0,255,0.25)', padding: '8px 16px', borderRadius: '8px', fontWeight: 600, fontSize: '0.85rem' }}>
+                        📁 Subir imagen
+                        <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleSectionImageUpload(e, 'imageFeatures')} />
+                      </label>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--color-text-light)' }}>o pega una URL:</span>
+                      <input
+                        type="text"
+                        className={styles.input}
+                        style={{ flex: 1, minWidth: '180px' }}
+                        placeholder="https://ejemplo.com/imagen-features.jpg"
+                        value={formData.imageFeatures || ''}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, imageFeatures: e.target.value }))}
+                      />
+                      {formData.imageFeatures && (
+                        <button type="button" onClick={() => setFormData((prev) => ({ ...prev, imageFeatures: '' }))} style={{ background: '#ff4444', color: 'white', border: 'none', borderRadius: '6px', padding: '6px 10px', cursor: 'pointer', fontWeight: 700 }}>✕ Quitar</button>
+                      )}
+                    </div>
+                    {formData.imageFeatures && (
+                      <div style={{ marginTop: '10px' }}>
+                        <img src={formData.imageFeatures} alt="Preview Features" style={{ maxHeight: '120px', borderRadius: '10px', border: '2px solid rgba(100,0,255,0.3)', objectFit: 'cover' }} />
+                        <p style={{ fontSize: '0.7rem', color: 'var(--color-text-light)', marginTop: '4px' }}>✅ Imagen cargada para la sección Tecnología</p>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
 
-              {/* --- SECCIÓN 3: CÓMO USAR --- */}
-              <div style={{ background: 'rgba(0,180,100,0.04)', padding: '20px', borderRadius: '16px', border: '2px solid rgba(0,180,100,0.2)', marginBottom: '24px' }}>
-                <label className={styles.label} style={{ color: '#007a42', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                  📋 Sección 3 — CÓMO USAR (3 Pasos)
-                </label>
-                <p style={{ fontSize: '0.8rem', color: 'var(--color-text-light)', marginBottom: '14px' }}>
-                  Aparece en la sección <strong>"Cómo usar en 3 pasos"</strong> — imagen ilustrativa de ese bloque.
-                </p>
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap', marginBottom: '10px' }}>
-                  <label style={{ cursor: 'pointer', background: 'rgba(0,180,100,0.1)', color: '#007a42', border: '1px solid rgba(0,180,100,0.3)', padding: '8px 16px', borderRadius: '8px', fontWeight: 600, fontSize: '0.85rem' }}>
-                    📁 Subir imagen
-                    <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleSectionImageUpload(e, 'imageHowTo')} />
-                  </label>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--color-text-light)' }}>o pega una URL:</span>
-                  <input
-                    type="text"
-                    className={styles.input}
-                    style={{ flex: 1, minWidth: '180px' }}
-                    placeholder="https://ejemplo.com/imagen-howto.jpg"
-                    value={formData.imageHowTo || ''}
-                    onChange={(e) => setFormData((prev) => ({ ...prev, imageHowTo: e.target.value }))}
-                  />
-                  {formData.imageHowTo && (
-                    <button type="button" onClick={() => setFormData((prev) => ({ ...prev, imageHowTo: '' }))} style={{ background: '#ff4444', color: 'white', border: 'none', borderRadius: '6px', padding: '6px 10px', cursor: 'pointer', fontWeight: 700 }}>✕ Quitar</button>
-                  )}
-                </div>
-                {formData.imageHowTo && (
-                  <div style={{ marginTop: '10px' }}>
-                    <img src={formData.imageHowTo} alt="Preview HowTo" style={{ maxHeight: '120px', borderRadius: '10px', border: '2px solid rgba(0,180,100,0.3)', objectFit: 'cover' }} />
-                    <p style={{ fontSize: '0.7rem', color: 'var(--color-text-light)', marginTop: '4px' }}>✅ Imagen cargada para la sección Cómo Usar</p>
+                  {/* --- SECCIÓN 3: CÓMO USAR --- */}
+                  <div style={{ background: 'rgba(0,180,100,0.04)', padding: '20px', borderRadius: '16px', border: '2px solid rgba(0,180,100,0.2)', marginBottom: '24px' }}>
+                    <label className={styles.label} style={{ color: '#007a42', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                      📋 Sección 3 — CÓMO USAR (3 Pasos)
+                    </label>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--color-text-light)', marginBottom: '14px' }}>
+                      Aparece en la sección <strong>"Cómo usar en 3 pasos"</strong> — imagen ilustrativa de ese bloque.
+                    </p>
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap', marginBottom: '10px' }}>
+                      <label style={{ cursor: 'pointer', background: 'rgba(0,180,100,0.1)', color: '#007a42', border: '1px solid rgba(0,180,100,0.3)', padding: '8px 16px', borderRadius: '8px', fontWeight: 600, fontSize: '0.85rem' }}>
+                        📁 Subir imagen
+                        <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleSectionImageUpload(e, 'imageHowTo')} />
+                      </label>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--color-text-light)' }}>o pega una URL:</span>
+                      <input
+                        type="text"
+                        className={styles.input}
+                        style={{ flex: 1, minWidth: '180px' }}
+                        placeholder="https://ejemplo.com/imagen-howto.jpg"
+                        value={formData.imageHowTo || ''}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, imageHowTo: e.target.value }))}
+                      />
+                      {formData.imageHowTo && (
+                        <button type="button" onClick={() => setFormData((prev) => ({ ...prev, imageHowTo: '' }))} style={{ background: '#ff4444', color: 'white', border: 'none', borderRadius: '6px', padding: '6px 10px', cursor: 'pointer', fontWeight: 700 }}>✕ Quitar</button>
+                      )}
+                    </div>
+                    {formData.imageHowTo && (
+                      <div style={{ marginTop: '10px' }}>
+                        <img src={formData.imageHowTo} alt="Preview HowTo" style={{ maxHeight: '120px', borderRadius: '10px', border: '2px solid rgba(0,180,100,0.3)', objectFit: 'cover' }} />
+                        <p style={{ fontSize: '0.7rem', color: 'var(--color-text-light)', marginTop: '4px' }}>✅ Imagen cargada para la sección Cómo Usar</p>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
+                </>
+              )}
 
               {/* Subida de Imágenes */}
               <h2 className={styles.formSectionTitle}>

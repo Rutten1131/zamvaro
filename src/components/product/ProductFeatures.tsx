@@ -106,13 +106,25 @@ export default function ProductFeatures({ product }: Props) {
                 <p className={styles.centerHeadline}>{problemHeadline}</p>
               </div>
               <div className={styles.centerImageWrap}>
-                <Image
-                  src={imageSrc}
-                  alt="Cepillo Secador 3 en 1"
-                  fill
-                  className={styles.centerImage}
-                  sizes="(max-width: 900px) 90vw, 340px"
-                />
+                {imageSrc.toLowerCase().endsWith('.mp4') || imageSrc.toLowerCase().endsWith('.webm') ? (
+                  <video
+                    src={imageSrc}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className={styles.centerImage}
+                    style={{ objectFit: 'cover', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}
+                  />
+                ) : (
+                  <Image
+                    src={imageSrc}
+                    alt="Cepillo Secador 3 en 1"
+                    fill
+                    className={styles.centerImage}
+                    sizes="(max-width: 900px) 90vw, 340px"
+                  />
+                )}
               </div>
               <div className={styles.factorsGrid}>
                 {problemFactors.map((f, i) => (

@@ -17,6 +17,9 @@ import StickyWhatsApp from '@/components/product/StickyWhatsApp';
 import AnnouncementBar from '@/components/product/AnnouncementBar';
 import OtherProductsSlider from '@/components/product/OtherProductsSlider';
 import SalesPopWidget from '@/components/product/SalesPopWidget';
+import ProductDetailGanadora from '@/components/product/ProductDetailGanadora';
+import LazySection from '@/components/LazySection';
+import { useSearchParams } from 'next/navigation';
 
 import { useEffect } from 'react';
 import * as fpixel from '@/lib/fpixel';
@@ -80,6 +83,10 @@ function buildColorStyle(primaryColor: string): string {
 }
 
 export default function ProductDetailClient({ product }: ProductDetailClientProps) {
+  const searchParams = useSearchParams();
+  const templateOverride = searchParams.get('template');
+  const activeTemplate = templateOverride || product.template || 'basica';
+
   const primaryColor: string = product.primaryColor || '#9B046F';
   const colorStyle = buildColorStyle(primaryColor);
 
@@ -122,7 +129,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             __html: `
               !function(f,b,e,v,n,t,s)
               {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+               n.callMethod.apply(n,arguments):n.queue.push(arguments)};
               if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
               n.queue=[];t=b.createElement(e);t.async=!0;
               t.src=v;s=b.getElementsByTagName(e)[0];
@@ -142,44 +149,70 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
         />
       )}
 
-      <Navbar isProductPage={true} whatsappNumber={product.whatsappNumber} />
-      {/* Barra de anuncio fija — desaparece al bajar */}
-      <AnnouncementBar whatsappNumber={product.whatsappNumber} />
-      <main style={{ background: 'var(--color-bg)' }}>
-        {/* 1. Hero Section (Images, Bullets, Buy CTA) */}
-        <ProductHero product={product} />
+      {activeTemplate === 'ganadora' ? (
+        <main style={{ background: '#ffffff', minHeight: '100vh' }}>
+          <ProductDetailGanadora product={product} />
+        </main>
+      ) : (
+        <>
+          <Navbar isProductPage={true} whatsappNumber={product.whatsappNumber} />
+          {/* Barra de anuncio fija — desaparece al bajar */}
+          <AnnouncementBar whatsappNumber={product.whatsappNumber} />
+          <main style={{ background: 'var(--color-bg)' }}>
+            {/* 1. Hero Section (Images, Bullets, Buy CTA) */}
+            <ProductHero product={product} />
 
-        {/* 2. Problem & Solution */}
-        <ProductProblem product={product} />
+            {/* 2. Problem & Solution */}
+            <LazySection height="400px">
+              <ProductProblem product={product} />
+            </LazySection>
 
-        {/* 3. Features & Grid */}
-        <ProductFeatures product={product} />
+            {/* 3. Features & Grid */}
+            <LazySection height="600px">
+              <ProductFeatures product={product} />
+            </LazySection>
 
-        {/* 4. Trust Guarantee Banner */}
-        <ProductGuarantee product={product} />
+            {/* 4. Trust Guarantee Banner */}
+            <LazySection height="150px">
+              <ProductGuarantee product={product} />
+            </LazySection>
 
-        {/* 5. Testimonials & Social Proof */}
-        <ProductTestimonials product={product} />
+            {/* 5. Testimonials & Social Proof */}
+            <LazySection height="500px">
+              <ProductTestimonials product={product} />
+            </LazySection>
 
-        {/* 6. Comparison & Stats (Unified Section) */}
-        <ProductComparison product={product} />
+            {/* 6. Comparison & Stats (Unified Section) */}
+            <LazySection height="500px">
+              <ProductComparison product={product} />
+            </LazySection>
 
-        {/* 7. Step by step instructions */}
-        <ProductHowTo product={product} />
+            {/* 7. Step by step instructions */}
+            <LazySection height="450px">
+              <ProductHowTo product={product} />
+            </LazySection>
 
-        {/* 9. Frequently Asked Questions */}
-        <ProductFAQ product={product} />
+            {/* 9. Frequently Asked Questions */}
+            <LazySection height="350px">
+              <ProductFAQ product={product} />
+            </LazySection>
 
-        {/* 10. Other products slider */}
-        <OtherProductsSlider currentProductSlug={product.slug} />
+            {/* 10. Other products slider */}
+            <LazySection height="300px">
+              <OtherProductsSlider currentProductSlug={product.slug} />
+            </LazySection>
 
-        {/* 11. Floating sticky CTA button */}
-        <StickyWhatsApp product={product} />
+            {/* 11. Floating sticky CTA button */}
+            <StickyWhatsApp product={product} />
 
-        {/* 12. Sales pop-up social proof widget */}
-        <SalesPopWidget product={product} />
-      </main>
-      <Footer />
+            {/* 12. Sales pop-up social proof widget */}
+            <LazySection height="100px">
+              <SalesPopWidget product={product} />
+            </LazySection>
+          </main>
+          <Footer />
+        </>
+      )}
     </>
   );
 }

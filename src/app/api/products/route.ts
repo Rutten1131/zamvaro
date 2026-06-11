@@ -104,6 +104,7 @@ export async function POST(request: Request) {
       problemTagline,
       problemHeadline,
       facebookPixelId,
+      template,
     } = body;
 
     if (!name || !slug) {
@@ -117,8 +118,8 @@ export async function POST(request: Request) {
         imageProblem, imageFeatures, imageHowTo,
         isAvailable, slug, bullets, features, testimonials, comparisonTitle, comparisonOursLabel,
         comparisonTheirsLabel, comparison, stats, steps, faqs, guaranteeText, whatsappNumber, primaryColor,
-        problemFactors, problemTagline, problemHeadline, facebookPixelId
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        problemFactors, problemTagline, problemHeadline, facebookPixelId, template
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const [result] = await pool.query(query, [
@@ -154,6 +155,7 @@ export async function POST(request: Request) {
       problemTagline || null,
       problemHeadline || null,
       facebookPixelId || null,
+      template || 'basica',
     ]);
 
     const insertId = (result as any).insertId;
