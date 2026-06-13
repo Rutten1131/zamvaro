@@ -3,14 +3,15 @@ import pool, { initDatabase } from '@/lib/db';
 import ProductDetailClient from './ProductDetailClient';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-// ── Cache en memoria: evita golpear la BD en cada visita al mismo producto ──
-// Expira cada 60 segundos para reflejar cambios del admin sin reiniciar el server.
+// ── Cache en memoria desactivado para actualizaciones inmediatas ──
 const productCache = new Map<string, { data: any; expiresAt: number }>();
-const CACHE_TTL_MS = 60_000; // 60 segundos
+const CACHE_TTL_MS = 0; // Desactivado
 
 async function getProductBySlug(slug: string) {
   // 1. Servir desde cache si aún es válido

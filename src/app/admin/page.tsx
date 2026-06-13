@@ -60,7 +60,7 @@ const emptyProduct = {
   promptHowTo: '',
   promptGallery: '',
   referenceImages: [] as string[],
-  landingButtons: Array(6).fill(null).map(() => ({ show: false, text: '👉 HACER PEDIDO AHORA 🇪🇨' })),
+  landingButtons: Array(6).fill(null).map(() => ({ show: false, text: '👉 HACER PEDIDO AHORA 🇪🇨', subtext: '' })),
   promotions: [
     { quantity: 1, price: 24.99, originalPrice: 32.99, title: 'PAGA 3 LLEVA 5', badge: 'OFERTA 😜', badgeClass: 'badgeOffer' },
     { quantity: 2, price: 29.99, originalPrice: 65.99, title: 'PAGA 4 LLEVA 8', badge: '20% OFF 🤩', badgeClass: 'badgeSpecial' },
@@ -760,10 +760,10 @@ export default function AdminPage() {
         ? JSON.parse(product.referenceImages)
         : [],
       landingButtons: Array.isArray(product.landingButtons)
-        ? (product.landingButtons.length === 6 ? product.landingButtons : [...product.landingButtons, ...Array(Math.max(0, 6 - product.landingButtons.length)).fill(null).map(() => ({ show: false, text: '👉 HACER PEDIDO AHORA 🇪🇨' }))])
+        ? (product.landingButtons.length === 6 ? product.landingButtons : [...product.landingButtons, ...Array(Math.max(0, 6 - product.landingButtons.length)).fill(null).map(() => ({ show: false, text: '👉 HACER PEDIDO AHORA 🇪🇨', subtext: '' }))])
         : typeof product.landingButtons === 'string'
         ? JSON.parse(product.landingButtons)
-        : Array(6).fill(null).map(() => ({ show: false, text: '👉 HACER PEDIDO AHORA 🇪🇨' })),
+        : Array(6).fill(null).map(() => ({ show: false, text: '👉 HACER PEDIDO AHORA 🇪🇨', subtext: '' })),
       promotions: Array.isArray(product.promotions)
         ? (product.promotions.length > 0 ? product.promotions : emptyProduct.promotions)
         : typeof product.promotions === 'string'
@@ -1872,7 +1872,7 @@ export default function AdminPage() {
                                       checked={btnConfig.show}
                                       onChange={(e) => {
                                         const newButtons = [...(formData.landingButtons || [])];
-                                        if (!newButtons[idx]) newButtons[idx] = { show: false, text: '👉 HACER PEDIDO AHORA 🇪🇨' };
+                                        if (!newButtons[idx]) newButtons[idx] = { show: false, text: '👉 HACER PEDIDO AHORA 🇪🇨', subtext: '' };
                                         newButtons[idx] = { ...newButtons[idx], show: e.target.checked };
                                         setFormData(prev => ({ ...prev, landingButtons: newButtons }));
                                       }}
@@ -1882,19 +1882,34 @@ export default function AdminPage() {
                                 )}
                               </div>
                               {hasImage && btnConfig.show && (
-                                <input
-                                  type="text"
-                                  className={styles.input}
-                                  style={{ padding: '6px 12px', fontSize: '0.82rem' }}
-                                  placeholder="Texto del botón (ej: 👉 HACER PEDIDO AHORA 🇪🇨)"
-                                  value={btnConfig.text || ''}
-                                  onChange={(e) => {
-                                    const newButtons = [...(formData.landingButtons || [])];
-                                    if (!newButtons[idx]) newButtons[idx] = { show: false, text: '👉 HACER PEDIDO AHORA 🇪🇨' };
-                                    newButtons[idx] = { ...newButtons[idx], text: e.target.value };
-                                    setFormData(prev => ({ ...prev, landingButtons: newButtons }));
-                                  }}
-                                />
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '6px' }}>
+                                  <input
+                                    type="text"
+                                    className={styles.input}
+                                    style={{ padding: '6px 12px', fontSize: '0.82rem' }}
+                                    placeholder="Texto del botón (ej: 👉 HACER PEDIDO AHORA 🇪🇨)"
+                                    value={btnConfig.text || ''}
+                                    onChange={(e) => {
+                                      const newButtons = [...(formData.landingButtons || [])];
+                                      if (!newButtons[idx]) newButtons[idx] = { show: false, text: '👉 HACER PEDIDO AHORA 🇪🇨', subtext: '' };
+                                      newButtons[idx] = { ...newButtons[idx], text: e.target.value };
+                                      setFormData(prev => ({ ...prev, landingButtons: newButtons }));
+                                    }}
+                                  />
+                                  <input
+                                    type="text"
+                                    className={styles.input}
+                                    style={{ padding: '6px 12px', fontSize: '0.82rem' }}
+                                    placeholder="Subtexto del botón (Dejar vacío para cálculo automático. Ej: LLEVATE 3 POR SOLO: $60.00)"
+                                    value={btnConfig.subtext || ''}
+                                    onChange={(e) => {
+                                      const newButtons = [...(formData.landingButtons || [])];
+                                      if (!newButtons[idx]) newButtons[idx] = { show: false, text: '👉 HACER PEDIDO AHORA 🇪🇨', subtext: '' };
+                                      newButtons[idx] = { ...newButtons[idx], subtext: e.target.value };
+                                      setFormData(prev => ({ ...prev, landingButtons: newButtons }));
+                                    }}
+                                  />
+                                </div>
                               )}
                             </div>
                           </div>

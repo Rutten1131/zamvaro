@@ -334,7 +334,11 @@ export default function ProductDetailGanadoraSimple({ product }: Props) {
                     style={{ backgroundColor: product.primaryColor || '#fda101' }}
                   >
                     <span className={styles.ctaHeadline}>{btnConfig.text || '👉 HACER PEDIDO AHORA 🇪🇨'}</span>
-                    <span className={styles.ctaSubheadline}>LLEVATE {totalQuantity} POR SOLO: ${totalPrice.toFixed(2)}</span>
+                    <span className={styles.ctaSubheadline}>
+                      {btnConfig.subtext !== undefined && btnConfig.subtext !== null && btnConfig.subtext !== '' 
+                        ? btnConfig.subtext 
+                        : `LLEVATE ${totalQuantity} POR SOLO: $${totalPrice.toFixed(2)}`}
+                    </span>
                   </button>
                 </div>
               )}
