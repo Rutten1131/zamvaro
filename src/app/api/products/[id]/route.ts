@@ -49,6 +49,16 @@ export async function PUT(request: Request, { params }: RouteParams) {
       problemHeadline,
       facebookPixelId,
       template,
+      promptProblem,
+      promptFeatures,
+      promptHowTo,
+      promptGallery,
+      referenceImages,
+      aiText,
+      landingButtons,
+      promotions,
+      showPriorityShipping,
+      showDispatch24h,
     } = body;
 
     if (!name || !slug) {
@@ -89,7 +99,17 @@ export async function PUT(request: Request, { params }: RouteParams) {
         problemTagline = ?,
         problemHeadline = ?,
         facebookPixelId = ?,
-        template = ?
+        template = ?,
+        promptProblem = ?,
+        promptFeatures = ?,
+        promptHowTo = ?,
+        promptGallery = ?,
+        referenceImages = ?,
+        aiText = ?,
+        landingButtons = ?,
+        promotions = ?,
+        showPriorityShipping = ?,
+        showDispatch24h = ?
       WHERE id = ?
     `;
 
@@ -127,12 +147,25 @@ export async function PUT(request: Request, { params }: RouteParams) {
       problemHeadline || null,
       facebookPixelId || null,
       template || 'basica',
+      promptProblem || null,
+      promptFeatures || null,
+      promptHowTo || null,
+      promptGallery || null,
+      JSON.stringify(referenceImages || []),
+      aiText || null,
+      JSON.stringify(landingButtons || []),
+      JSON.stringify(promotions || []),
+      showPriorityShipping !== false ? 1 : 0,
+      showDispatch24h !== false ? 1 : 0,
       id,
     ]);
 
     return NextResponse.json({ success: true, message: 'Producto actualizado exitosamente' });
   } catch (error: any) {
     console.error('Error in PUT /api/products/[id]:', error);
+    if (error.code === 'ER_DUP_ENTRY' || (error.message && error.message.includes('Duplicate entry'))) {
+      return NextResponse.json({ message: 'El slug ya está en uso por otro producto. Por favor, elige un slug diferente.' }, { status: 400 });
+    }
     return NextResponse.json({ message: 'Error al actualizar producto', error: error.message }, { status: 500 });
   }
 }

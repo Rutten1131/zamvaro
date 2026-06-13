@@ -18,6 +18,7 @@ import AnnouncementBar from '@/components/product/AnnouncementBar';
 import OtherProductsSlider from '@/components/product/OtherProductsSlider';
 import SalesPopWidget from '@/components/product/SalesPopWidget';
 import ProductDetailGanadora from '@/components/product/ProductDetailGanadora';
+import ProductDetailGanadoraSimple from '@/components/product/ProductDetailGanadoraSimple';
 import LazySection from '@/components/LazySection';
 import { useSearchParams } from 'next/navigation';
 
@@ -57,6 +58,10 @@ function buildColorStyle(primaryColor: string): string {
   const g = rgb?.g ?? 4;
   const b = rgb?.b ?? 111;
 
+  // Fondo oscuro derivado del color principal (muy oscuro, casi negro)
+  const bgDarkStart = adjustHex(color, -180);
+  const bgDarkEnd = adjustHex(color, -220);
+
   return `
     :root {
       --color-primary: ${color};
@@ -70,6 +75,12 @@ function buildColorStyle(primaryColor: string): string {
       --shadow-md: 0 8px 32px rgba(${r},${g},${b},0.12);
       --shadow-lg: 0 20px 60px rgba(${r},${g},${b},0.18);
       --shadow-card: 0 4px 20px rgba(46,42,57,0.08), 0 1px 4px rgba(${r},${g},${b},0.06);
+      
+      /* Variables para Plantilla Ganadora Oscura */
+      --color-accent-gold: #fbbf24;
+      --color-bg-dark: linear-gradient(180deg, ${bgDarkStart} 0%, ${bgDarkEnd} 100%);
+      --color-card-bg-dark: rgba(255, 255, 255, 0.03);
+      --color-border-dark: rgba(${r},${g},${b},0.25);
     }
     .btn-primary { box-shadow: 0 4px 20px rgba(${r},${g},${b},0.35) !important; }
     .btn-primary:hover { box-shadow: 0 8px 30px rgba(${r},${g},${b},0.45) !important; }
@@ -129,9 +140,9 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             __html: `
               !function(f,b,e,v,n,t,s)
               {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-               n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                n.callMethod.apply(n,arguments):n.queue.push(arguments)};
               if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-              n.queue=[];t=b.createElement(e);t.async=!0;
+               n.queue=[];t=b.createElement(e);t.async=!0;
               t.src=v;s=b.getElementsByTagName(e)[0];
               s.parentNode.insertBefore(t,s)}(window, document,'script',
               'https://connect.facebook.net/en_US/fbevents.js');
@@ -150,8 +161,12 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
       )}
 
       {activeTemplate === 'ganadora' ? (
-        <main style={{ background: '#ffffff', minHeight: '100vh' }}>
+        <main style={{ background: 'var(--color-bg-dark, #0b1511)', minHeight: '100vh' }}>
           <ProductDetailGanadora product={product} />
+        </main>
+      ) : activeTemplate === 'ganadora_simple' ? (
+        <main style={{ background: '#ffffff', minHeight: '100vh' }}>
+          <ProductDetailGanadoraSimple product={product} />
         </main>
       ) : (
         <>

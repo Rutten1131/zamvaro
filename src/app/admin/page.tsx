@@ -55,6 +55,19 @@ const emptyProduct = {
   problemHeadline: '',
   facebookPixelId: '',
   template: 'basica',
+  promptProblem: '',
+  promptFeatures: '',
+  promptHowTo: '',
+  promptGallery: '',
+  referenceImages: [] as string[],
+  landingButtons: Array(6).fill(null).map(() => ({ show: false, text: '👉 HACER PEDIDO AHORA 🇪🇨' })),
+  promotions: [
+    { quantity: 1, price: 24.99, originalPrice: 32.99, title: 'PAGA 3 LLEVA 5', badge: 'OFERTA 😜', badgeClass: 'badgeOffer' },
+    { quantity: 2, price: 29.99, originalPrice: 65.99, title: 'PAGA 4 LLEVA 8', badge: '20% OFF 🤩', badgeClass: 'badgeSpecial' },
+    { quantity: 3, price: 34.99, originalPrice: 99.99, title: 'PACK 3: 12 SOBRES', badge: '🔥 EL MÁS PEDIDO', badgeClass: 'badgeBest' }
+  ],
+  showPriorityShipping: true,
+  showDispatch24h: true,
 };
 
 
@@ -298,9 +311,86 @@ export default function AdminPage() {
   const [formData, setFormData] = useState<typeof emptyProduct & { id?: number }>(emptyProduct);
   const [aiText, setAiText] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
+  const [imageGeneratingField, setImageGeneratingField] = useState<string | null>(null);
+  const [generatingAllImages, setGeneratingAllImages] = useState(false);
+
+  const handleGenerateAIImage = async (field: 'gallery' | 'imageProblem' | 'imageFeatures' | 'imageHowTo') => {
+    let defaultPrompt = '';
+    if (field === 'gallery') {
+      defaultPrompt = formData.promptGallery || `Product mockup photo of ${formData.name || 'our product'}, clean white background, professional e-commerce photography, high resolution, studio lighting`;
+    } else if (field === 'imageProblem') {
+      defaultPrompt = formData.promptProblem || `Split comparison or dramatic lifestyle photo representing the problem that ${formData.name || 'this product'} solves, photorealistic, cinematic lighting`;
+    } else if (field === 'imageFeatures') {
+      defaultPrompt = formData.promptFeatures || `Detailed close-up showing technology and premium features of ${formData.name || 'this product'}, studio lighting, macro shot`;
+    } else {
+      defaultPrompt = formData.promptHowTo || `Lifestyle instruction photo showing steps to use ${formData.name || 'the product'} in daily life, warm natural lighting, happy expression`;
+    }
+
+    const promptToUse = prompt(`Escribe el prompt para generar la imagen con IA (Gemini Imagen 3):`, defaultPrompt);
+    if (!promptToUse) return;
+
+    setImageGeneratingField(field);
+    try {
+      const res = await fetch('/api/admin/generate-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: promptToUse, productSlug: formData.slug || 'general' })
+      });
+      const data = await res.json();
+      if (data.success && data.url) {
+        if (field === 'gallery') {
+          setFormData((prev) => ({
+            ...prev,
+            images: [...prev.images, data.url],
+            image: prev.images.length === 0 ? data.url : prev.image,
+          }));
+        } else {
+          setFormData((prev) => ({ ...prev, [field]: data.url }));
+        }
+        setStatusMsg({ type: 'success', text: `Imagen para ${field} generada con IA y subida a Bunny.net exitosamente.` });
+      } else {
+        setStatusMsg({ type: 'error', text: data.message || 'Error al generar la imagen' });
+      }
+    } catch (err: any) {
+      setStatusMsg({ type: 'error', text: 'Error de conexión: ' + err.message });
+    } finally {
+      setImageGeneratingField(null);
+    }
+  };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const galleryInputRef = useRef<HTMLInputElement>(null);
+  const referenceInputRef = useRef<HTMLInputElement>(null);
+
+  const handleReferenceUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    
+    setLoading(true);
+    try {
+      const newRefs = [...(formData.referenceImages || [])];
+      for (let i = 0; i < files.length; i++) {
+        const formDataUpload = new FormData();
+        formDataUpload.append('file', files[i]);
+        formDataUpload.append('productSlug', formData.slug || formData.name || 'general');
+        
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          body: formDataUpload,
+        });
+        const data = await res.json();
+        if (data.success) {
+          newRefs.push(data.url);
+        }
+      }
+      setFormData((prev) => ({ ...prev, referenceImages: newRefs }));
+      setStatusMsg({ type: 'success', text: 'Imágenes de referencia agregadas.' });
+    } catch (err) {
+      setStatusMsg({ type: 'error', text: 'Error al subir imágenes de referencia' });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Cargar productos al iniciar
   useEffect(() => {
@@ -391,7 +481,10 @@ export default function AdminPage() {
       const res = await fetch('/api/admin/generate-product', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ rawText: aiText }),
+        body: JSON.stringify({
+          rawText: aiText,
+          referenceImages: formData.referenceImages || []
+        }),
       });
       const data = await res.json();
       if (data.success) {
@@ -410,8 +503,9 @@ export default function AdminPage() {
             : '',
           image: formData.image, // Mantener imágenes si ya se subieron
           images: formData.images,
+          referenceImages: formData.referenceImages || [],
         });
-        setStatusMsg({ type: 'success', text: '¡Estructura generada y rellenada exitosamente con IA! ✨ Revisa los campos abajo.' });
+        setStatusMsg({ type: 'success', text: '¡Estructura y prompts generados exitosamente con IA! ✨ Revisa los campos abajo.' });
       } else {
         setStatusMsg({ type: 'error', text: data.message || 'Error al invocar la IA' });
       }
@@ -420,6 +514,81 @@ export default function AdminPage() {
     } finally {
       setAiLoading(false);
     }
+  };
+
+  // Generar TODAS las imágenes con IA de una sola vez
+  const handleGenerateAllImages = async () => {
+    if (!formData.name) {
+      setStatusMsg({ type: 'error', text: 'Primero ingresa el nombre del producto antes de generar imágenes.' });
+      return;
+    }
+    if (!confirm('¿Generar automáticamente las 4 imágenes de secciones con IA? Esto puede tardar 1-3 minutos.')) return;
+
+    setGeneratingAllImages(true);
+    setStatusMsg(null);
+
+    const productName = formData.name;
+    const slug = formData.slug || 'general';
+
+    const sections: Array<{ field: 'gallery' | 'imageProblem' | 'imageFeatures' | 'imageHowTo'; prompt: string; label: string }> = [
+      {
+        field: 'gallery',
+        prompt: formData.promptGallery || `Professional e-commerce product photo of ${productName}, clean white background, studio lighting, high resolution, commercial photography style`,
+        label: 'Galería'
+      },
+      {
+        field: 'imageProblem',
+        prompt: formData.promptProblem || `Dramatic lifestyle photo showing the problem that ${productName} solves, frustrated person struggling with a household task, cinematic lighting, realistic photographic style`,
+        label: 'Problema'
+      },
+      {
+        field: 'imageFeatures',
+        prompt: formData.promptFeatures || `Detailed close-up macro photo showcasing the premium features and technology of ${productName}, studio lighting, sharp focus, product photography`,
+        label: 'Características'
+      },
+      {
+        field: 'imageHowTo',
+        prompt: formData.promptHowTo || `Happy person using ${productName} step by step in a bright modern home, lifestyle photography, warm natural lighting, clean aesthetic`,
+        label: 'Cómo usar'
+      }
+    ];
+
+    let successCount = 0;
+    for (const section of sections) {
+      setImageGeneratingField(section.field);
+      setStatusMsg({ type: 'success', text: `Generando imagen de ${section.label}... (esto puede tomar unos segundos)` });
+      try {
+        const res = await fetch('/api/admin/generate-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: section.prompt, productSlug: slug })
+        });
+        const data = await res.json();
+        if (data.success && data.url) {
+          if (section.field === 'gallery') {
+            setFormData((prev) => ({
+              ...prev,
+              images: [...prev.images, data.url],
+              image: prev.images.length === 0 ? data.url : prev.image,
+            }));
+          } else {
+            setFormData((prev) => ({ ...prev, [section.field]: data.url }));
+          }
+          successCount++;
+        }
+      } catch (err) {
+        console.error(`Error generando imagen para ${section.label}:`, err);
+      }
+    }
+
+    setImageGeneratingField(null);
+    setGeneratingAllImages(false);
+    setStatusMsg({
+      type: successCount > 0 ? 'success' : 'error',
+      text: successCount > 0
+        ? `✅ ${successCount} de 4 imágenes generadas exitosamente con IA.`
+        : 'No se pudo generar ninguna imagen. Revisa la conexión.'
+    });
   };
 
   // Subir imagen de portada (Thumbnail)
@@ -531,10 +700,11 @@ export default function AdminPage() {
     const url = isEdit ? `/api/products/${formData.id}` : '/api/products';
     const method = isEdit ? 'PUT' : 'POST';
 
-    // SINCRONIZACIÓN: image siempre es el primer elemento de images
+    // SINCRONIZACIÓN: image siempre es el primer elemento de images (solo si no es ganadora_simple)
+    const isGanadoraSimple = formData.template === 'ganadora_simple';
     const syncedFormData = {
       ...formData,
-      image: formData.images[0] || formData.image || '',
+      image: isGanadoraSimple ? formData.image : (formData.images[0] || formData.image || ''),
     };
 
     try {
@@ -564,24 +734,45 @@ export default function AdminPage() {
   };
 
   const handleEditClick = (product: any) => {
-    // SINCRONIZACIÓN: fusionar product.image en product.images para que el admin muestre UNA sola lista unificada
+    const isGanadoraSimple = product.template === 'ganadora_simple';
     const baseImages: string[] = Array.isArray(product.images) ? product.images : [];
     const mainImage: string = product.image || '';
-    const unifiedImages =
-      mainImage && !baseImages.includes(mainImage)
+    
+    let unifiedImages = baseImages;
+    if (!isGanadoraSimple) {
+      unifiedImages = mainImage && !baseImages.includes(mainImage)
         ? [mainImage, ...baseImages]
         : baseImages.length > 0
         ? baseImages
         : mainImage
         ? [mainImage]
         : [];
+    }
 
     setFormData({
       ...emptyProduct,
       ...product,
       images: unifiedImages,
-      image: unifiedImages[0] || '',
+      image: mainImage || (isGanadoraSimple ? '' : unifiedImages[0] || ''),
+      referenceImages: Array.isArray(product.referenceImages)
+        ? product.referenceImages
+        : typeof product.referenceImages === 'string'
+        ? JSON.parse(product.referenceImages)
+        : [],
+      landingButtons: Array.isArray(product.landingButtons)
+        ? (product.landingButtons.length === 6 ? product.landingButtons : [...product.landingButtons, ...Array(Math.max(0, 6 - product.landingButtons.length)).fill(null).map(() => ({ show: false, text: '👉 HACER PEDIDO AHORA 🇪🇨' }))])
+        : typeof product.landingButtons === 'string'
+        ? JSON.parse(product.landingButtons)
+        : Array(6).fill(null).map(() => ({ show: false, text: '👉 HACER PEDIDO AHORA 🇪🇨' })),
+      promotions: Array.isArray(product.promotions)
+        ? (product.promotions.length > 0 ? product.promotions : emptyProduct.promotions)
+        : typeof product.promotions === 'string'
+        ? JSON.parse(product.promotions)
+        : emptyProduct.promotions,
+      showPriorityShipping: product.showPriorityShipping !== undefined ? product.showPriorityShipping : true,
+      showDispatch24h: product.showDispatch24h !== undefined ? product.showDispatch24h : true,
     });
+    setAiText(product.aiText || '');
     setActiveTab('edit');
   };
 
@@ -797,6 +988,15 @@ export default function AdminPage() {
                             >
                               <Eye size={12} /> Ganadora
                             </a>
+                            <a
+                              href={`/productos/${product.slug}?template=ganadora_simple`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title="Ver Plantilla Ganadora Sencilla"
+                              style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '5px 10px', borderRadius: '8px', border: '1px solid rgba(34,197,94,0.3)', background: 'rgba(34,197,94,0.08)', color: '#16a34a', fontSize: '11px', fontWeight: 700, textDecoration: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}
+                            >
+                              <Eye size={12} /> G. Sencilla
+                            </a>
                           </div>
                           {/* Fila 2: Botones de Acción */}
                           <div style={{ display: 'flex', gap: '6px' }}>
@@ -884,35 +1084,104 @@ export default function AdminPage() {
                     <div style={{ marginTop: '10px', background: '#d97706', color: 'white', padding: '4px 10px', borderRadius: '20px', fontSize: '0.72rem', fontWeight: 700, display: 'inline-block' }}>✓ SELECCIONADA</div>
                   )}
                 </button>
+
+                {/* Card Ganadora Sencilla */}
+                <button
+                  type="button"
+                  onClick={() => setFormData((prev) => ({ ...prev, template: 'ganadora_simple' }))}
+                  style={{
+                    flex: 1, minWidth: '220px', padding: '18px 20px', borderRadius: '16px', cursor: 'pointer',
+                    border: formData.template === 'ganadora_simple' ? '2.5px solid #22c55e' : '2px solid rgba(0,0,0,0.1)',
+                    background: formData.template === 'ganadora_simple' ? 'rgba(34,197,94,0.09)' : 'white',
+                    boxShadow: formData.template === 'ganadora_simple' ? '0 0 0 4px rgba(34,197,94,0.12)' : 'none',
+                    transition: 'all 0.2s', textAlign: 'left'
+                  }}
+                >
+                  <div style={{ fontSize: '1.8rem', marginBottom: '6px' }}>⚡</div>
+                  <div style={{ fontWeight: 800, fontSize: '1rem', color: formData.template === 'ganadora_simple' ? '#22c55e' : '#111', marginBottom: '4px' }}>Ganadora Sencilla (6 Imágenes)</div>
+                  <div style={{ fontSize: '0.78rem', color: '#666', lineHeight: 1.4 }}>Página súper sencilla compuesta de hasta 6 imágenes/videos con botones de compra intermedios y formulario COD al final.</div>
+                  {formData.template === 'ganadora_simple' && (
+                    <div style={{ marginTop: '10px', background: '#22c55e', color: 'white', padding: '4px 10px', borderRadius: '20px', fontSize: '0.72rem', fontWeight: 700, display: 'inline-block' }}>✓ SELECCIONADA</div>
+                  )}
+                </button>
               </div>
             </div>
 
             {/* Sección de IA */}
-            <div className={styles.aiSection}>
-              <h3 className={styles.aiTitle}>
-                <Sparkles size={18} /> Asistente de IA para Productos (Gemini)
-              </h3>
-              <p style={{ fontSize: '0.85rem', marginBottom: '12px', color: 'var(--color-text-light)' }}>
-                Pega la información, copia de marketing, especificaciones o descripción del producto que deseas vender. La IA estructurará de forma atractiva la información, escribirá testimonios y autocompletará el formulario por ti.
-              </p>
-              
-              <textarea
-                className={styles.textarea}
-                placeholder="Ejemplo: Vendo una mini aspiradora inalámbrica recargable portátil para auto y hogar. Cuesta $19.99, antes $40. Es de succión potente, tiene filtros HEPA lavables y dura 30 minutos de batería..."
-                value={aiText}
-                onChange={(e) => setAiText(e.target.value)}
-              />
-              
-              <button
-                type="button"
-                className={styles.button}
-                style={{ marginTop: '12px', width: 'auto', background: 'linear-gradient(135deg, #8b5cf6, #ec4899)' }}
-                onClick={handleGenerateAI}
-                disabled={aiLoading}
-              >
-                {aiLoading ? <div className={styles.spinner}></div> : <><Sparkles size={16} /> Generar Estructura con IA</>}
-              </button>
-            </div>
+            {(
+              <div className={styles.aiSection}>
+                <h3 className={styles.aiTitle}>
+                  <Sparkles size={18} /> Asistente de IA para Productos (Gemini)
+                </h3>
+                <p style={{ fontSize: '0.85rem', marginBottom: '12px', color: 'var(--color-text-light)' }}>
+                  Pega la información, copia de marketing, especificaciones o descripción del producto que deseas vender. La IA estructurará de forma atractiva la información, escribirá testimonios y autocompletará el formulario por ti.
+                </p>
+                
+                <textarea
+                  className={styles.textarea}
+                  placeholder="Ejemplo: Vendo una mini aspiradora inalámbrica recargable portátil para auto y hogar. Cuesta $19.99, antes $40. Es de succión potente, tiene filtros HEPA lavables y dura 30 minutos de batería..."
+                  value={aiText}
+                  onChange={(e) => setAiText(e.target.value)}
+                />
+
+                <div style={{ marginTop: '14px', marginBottom: '14px' }}>
+                  <label className={styles.label} style={{ fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700 }}>
+                    📸 Imagen del Producto Real de Referencia (Opcional):
+                  </label>
+                  <p style={{ fontSize: '0.75rem', color: '#666', margin: '0 0 10px 0', lineHeight: 1.4 }}>
+                    Sube una foto del producto real. Gemini la analizará para extraer el color HEX dominante exacto y describir sus materiales/detalles físicos en los prompts para que las imágenes generadas coincidan perfectamente.
+                  </p>
+                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+                    <button
+                      type="button"
+                      style={{ background: '#f3f4f6', color: '#374151', border: '1px solid #d1d5db', padding: '8px 16px', borderRadius: '8px', fontWeight: 600, fontSize: '0.82rem', cursor: 'pointer' }}
+                      onClick={() => referenceInputRef.current?.click()}
+                    >
+                      📁 Subir Imagen Real
+                    </button>
+                    <input
+                      type="file"
+                      ref={referenceInputRef}
+                      style={{ display: 'none' }}
+                      accept="image/*"
+                      multiple
+                      onChange={handleReferenceUpload}
+                    />
+                    {formData.referenceImages && formData.referenceImages.length > 0 && (
+                      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                        {formData.referenceImages.map((img, idx) => (
+                          <div key={idx} style={{ position: 'relative' }}>
+                            <img src={img} alt={`Referencia ${idx}`} style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #d1d5db' }} />
+                            <button
+                              type="button"
+                              style={{ position: 'absolute', top: '-6px', right: '-6px', background: '#ff4444', color: 'white', border: 'none', borderRadius: '50%', width: '16px', height: '16px', fontSize: '9px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                              onClick={() => {
+                                setFormData(prev => ({
+                                  ...prev,
+                                  referenceImages: (prev.referenceImages || []).filter((_, i) => i !== idx)
+                                }));
+                              }}
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                <button
+                  type="button"
+                  className={styles.button}
+                  style={{ marginTop: '12px', width: 'auto', background: 'linear-gradient(135deg, #8b5cf6, #ec4899)' }}
+                  onClick={handleGenerateAI}
+                  disabled={aiLoading}
+                >
+                  {aiLoading ? <div className={styles.spinner}></div> : <><Sparkles size={16} /> Generar Estructura con IA</>}
+                </button>
+              </div>
+            )}
 
             {/* Formulario Principal */}
             <div className={styles.cardList} style={{ padding: '30px', background: 'white' }}>
@@ -1027,6 +1296,70 @@ export default function AdminPage() {
                   <small style={{ color: '#888', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>Deja en blanco para usar el Pixel global del sitio. Si ingresas un ID, solo se activará en la página de este producto.</small>
                 </div>
 
+                <div className={`${styles.inputGroup} ${styles.fullWidth}`} style={{ marginTop: '10px' }}>
+                  <label className={styles.label}>📸 Imagen de Portada / Miniatura del Producto (Para Formulario COD)</label>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--color-text-light)', marginBottom: '12px', textTransform: 'none', letterSpacing: 'normal' }}>
+                    Esta imagen representa al producto físico y aparecerá en el formulario COD (junto a la selección de paquetes y en el resumen de compra).
+                  </p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '16px' }}>
+                    {formData.image ? (
+                      <div style={{ position: 'relative', width: '90px', height: '90px' }}>
+                        <img
+                          src={formData.image}
+                          alt="Miniatura del producto"
+                          style={{ width: '90px', height: '90px', borderRadius: '12px', border: '2px solid rgba(0,0,0,0.06)', objectFit: 'cover', display: 'block' }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setFormData(prev => ({ ...prev, image: '' }))}
+                          style={{
+                            position: 'absolute',
+                            top: '-6px',
+                            right: '-6px',
+                            background: '#ff4444',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '50%',
+                            width: '22px',
+                            height: '22px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '11px',
+                            fontWeight: 'bold',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.15)'
+                          }}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ) : (
+                      <div style={{ width: '90px', height: '90px', borderRadius: '12px', border: '2px dashed rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', background: '#fafafa', flexShrink: 0, justifyContent: 'center' }}>
+                        <span style={{ fontSize: '1.5rem', opacity: 0.3 }}>🖼️</span>
+                      </div>
+                    )}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1, minWidth: '240px' }}>
+                      <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleMainImageUpload}
+                          style={{ fontSize: '0.85rem' }}
+                        />
+                      </div>
+                      <input
+                        type="text"
+                        className={styles.input}
+                        placeholder="O pega la URL de la imagen aquí..."
+                        value={formData.image || ''}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, image: e.target.value }))}
+                        style={{ padding: '8px 10px', fontSize: '0.82rem' }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
 
 
                 <div className={styles.inputGroup} style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '30px' }}>
@@ -1043,22 +1376,13 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              <div className={styles.inputGroup} style={{ marginTop: '20px' }}>
-                <label className={styles.label}>Texto de Gancho / Hook</label>
-                <textarea
-                  className={styles.textarea}
-                  value={formData.hookText}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, hookText: e.target.value }))}
-                />
-              </div>
-
-              {/* ===================== COLOR PRINCIPAL DE LA PÁGINA ===================== */}
+              {/* ===================== COLOR PRINCIPAL Y BOTONES DE LA PÁGINA ===================== */}
               <h2 className={styles.formSectionTitle}>
-                🎨 Color Principal de la Página
+                🎨 Color Principal de la Página y Botones
               </h2>
               <div style={{ background: 'rgba(139,92,246,0.04)', padding: '24px', borderRadius: '16px', border: '2px solid rgba(139,92,246,0.15)', marginBottom: '24px' }}>
                 <p style={{ fontSize: '0.85rem', color: 'var(--color-text-light)', marginBottom: '18px', lineHeight: 1.6 }}>
-                  Este color reemplaza el morado-rosado en <strong>toda la página del producto</strong>: botones, badges, gradientes, estrellas, borde de sección, etc. También se usa como fondo de la sección «Problema».
+                  Este color se utilizará para **los botones de compra**, badges y acentos en las plantillas. En las plantillas básicas/ganadora también reemplaza el color de acento principal.
                 </p>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
                   {/* Color Picker */}
@@ -1076,6 +1400,8 @@ export default function AdminPage() {
                     <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-text)' }}>Colores predefinidos:</span>
                     <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                       {[
+                        { label: 'Naranja (de la ref.)', color: '#fda101' },
+                        { label: 'Verde Whatsapp', color: '#25D366' },
                         { label: 'Morado (default)', color: '#9B046F' },
                         { label: 'Azul eléctrico', color: '#1D4ED8' },
                         { label: 'Naranja vibrante', color: '#EA580C' },
@@ -1110,14 +1436,39 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              {/* ===================== IMÁGENES POR SECCIÓN ===================== */}
-              {formData.template === 'basica' && (
+              {formData.template !== 'ganadora_simple' && (
                 <>
+                  <div className={styles.inputGroup} style={{ marginTop: '20px' }}>
+                    <label className={styles.label}>Texto de Gancho / Hook</label>
+                    <textarea
+                      className={styles.textarea}
+                      value={formData.hookText}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, hookText: e.target.value }))}
+                    />
+                  </div>
+
+                  {/* ===================== IMÁGENES POR SECCIÓN ===================== */}
                   <h2 className={styles.formSectionTitle}>
                     🖼️ Imágenes por Sección de la Página
                   </h2>
+                  <div style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.1), rgba(236,72,153,0.08))', border: '2px solid rgba(139,92,246,0.25)', borderRadius: '16px', padding: '20px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+                    <div style={{ flex: 1 }}>
+                      <p style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--color-primary)', marginBottom: '4px' }}>🪄 Generación Automática</p>
+                      <p style={{ fontSize: '0.82rem', color: 'var(--color-text-light)', lineHeight: 1.5 }}>
+                        Genera todas las imágenes de secciones de una sola vez con IA (Pollinations.ai, gratis). Tardará 1-3 minutos.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleGenerateAllImages}
+                      disabled={generatingAllImages || !formData.name}
+                      style={{ background: generatingAllImages ? '#aaa' : 'linear-gradient(135deg, #7c3aed, #db2777)', color: 'white', border: 'none', padding: '12px 22px', borderRadius: '12px', fontWeight: 700, fontSize: '0.9rem', cursor: generatingAllImages || !formData.name ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap', boxShadow: '0 4px 12px rgba(139,92,246,0.35)' }}
+                    >
+                      {generatingAllImages ? `⏳ Generando ${imageGeneratingField || ''}...` : '🚀 Generar TODAS las imágenes con IA'}
+                    </button>
+                  </div>
                   <p style={{ fontSize: '0.85rem', color: 'var(--color-text-light)', marginBottom: '20px', lineHeight: 1.6 }}>
-                    Cada sección de la página del producto tiene su propia imagen. Aquí puedes configurarlas de forma independiente.
+                    O genera cada imagen individualmente por sección:
                   </p>
 
                   {/* --- SECCIÓN 1: PROBLEMA --- */}
@@ -1128,11 +1479,29 @@ export default function AdminPage() {
                     <p style={{ fontSize: '0.8rem', color: 'var(--color-text-light)', marginBottom: '14px' }}>
                       Aparece en la sección <strong>"¿Cansada de perder 40 minutos...?"</strong> — es la imagen de fondo/banner de esa sección.
                     </p>
+                    <div style={{ marginBottom: '12px' }}>
+                      <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: '6px' }}>Prompt Psicológico para la sección de Problema:</label>
+                      <textarea
+                        className={styles.textarea}
+                        style={{ minHeight: '60px', fontSize: '0.82rem', padding: '10px' }}
+                        placeholder="Ej: A frustrated person struggling with..."
+                        value={formData.promptProblem || ''}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, promptProblem: e.target.value }))}
+                      />
+                    </div>
                     <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap', marginBottom: '10px' }}>
                       <label style={{ cursor: 'pointer', background: 'rgba(255,100,0,0.12)', color: '#c04a00', border: '1px solid rgba(255,100,0,0.3)', padding: '8px 16px', borderRadius: '8px', fontWeight: 600, fontSize: '0.85rem' }}>
                         📁 Subir imagen
                         <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleSectionImageUpload(e, 'imageProblem')} />
                       </label>
+                      <button
+                        type="button"
+                        onClick={() => handleGenerateAIImage('imageProblem')}
+                        disabled={imageGeneratingField === 'imageProblem'}
+                        style={{ background: 'linear-gradient(135deg, #8b5cf6, #ec4899)', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '8px', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer' }}
+                      >
+                        {imageGeneratingField === 'imageProblem' ? 'Generando...' : '🪄 Generar con IA'}
+                      </button>
                       <span style={{ fontSize: '0.75rem', color: 'var(--color-text-light)' }}>o pega una URL:</span>
                       <input
                         type="text"
@@ -1162,11 +1531,29 @@ export default function AdminPage() {
                     <p style={{ fontSize: '0.8rem', color: 'var(--color-text-light)', marginBottom: '14px' }}>
                       Aparece en la sección <strong>"Descubre el poder de una tecnología única"</strong> — imagen o banner de esa área.
                     </p>
+                    <div style={{ marginBottom: '12px' }}>
+                      <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: '6px' }}>Prompt para la sección de Características / Tecnología:</label>
+                      <textarea
+                        className={styles.textarea}
+                        style={{ minHeight: '60px', fontSize: '0.82rem', padding: '10px' }}
+                        placeholder="Ej: Close-up macro photo of..."
+                        value={formData.promptFeatures || ''}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, promptFeatures: e.target.value }))}
+                      />
+                    </div>
                     <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap', marginBottom: '10px' }}>
                       <label style={{ cursor: 'pointer', background: 'rgba(100,0,255,0.1)', color: '#5c00cc', border: '1px solid rgba(100,0,255,0.25)', padding: '8px 16px', borderRadius: '8px', fontWeight: 600, fontSize: '0.85rem' }}>
                         📁 Subir imagen
                         <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleSectionImageUpload(e, 'imageFeatures')} />
                       </label>
+                      <button
+                        type="button"
+                        onClick={() => handleGenerateAIImage('imageFeatures')}
+                        disabled={imageGeneratingField === 'imageFeatures'}
+                        style={{ background: 'linear-gradient(135deg, #8b5cf6, #ec4899)', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '8px', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer' }}
+                      >
+                        {imageGeneratingField === 'imageFeatures' ? 'Generando...' : '🪄 Generar con IA'}
+                      </button>
                       <span style={{ fontSize: '0.75rem', color: 'var(--color-text-light)' }}>o pega una URL:</span>
                       <input
                         type="text"
@@ -1196,11 +1583,29 @@ export default function AdminPage() {
                     <p style={{ fontSize: '0.8rem', color: 'var(--color-text-light)', marginBottom: '14px' }}>
                       Aparece en la sección <strong>"Cómo usar en 3 pasos"</strong> — imagen ilustrativa de ese bloque.
                     </p>
+                    <div style={{ marginBottom: '12px' }}>
+                      <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: '6px' }}>Prompt para la sección de Cómo Usar:</label>
+                      <textarea
+                        className={styles.textarea}
+                        style={{ minHeight: '60px', fontSize: '0.82rem', padding: '10px' }}
+                        placeholder="Ej: Happy person using..."
+                        value={formData.promptHowTo || ''}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, promptHowTo: e.target.value }))}
+                      />
+                    </div>
                     <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap', marginBottom: '10px' }}>
                       <label style={{ cursor: 'pointer', background: 'rgba(0,180,100,0.1)', color: '#007a42', border: '1px solid rgba(0,180,100,0.3)', padding: '8px 16px', borderRadius: '8px', fontWeight: 600, fontSize: '0.85rem' }}>
                         📁 Subir imagen
                         <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleSectionImageUpload(e, 'imageHowTo')} />
                       </label>
+                      <button
+                        type="button"
+                        onClick={() => handleGenerateAIImage('imageHowTo')}
+                        disabled={imageGeneratingField === 'imageHowTo'}
+                        style={{ background: 'linear-gradient(135deg, #8b5cf6, #ec4899)', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '8px', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer' }}
+                      >
+                        {imageGeneratingField === 'imageHowTo' ? 'Generando...' : '🪄 Generar con IA'}
+                      </button>
                       <span style={{ fontSize: '0.75rem', color: 'var(--color-text-light)' }}>o pega una URL:</span>
                       <input
                         type="text"
@@ -1226,36 +1631,62 @@ export default function AdminPage() {
 
               {/* Subida de Imágenes */}
               <h2 className={styles.formSectionTitle}>
-                <ImageIcon size={18} /> Fotos del Producto
+                <ImageIcon size={18} /> {formData.template === 'ganadora_simple' ? '🖼️ Imágenes de la Landing' : 'Fotos del Producto'}
               </h2>
               
               <div style={{ background: 'rgba(0,0,0,0.01)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.04)', marginBottom: '24px' }}>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', marginBottom: '20px', alignItems: 'flex-start' }}>
                   <div style={{ flex: 1, minWidth: '280px' }}>
                     <label className={styles.label} style={{ color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      📸 Fotos del Carrusel del Producto
+                      📸 {formData.template === 'ganadora_simple' ? 'Sube hasta 6 imágenes en orden' : 'Fotos del Carrusel del Producto'}
                     </label>
                     <p style={{ fontSize: '0.8rem', color: 'var(--color-text-light)', marginBottom: '12px' }}>
-                      Sube <strong>una o varias fotos</strong>. La <strong>primera foto</strong> se usará como portada en los listados. El resto aparecerá en el carrusel deslizable de la página del producto.
+                      {formData.template === 'ganadora_simple' 
+                        ? 'Sube las imágenes o videos de tu landing page. El orden en el que se listan abajo determinará la secuencia de la página.' 
+                        : 'Sube una o varias fotos. La primera foto se usará como portada en los listados. El resto aparecerá en el carrusel deslizable.'}
                     </p>
+                    {formData.template !== 'ganadora_simple' && (
+                      <div style={{ marginBottom: '12px' }}>
+                        <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: '6px' }}>Prompt para Foto de Portada / Galería:</label>
+                        <textarea
+                          className={styles.textarea}
+                          style={{ minHeight: '60px', fontSize: '0.82rem', padding: '10px' }}
+                          placeholder="Ej: Professional e-commerce product photo..."
+                          value={formData.promptGallery || ''}
+                          onChange={(e) => setFormData((prev) => ({ ...prev, promptGallery: e.target.value }))}
+                        />
+                      </div>
+                    )}
                     
-                    <div
-                      className={styles.imageUploader}
-                      onClick={() => fileInputRef.current?.click()}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <Plus size={20} />
-                      <span style={{ fontSize: '0.9rem', fontWeight: 700 }}>Subir Fotos (puedes seleccionar varias)</span>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--color-text-light)' }}>Las fotos se guardan en la base de datos</span>
-                      <input
-                        type="file"
-                        ref={fileInputRef}
-                        style={{ display: 'none' }}
+                    <div style={{ display: 'flex', gap: '10px', width: '100%', flexWrap: 'wrap' }}>
+                      <div
+                        className={styles.imageUploader}
+                        onClick={() => fileInputRef.current?.click()}
+                        style={{ cursor: 'pointer', flex: 1, minWidth: '200px' }}
+                      >
+                        <Plus size={20} />
+                        <span style={{ fontSize: '0.9rem', fontWeight: 700 }}>Subir Fotos</span>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--color-text-light)' }}>Desde tu computadora</span>
+                      </div>
+                      {formData.template !== 'ganadora_simple' && (
+                        <button
+                          type="button"
+                          onClick={() => handleGenerateAIImage('gallery')}
+                          disabled={imageGeneratingField === 'gallery'}
+                          style={{ flex: 1, minWidth: '200px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '6px', background: 'linear-gradient(135deg, #8b5cf6, #ec4899)', color: 'white', border: 'none', padding: '16px', borderRadius: '16px', fontWeight: 700, fontSize: '0.95rem', cursor: 'pointer' }}
+                        >
+                          {imageGeneratingField === 'gallery' ? 'Generando Imagen...' : <><span>🪄 Generar con IA</span><span style={{ fontSize: '0.7rem', fontWeight: 'normal', opacity: 0.9 }}>Pollinations.ai (Gratis)</span></>}
+                        </button>
+                      )}
+                    </div>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      style={{ display: 'none' }}
                         accept="image/*"
                         multiple
                         onChange={handleGalleryUpload}
                       />
-                    </div>
 
                     <div className={styles.inputGroup} style={{ marginTop: '14px' }}>
                       <label className={styles.label} style={{ fontSize: '0.78rem' }}>O pega una URL de imagen directamente:</label>
@@ -1395,8 +1826,271 @@ export default function AdminPage() {
                 )}
               </div>
 
-              {/* Bullets */}
-              <h2 className={styles.formSectionTitle}>💡 Viñetas Clave (Bullets)</h2>
+              {/* ===================== CONFIGURACIÓN GANADORA SENCILLA ===================== */}
+              {formData.template === 'ganadora_simple' && (
+                <div style={{ marginTop: '24px', marginBottom: '24px' }}>
+                  <h2 className={styles.formSectionTitle}>⚡ Configuración de Botones (Ganadora Sencilla)</h2>
+                  <div style={{ background: 'rgba(34,197,94,0.04)', padding: '24px', borderRadius: '16px', border: '2px solid rgba(34,197,94,0.15)' }}>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--color-text-light)', marginBottom: '18px', lineHeight: 1.6 }}>
+                      Puedes activar botones CTA intermedios entre las imágenes. Al hacer clic, desplazarán automáticamente al comprador al formulario de pedido al final de la página. Puedes configurar hasta 6 imágenes (que se suben en la sección "Fotos del Producto" arriba).
+                    </p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                      {Array(6).fill(null).map((_, idx) => {
+                        const hasImage = formData.images && formData.images[idx];
+                        const btnConfig = (formData.landingButtons && formData.landingButtons[idx]) || { show: false, text: '👉 HACER PEDIDO AHORA 🇪🇨' };
+
+                        return (
+                          <div
+                            key={idx}
+                            style={{
+                              display: 'flex',
+                              gap: '16px',
+                              alignItems: 'center',
+                              padding: '14px',
+                              background: 'white',
+                              borderRadius: '12px',
+                              border: '1px solid rgba(0,0,0,0.08)',
+                              opacity: hasImage ? 1 : 0.6
+                            }}
+                          >
+                            {/* Mini preview de la imagen */}
+                            <div style={{ width: '60px', height: '60px', borderRadius: '8px', background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '1px solid rgba(0,0,0,0.1)' }}>
+                              {hasImage ? (
+                                <img src={formData.images[idx]} alt={`Mini ${idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              ) : (
+                                <span style={{ fontSize: '0.75rem', color: '#999', textAlign: 'center' }}>Sin foto {idx + 1}</span>
+                              )}
+                            </div>
+
+                            <div style={{ flex: 1 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+                                <span style={{ fontWeight: 800, fontSize: '0.85rem', color: '#2d3748' }}>Imagen {idx + 1}</span>
+                                {hasImage && (
+                                  <label style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', cursor: 'pointer', fontWeight: 600, color: 'var(--color-primary)' }}>
+                                    <input
+                                      type="checkbox"
+                                      checked={btnConfig.show}
+                                      onChange={(e) => {
+                                        const newButtons = [...(formData.landingButtons || [])];
+                                        if (!newButtons[idx]) newButtons[idx] = { show: false, text: '👉 HACER PEDIDO AHORA 🇪🇨' };
+                                        newButtons[idx] = { ...newButtons[idx], show: e.target.checked };
+                                        setFormData(prev => ({ ...prev, landingButtons: newButtons }));
+                                      }}
+                                    />
+                                    Mostrar botón debajo de esta imagen
+                                  </label>
+                                )}
+                              </div>
+                              {hasImage && btnConfig.show && (
+                                <input
+                                  type="text"
+                                  className={styles.input}
+                                  style={{ padding: '6px 12px', fontSize: '0.82rem' }}
+                                  placeholder="Texto del botón (ej: 👉 HACER PEDIDO AHORA 🇪🇨)"
+                                  value={btnConfig.text || ''}
+                                  onChange={(e) => {
+                                    const newButtons = [...(formData.landingButtons || [])];
+                                    if (!newButtons[idx]) newButtons[idx] = { show: false, text: '👉 HACER PEDIDO AHORA 🇪🇨' };
+                                    newButtons[idx] = { ...newButtons[idx], text: e.target.value };
+                                    setFormData(prev => ({ ...prev, landingButtons: newButtons }));
+                                  }}
+                                />
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* --- CONFIGURACIÓN DE PROMOCIONES --- */}
+                  <h2 className={styles.formSectionTitle} style={{ marginTop: '30px' }}>🎁 Promociones / Paquetes del Formulario</h2>
+                  <div style={{ background: 'rgba(59,130,246,0.04)', padding: '24px', borderRadius: '16px', border: '2px solid rgba(59,130,246,0.15)' }}>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--color-text-light)', marginBottom: '18px', lineHeight: 1.6 }}>
+                      Define los paquetes o promociones que se mostrarán en el formulario COD al final de la página. Puedes agregar, eliminar y configurar cada una.
+                    </p>
+
+                    {/* Checkboxes de Envio Prioritario y Despacho en 24h */}
+                    <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', marginBottom: '18px', background: 'white', padding: '14px', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)' }}>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer', color: '#4a5568' }}>
+                        <input
+                          type="checkbox"
+                          checked={formData.showPriorityShipping !== false}
+                          onChange={(e) => setFormData(prev => ({ ...prev, showPriorityShipping: e.target.checked }))}
+                          style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: '#22c55e' }}
+                        />
+                        ⚡ Mostrar opción "Envío Prioritario"
+                      </label>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer', color: '#4a5568' }}>
+                        <input
+                          type="checkbox"
+                          checked={formData.showDispatch24h !== false}
+                          onChange={(e) => setFormData(prev => ({ ...prev, showDispatch24h: e.target.checked }))}
+                          style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: '#22c55e' }}
+                        />
+                        🚨 Mostrar "Despacho en 24 horas"
+                      </label>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '20px' }}>
+                      {(formData.promotions || []).map((promo: any, idx: number) => (
+                        <div
+                          key={idx}
+                          style={{
+                            background: 'white',
+                            borderRadius: '12px',
+                            border: '1px solid rgba(0,0,0,0.08)',
+                            padding: '16px',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+                          }}
+                        >
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', borderBottom: '1px solid rgba(0,0,0,0.05)', paddingBottom: '8px' }}>
+                            <span style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--color-primary)' }}>
+                              Paquete #{idx + 1}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const newPromos = (formData.promotions || []).filter((_: any, i: number) => i !== idx);
+                                setFormData(prev => ({ ...prev, promotions: newPromos }));
+                              }}
+                              style={{ background: 'none', border: 'none', color: '#ff4444', fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 700 }}
+                            >
+                              <Trash2 size={14} /> Eliminar
+                            </button>
+                          </div>
+                          
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
+                            <div>
+                              <label style={{ fontSize: '0.78rem', fontWeight: 600, display: 'block', marginBottom: '4px', color: '#4a5568' }}>Título del Paquete</label>
+                              <input
+                                type="text"
+                                className={styles.input}
+                                style={{ padding: '8px 10px', fontSize: '0.82rem' }}
+                                placeholder="Ej: PAGA 3 LLEVA 5"
+                                value={promo.title || ''}
+                                onChange={(e) => {
+                                  const newPromos = [...(formData.promotions || [])];
+                                  newPromos[idx] = { ...newPromos[idx], title: e.target.value };
+                                  setFormData(prev => ({ ...prev, promotions: newPromos }));
+                                }}
+                              />
+                            </div>
+                            
+                            <div>
+                              <label style={{ fontSize: '0.78rem', fontWeight: 600, display: 'block', marginBottom: '4px', color: '#4a5568' }}>Precio Especial ($)</label>
+                              <input
+                                type="number"
+                                step="0.01"
+                                className={styles.input}
+                                style={{ padding: '8px 10px', fontSize: '0.82rem' }}
+                                placeholder="24.99"
+                                value={promo.price || ''}
+                                onChange={(e) => {
+                                  const newPromos = [...(formData.promotions || [])];
+                                  newPromos[idx] = { ...newPromos[idx], price: parseFloat(e.target.value) || 0 };
+                                  setFormData(prev => ({ ...prev, promotions: newPromos }));
+                                }}
+                              />
+                            </div>
+
+                            <div>
+                              <label style={{ fontSize: '0.78rem', fontWeight: 600, display: 'block', marginBottom: '4px', color: '#4a5568' }}>Precio Original ($)</label>
+                              <input
+                                type="number"
+                                step="0.01"
+                                className={styles.input}
+                                style={{ padding: '8px 10px', fontSize: '0.82rem' }}
+                                placeholder="32.99"
+                                value={promo.originalPrice || ''}
+                                onChange={(e) => {
+                                  const newPromos = [...(formData.promotions || [])];
+                                  newPromos[idx] = { ...newPromos[idx], originalPrice: parseFloat(e.target.value) || 0 };
+                                  setFormData(prev => ({ ...prev, promotions: newPromos }));
+                                }}
+                              />
+                            </div>
+
+                            <div>
+                              <label style={{ fontSize: '0.78rem', fontWeight: 600, display: 'block', marginBottom: '4px', color: '#4a5568' }}>Cantidad</label>
+                              <input
+                                type="number"
+                                className={styles.input}
+                                style={{ padding: '8px 10px', fontSize: '0.82rem' }}
+                                placeholder="1"
+                                value={promo.quantity || ''}
+                                onChange={(e) => {
+                                  const newPromos = [...(formData.promotions || [])];
+                                  newPromos[idx] = { ...newPromos[idx], quantity: parseInt(e.target.value, 10) || 1 };
+                                  setFormData(prev => ({ ...prev, promotions: newPromos }));
+                                }}
+                              />
+                            </div>
+
+                            <div>
+                              <label style={{ fontSize: '0.78rem', fontWeight: 600, display: 'block', marginBottom: '4px', color: '#4a5568' }}>Texto Etiqueta (Badge)</label>
+                              <input
+                                type="text"
+                                className={styles.input}
+                                style={{ padding: '8px 10px', fontSize: '0.82rem' }}
+                                placeholder="Ej: OFERTA 😜"
+                                value={promo.badge || ''}
+                                onChange={(e) => {
+                                  const newPromos = [...(formData.promotions || [])];
+                                  newPromos[idx] = { ...newPromos[idx], badge: e.target.value };
+                                  setFormData(prev => ({ ...prev, promotions: newPromos }));
+                                }}
+                              />
+                            </div>
+
+                            <div>
+                              <label style={{ fontSize: '0.78rem', fontWeight: 600, display: 'block', marginBottom: '4px', color: '#4a5568' }}>Estilo Etiqueta (Color)</label>
+                              <select
+                                className={styles.input}
+                                style={{ padding: '8px 10px', fontSize: '0.82rem', height: '36px' }}
+                                value={promo.badgeClass || 'badgeOffer'}
+                                onChange={(e) => {
+                                  const newPromos = [...(formData.promotions || [])];
+                                  newPromos[idx] = { ...newPromos[idx], badgeClass: e.target.value };
+                                  setFormData(prev => ({ ...prev, promotions: newPromos }));
+                                }}
+                              >
+                                <option value="badgeOffer">Azul (OFERTA)</option>
+                                <option value="badgeSpecial">Naranja/Rojo (DESCUENTO)</option>
+                                <option value="badgeBest">Naranja/Marrón (MÁS VENDIDO)</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <button
+                      type="button"
+                      className={styles.addItemBtn}
+                      onClick={() => {
+                        const newPromos = [...(formData.promotions || [])];
+                        newPromos.push({
+                          quantity: 1,
+                          price: 24.99,
+                          originalPrice: 32.99,
+                          title: 'NUEVA OFERTA',
+                          badge: 'OFERTA 🔥',
+                          badgeClass: 'badgeOffer'
+                        });
+                        setFormData(prev => ({ ...prev, promotions: newPromos }));
+                      }}
+                    >
+                      <Plus size={14} /> Agregar Nueva Promoción
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {formData.template !== 'ganadora_simple' && (
+                <>
+                  {/* Bullets */}
+                  <h2 className={styles.formSectionTitle}>💡 Viñetas Clave (Bullets)</h2>
               <div className={styles.arrayContainer}>
                 {formData.bullets.map((bullet, index) => (
                   <div key={index} className={styles.arrayItem}>
@@ -2001,16 +2695,18 @@ export default function AdminPage() {
                 </button>
               </div>
 
-              {/* Garantía */}
-              <h2 className={styles.formSectionTitle}>🛡️ Garantía de Compra</h2>
-              <div className={styles.inputGroup}>
-                <label className={styles.label}>Texto de Garantía</label>
-                <textarea
-                  className={styles.textarea}
-                  value={formData.guaranteeText}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, guaranteeText: e.target.value }))}
-                />
-              </div>
+                  {/* Garantía */}
+                  <h2 className={styles.formSectionTitle}>🛡️ Garantía de Compra</h2>
+                  <div className={styles.inputGroup}>
+                    <label className={styles.label}>Texto de Garantía</label>
+                    <textarea
+                      className={styles.textarea}
+                      value={formData.guaranteeText}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, guaranteeText: e.target.value }))}
+                    />
+                  </div>
+                </>
+              )}
 
               {/* Botón de Guardado */}
               <button

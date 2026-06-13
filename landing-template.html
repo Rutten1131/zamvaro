@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collar Titanic Corazón del Océano - Oferta Exclusiva</title>
+  
+  <!-- Importación de Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Montserrat:wght@400;500;700;800&family=Open+Sans:wght@400;600;700&family=Poppins:wght@400;600;700;800&family=Roboto:wght@400;500;700;900&family=Staatliches&display=swap" rel="stylesheet">
+  
+  <style>
+    /* VARIABLES DE COLOR Y DISEÑO */
+    :root {
+      --navy-dark: #01072E;
+      --navy-medium: #011540;
+      --navy-light: #111833;
+      --blue-accent: #07244F;
+      --gold-cta: #946F22;
+      --gold-light: #C5A059;
+      --green-confirm: #03AD33;
+      --red-urgency: #D0021B;
+      --pink-alert: #FF7397;
+      --pink-dark: #EE0E55;
+      --turquoise: #50E3C2;
+      --form-bg: #DEEAFD;
+      --text-gray: #4A4A4A;
+      --text-light: #FFFFFF;
+      --soft-white: #F6F9FE;
+    }
+
+    /* GENERAL Y RESET */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: #0A0F24;
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      background-color: var(--navy-dark);
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ANIMACIONES */
+    @keyframes move {
+      0%, 100% { transform: translateX(0); }
+      15% { transform: translateX(-6px) rotate(-1deg); }
+      30% { transform: translateX(5px) rotate(1deg); }
+      45% { transform: translateX(-4px) rotate(-0.5deg); }
+      60% { transform: translateX(3px) rotate(0.5deg); }
+      75% { transform: translateX(-2px); }
+    }
+    
+    .anim-move {
+      animation: move 2.5s infinite ease-in-out;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .anim-bounce {
+      animation: bounce 1.8s infinite ease-in-out;
+    }
+
+    /* BOTÓN CTA GENERAL */
+    .btn-gold {
+      display: block;
+      width: 100%;
+      background-color: var(--gold-cta);
+      border: 10px solid var(--gold-cta);
+      color: #FFFFFF;
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(148, 111, 34, 0.4);
+    }
+    
+    .btn-gold:hover {
+      background-color: var(--gold-light);
+      border-color: var(--gold-light);
+      transform: translateY(-2px);
+    }
+
+    .btn-gold .title {
+      font-family: 'Roboto', sans-serif;
+      font-weight: 900;
+      font-size: 20px;
+      letter-spacing: 0.5px;
+      display: block;
+      text-transform: uppercase;
+    }
+
+    .btn-gold .subtitle {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 500;
+      font-size: 12px;
+      margin-top: 2px;
+      display: block;
+      opacity: 0.95;
+    }
+
+    /* SECCIÓN 1: HERO / HEADER VISUAL */
+    .section-hero {
+      background-color: #FFFFFF;
+      padding: 0;
+      width: 100%;
+      border-bottom: 2px solid var(--gold-cta);
+    }
+
+    .hero-banner {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 0;
+    }
+
+    /* SECCIÓN 2: CTA INICIAL + VIDEO DEMOSTRATIVO */
+    .section-demo {
+      background-color: var(--navy-dark);
+      padding: 20px 15px;
+      text-align: center;
+    }
+
+    .video-container {
+      width: 100%;
+      max-width: 100%;
+      aspect-ratio: 636/848;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 15px 0;
+      border: 3px solid var(--gold-cta);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+      background-color: #000;
+    }
+
+    .video-element {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .secondary-image {
+      width: 100%;
+      border-radius: 12px;
+      margin: 15px 0;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    }
+
+    .pago-contraentrega-txt {
+      font-family: 'Open Sans', sans-serif;
+      font-size: 16px;
+      color: #FFFFFF;
+      text-align: center;
+      margin-top: 15px;
+      letter-spacing: 0.5px;
+    }
+
+    .pago-contraentrega-txt strong {
+      font-weight: 800;
+    }
+
+    /* SECCIÓN 3: SECCIÓN VISUAL SECUNDARIA */
+    .section-secondary {
+      background-color: var(--navy-medium);
+      padding: 0;
+      text-align: center;
+    }
+
+    .section-secondary .video-container {
+      aspect-ratio: 678/848;
+      border: none;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    .section-secondary .btn-gold-wrap {
+      padding: 30px 15px 40px;
+    }
+
+    /* SECCIÓN 4: CARACTERÍSTICAS DEL PRODUCTO */
+    .section-features {
+      background-color: var(--navy-light);
+      padding: 30px 20px 40px;
+      text-align: center;
+    }
+
+    .features-title {
+      font-family: 'Staatliches', sans-serif;
+      font-size: 26px;
+      color: #64C5E6;
+      margin: 10px 0 15px;
+      letter-spacing: 1.5px;
+    }
+
+    .features-list {
+      font-family: 'Merriweather', serif;
+      font-size: 16px;
+      line-height: 1.8;
+      color: #FFFFFF;
+      margin-bottom: 30px;
+      padding: 10px;
+      text-align: left;
+      border-left: 3px solid #64C5E6;
+      background: rgba(255,255,255,0.02);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .features-list p {
+      margin-bottom: 12px;
+    }
+
+    .features-list strong {
+      color: #64C5E6;
+    }
+
+    /* SECCIÓN 5: PRUEBA SOCIAL / TESTIMONIOS */
+    .section-testimonials {
+      background-color: var(--blue-accent);
+      padding: 30px 15px;
+    }
+
+    .testimonials-title {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      color: #FFFFFF;
+      text-align: center;
+      background: linear-gradient(135deg, var(--gold-cta), #D4AF37);
+      padding: 12px;
+      border-radius: 30px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .testimonial-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .testimonial-author {
+      font-family: 'Montserrat', sans-serif;
+      color: var(--turquoise);
+      font-style: italic;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .testimonial-stars {
+      color: #FFD700;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .testimonial-text {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px;
+      line-height: 1.4;
+      color: #FFFFFF;
+    }
+
+    /* SECCIÓN 6: GARANTÍA / COMPRA SEGURA */
+    .section-warranty {
+      background-color: var(--navy-light);
+      padding: 35px 20px;
+    }
+
+    .warranty-title {
+      font-family: 'Staatliches', sans-serif;
+      font-size: 34px;
+      color: #FFFFFF;
+      text-align: center;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+
+    .warranty-separator {
+      text-align: center;
+      color: var(--gold-cta);
+      font-weight: bold;
+      margin-bottom: 25px;
+      font-size: 18px;
+      letter-spacing: 2px;
+    }
+
+    .warranty-blocks {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .warranty-block {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    .warranty-block-title {
+      font-family: 'Roboto', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      color: #FFFFFF;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .warranty-block-title span {
+      color: var(--gold-light);
+    }
+
+    .warranty-block-desc {
+      font-family: 'Roboto', sans-serif;
+      font-size: 14px;
+      color: #CCCCCC;
+      line-height: 1.5;
+    }
+
+    .warranty-badge {
+      display: block;
+      width: 100%;
+      max-width: 320px;
+      height: auto;
+      margin: 25px auto 0;
+      object-fit: scale-down;
+    }
+
+    /* SECCIÓN 7: URGENCIA + TIMER + CTA FINAL */
+    .section-urgency-timer {
+      background-color: #FFFFFF;
+      color: #000000;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    .urgency-header {
+      margin-bottom: 20px;
+    }
+
+    .urgency-alert {
+      color: var(--pink-alert);
+      font-size: 24px;
+      font-weight: 900;
+      margin-bottom: 5px;
+    }
+
+    .urgency-promo {
+      font-size: 18px;
+      color: #333333;
+      margin-bottom: 5px;
+    }
+
+    .urgency-limit {
+      font-size: 21px;
+      font-weight: 900;
+      color: #000000;
+    }
+
+    /* TIMER */
+    .timer-container {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .timer-box {
+      background-color: #000000;
+      color: #FFFFFF;
+      border-radius: 8px;
+      padding: 10px;
+      min-width: 75px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    .timer-num {
+      font-family: 'Poppins', sans-serif;
+      font-size: 35px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .timer-lbl {
+      font-family: 'Open Sans', sans-serif;
+      font-size: 12px;
+      text-transform: uppercase;
+      opacity: 0.8;
+      margin-top: 4px;
+    }
+
+    .section-urgency-timer .btn-gold {
+      margin: 30px 0;
+    }
+
+    .section-urgency-timer .btn-gold .subtitle {
+      color: #FFFFFF;
+    }
+
+    /* FILA 7.2: LLAMADO AL FORMULARIO */
+    .form-anchor-row {
+      background-color: var(--form-bg);
+      padding: 25px 20px;
+      text-align: center;
+      border-top: 1px dashed rgba(0,0,0,0.1);
+    }
+
+    .form-anchor-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--navy-dark);
+      margin-bottom: 8px;
+    }
+
+    .form-anchor-sub {
+      color: var(--pink-dark);
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    /* SECCIÓN 8: FORMULARIO DE PEDIDO (2 PASOS) */
+    .section-order-form {
+      background-color: var(--navy-dark);
+      padding: 30px 15px;
+    }
+
+    .form-outer-container {
+      border: 4px solid var(--red-urgency);
+      border-radius: 20px 20px 20px 29px;
+      background-color: #FFFFFF;
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+    }
+
+    .form-inner-container {
+      border: 3px solid #449CF4;
+      border-radius: 0 16px 16px;
+      background-color: #FFFFFF;
+      padding: 20px 15px;
+    }
+
+    .form-step-header {
+      background-color: #F1F5F9;
+      border-radius: 8px;
+      padding: 8px;
+      text-align: center;
+      margin-bottom: 20px;
+      border: 1px solid #E2E8F0;
+    }
+
+    .form-step-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      color: #1E293B;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+    }
+
+    .form-label {
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      color: #252A32;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      height: 45px;
+      background-color: #FFFFFF;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 8px;
+      padding: 0 12px;
+      font-size: 14px;
+      color: #252A32;
+      font-family: 'Open Sans', sans-serif;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: #449CF4;
+      box-shadow: 0 0 0 3px rgba(68, 156, 244, 0.15);
+    }
+
+    .form-warning-text {
+      color: var(--red-urgency);
+      font-size: 13px;
+      text-align: center;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    /* BOTONES DEL FORMULARIO */
+    .btn-step1 {
+      width: 100%;
+      background-color: var(--green-confirm);
+      color: #F6F9FE;
+      font-size: 18px;
+      font-weight: 800;
+      border: none;
+      padding: 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-transform: uppercase;
+      box-shadow: 0 4px 15px rgba(3, 173, 51, 0.3);
+      transition: all 0.3s ease;
+      margin-top: 15px;
+    }
+
+    .btn-step1:hover {
+      background-color: #028e29;
+      transform: translateY(-1px);
+    }
+
+    .btn-step2 {
+      width: 100%;
+      background-color: var(--red-urgency);
+      color: #F6F9FE;
+      font-size: 18px;
+      font-weight: 800;
+      border: none;
+      padding: 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-transform: uppercase;
+      box-shadow: 0 4px 15px rgba(208, 2, 27, 0.3);
+      transition: all 0.3s ease;
+      margin-top: 20px;
+    }
+
+    .btn-step2:hover {
+      background-color: #b00115;
+      transform: translateY(-1px);
+    }
+
+    .form-footer-txt {
+      color: #000000;
+      font-size: 16px;
+      font-weight: 800;
+      text-decoration: underline;
+      text-align: center;
+      margin-top: 15px;
+      text-transform: uppercase;
+    }
+
+    /* ESTILOS PASO 2 */
+    .step-content {
+      display: none; /* Se activa dinámicamente con JS */
+    }
+
+    .step-content.active {
+      display: block;
+    }
+
+    .order-urgency-box {
+      background-color: #FEF2F2;
+      border: 1px solid #FEE2E2;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .order-urgency-box span {
+      display: block;
+      font-weight: 800;
+    }
+
+    .offer-title {
+      font-weight: 800;
+      font-size: 16px;
+      color: #1E293B;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    /* PACKS / OFERTAS DEL FORMULARIO */
+    .pack-selector {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .pack-option {
+      border: 2px solid #CBD5E1;
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.2s ease;
+      background: #FFFFFF;
+    }
+
+    .pack-option.selected {
+      border-color: var(--gold-cta);
+      background-color: #FFFDF5;
+    }
+
+    .pack-radio {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--gold-cta);
+    }
+
+    .pack-details {
+      flex: 1;
+      text-align: left;
+    }
+
+    .pack-name {
+      font-weight: 700;
+      font-size: 14px;
+      color: #1E293B;
+    }
+
+    .pack-badge {
+      display: inline-block;
+      background-color: var(--gold-cta);
+      color: #FFFFFF;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 5px;
+      text-transform: uppercase;
+    }
+
+    .pack-price {
+      font-weight: 800;
+      color: var(--red-urgency);
+      font-size: 16px;
+    }
+
+    /* RESUMEN DE COMPRA */
+    .order-summary {
+      background-color: #F8FAFC;
+      border-radius: 8px;
+      padding: 15px;
+      border: 1px solid #E2E8F0;
+      margin-bottom: 20px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #475569;
+    }
+
+    .summary-row.total {
+      border-top: 1.5px solid #E2E8F0;
+      padding-top: 10px;
+      margin-top: 5px;
+      font-weight: 800;
+      font-size: 18px;
+      color: #0F172A;
+    }
+
+    /* ORDER BUMPS */
+    .order-bump-card {
+      margin-bottom: 15px;
+      border-radius: 0 6px 6px;
+      padding: 15px;
+      text-align: left;
+    }
+
+    .bump-yellow {
+      border: 3px dashed #F5BF47;
+      background: rgba(251, 196, 196, 0.69);
+    }
+
+    .bump-teal {
+      border: 2px dashed #FDCC5E;
+      background: #DEFFF8;
+    }
+
+    .bump-header {
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      color: #000000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .bump-checkbox {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--red-urgency);
+    }
+
+    .bump-body {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .bump-img {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 6px;
+      background-color: #FFF;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .bump-info {
+      flex: 1;
+    }
+
+    .bump-desc {
+      font-size: 13px;
+      color: #333333;
+      line-height: 1.4;
+      margin-bottom: 6px;
+    }
+
+    .bump-pricing {
+      font-size: 14px;
+    }
+
+    .price-old {
+      text-decoration: line-through;
+      color: var(--red-urgency);
+      margin-right: 5px;
+    }
+
+    .price-new {
+      background-color: #F8E71C;
+      color: var(--red-urgency);
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* SECCIÓN 9: SOPORTE / WHATSAPP / ALIADOS / FOOTER */
+    .section-support {
+      background-color: #FFFFFF;
+      color: var(--text-gray);
+      padding: 30px 20px 20px;
+      text-align: center;
+    }
+
+    .support-title {
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 800;
+      font-size: 22px;
+      color: #111111;
+      margin-bottom: 12px;
+    }
+
+    .support-desc {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-gray);
+      margin-bottom: 20px;
+      text-align: justify;
+    }
+
+    .support-cta {
+      font-weight: 800;
+      font-size: 16px;
+      color: #111111;
+      margin-bottom: 25px;
+    }
+
+    .whatsapp-btn-img1 {
+      display: block;
+      width: 100%;
+      max-width: 374px;
+      height: auto;
+      margin: 10px auto;
+      transition: transform 0.2s ease;
+    }
+
+    .whatsapp-btn-img2 {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      object-fit: contain;
+      margin: 20px auto;
+      transition: transform 0.2s ease;
+    }
+
+    .whatsapp-btn-img1:hover, .whatsapp-btn-img2:hover {
+      transform: scale(1.02);
+    }
+
+    .allies-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #000000;
+      margin: 30px 0 10px;
+    }
+
+    .allies-img {
+      width: 100%;
+      border-radius: 10px;
+      object-fit: contain;
+      margin: 10px 0 20px;
+    }
+
+    .footer-copyright {
+      font-size: 13px;
+      color: #3F4547;
+      text-align: center;
+      padding: 15px 0;
+      border-top: 1px solid rgba(0,0,0,0.06);
+    }
+
+    /* MODAL DE CONFIRMACIÓN FINAL */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.85);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background-color: #FFFFFF;
+      color: #333333;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 400px;
+      padding: 30px 20px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      border: 3px solid var(--green-confirm);
+    }
+
+    .modal-icon {
+      font-size: 50px;
+      color: var(--green-confirm);
+      margin-bottom: 15px;
+    }
+
+    .modal-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 24px;
+      color: var(--green-confirm);
+      margin-bottom: 10px;
+    }
+
+    .modal-desc {
+      font-size: 15px;
+      color: #555555;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .btn-modal-close {
+      background-color: var(--green-confirm);
+      color: #FFFFFF;
+      border: none;
+      font-weight: 800;
+      padding: 12px 30px;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      text-transform: uppercase;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- SECCIÓN 1 — Hero / Header visual -->
+  <section class="section-hero">
+    <!-- SVG Banner Promesa Principal diseñado a medida para Collar Titanic -->
+    <svg viewBox="0 0 500 250" class="hero-banner" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#02093a"/>
+          <stop offset="50%" stop-color="#05195b"/>
+          <stop offset="100%" stop-color="#01072E"/>
+        </linearGradient>
+        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#946F22"/>
+          <stop offset="50%" stop-color="#F8E71C"/>
+          <stop offset="100%" stop-color="#946F22"/>
+        </linearGradient>
+      </defs>
+      <!-- Background -->
+      <rect width="500" height="250" fill="url(#blueGrad)"/>
+      <!-- Decorative heart shape outline inside background -->
+      <path d="M 250,55 C 250,55 210,15 170,15 C 120,15 90,55 90,95 C 90,155 160,205 250,235 C 340,205 410,155 410,95 C 410,55 380,15 330,15 C 290,15 250,55 250,55 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.05)" stroke-width="2"/>
+      
+      <!-- Text integrated in graphic design -->
+      <text x="250" y="50" fill="#FFFFFF" font-family="'Staatliches', sans-serif" font-size="28" text-anchor="middle" letter-spacing="1">EL REGALO DE AMOR ETERNO</text>
+      <text x="250" y="90" fill="url(#goldGrad)" font-family="'Montserrat', sans-serif" font-weight="900" font-size="34" text-anchor="middle" letter-spacing="1">COLLAR TITANIC</text>
+      <text x="250" y="125" fill="#50E3C2" font-family="'Montserrat', sans-serif" font-weight="700" font-size="16" text-anchor="middle">"CORAZÓN DEL OCÉANO" PREMIUM</text>
+      
+      <!-- Badges / Bullets visuales integrados -->
+      <rect x="50" y="155" width="400" height="70" rx="10" fill="rgba(255, 255, 255, 0.07)" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>
+      <circle cx="95" cy="190" r="18" fill="#946F22"/>
+      <text x="95" y="196" fill="#FFFFFF" font-family="'Montserrat', sans-serif" font-weight="bold" font-size="18" text-anchor="middle">💍</text>
+      <text x="125" y="182" fill="#FFFFFF" font-family="'Open Sans', sans-serif" font-weight="bold" font-size="12">Plata Ley 925 + Cristal Zafiro</text>
+      <text x="125" y="200" fill="#E2E8F0" font-family="'Open Sans', sans-serif" font-size="11">Hipoalergénico y Duradero</text>
+      
+      <circle cx="315" cy="190" r="18" fill="#03AD33"/>
+      <text x="315" y="195" fill="#FFFFFF" font-family="'Montserrat', sans-serif" font-weight="bold" font-size="16" text-anchor="middle">🇪🇨</text>
+      <text x="340" y="182" fill="#FFFFFF" font-family="'Open Sans', sans-serif" font-weight="bold" font-size="12">Envío Gratis</text>
+      <text x="340" y="200" fill="#E2E8F0" font-family="'Open Sans', sans-serif" font-size="11">Pago Contraentrega</text>
+    </svg>
+  </section>
+
+  <!-- SECCIÓN 2 — CTA inicial + Video demostrativo -->
+  <section class="section-demo">
+    <!-- Botón CTA 1 -->
+    <a href="#formulario-orden" class="btn-gold anim-move">
+      <span class="title">👉 PIDE AHORA Y PAGA AL RECIBIR</span>
+      <span class="subtitle">🔥 457 Vendidos - Solo quedan 13 Unidades</span>
+    </a>
+
+    <!-- Video Demostrativo del Producto -->
+    <div class="video-container">
+      <video class="video-element" autoplay loop muted playsinline>
+        <!-- Simulación de video con una demo loop interactiva o placeholder visual -->
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-beautiful-blue-crystal-jewel-close-up-40995-large.mp4" type="video/mp4">
+        Tu navegador no soporta videos.
+      </video>
+    </div>
+
+    <!-- Imagen secundaria del detalle del producto -->
+    <svg class="secondary-image" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg">
+      <rect width="400" height="250" fill="#011540"/>
+      <!-- Grid Lines -->
+      <line x1="200" y1="0" x2="200" y2="250" stroke="rgba(255,255,255,0.05)"/>
+      <!-- Heart shape detailed vector drawing -->
+      <path d="M 200,90 C 200,90 170,40 130,40 C 90,40 60,75 60,115 C 60,175 130,220 200,245 C 270,220 340,175 340,115 C 340,75 310,40 270,40 C 230,40 200,90 200,90 Z" fill="#0F4C81" stroke="#50E3C2" stroke-width="4" filter="drop-shadow(0px 5px 10px rgba(0,0,0,0.5))"/>
+      <path d="M 200,98 C 200,98 175,55 140,55 C 105,55 80,85 80,120 C 80,165 140,205 200,228 C 260,205 320,165 320,120 C 320,85 295,55 260,55 C 225,55 200,98 200,98 Z" fill="#1C74BB" opacity="0.6"/>
+      <!-- Shiny sparkles -->
+      <polygon points="120,80 125,90 135,95 125,100 120,110 115,100 105,95 115,90" fill="#FFFFFF"/>
+      <polygon points="270,140 273,147 280,150 273,153 270,160 267,153 260,150 267,147" fill="#FFFFFF"/>
+      <!-- Labels -->
+      <rect x="25" y="20" width="120" height="28" rx="5" fill="rgba(0,0,0,0.6)"/>
+      <text x="85" y="38" fill="#FFF" font-family="'Open Sans', sans-serif" font-size="11" text-anchor="middle" font-weight="bold">Cristal Tallado A Mano</text>
+      <rect x="250" y="200" width="130" height="28" rx="5" fill="rgba(0,0,0,0.6)"/>
+      <text x="315" y="218" fill="#50E3C2" font-family="'Open Sans', sans-serif" font-size="11" text-anchor="middle" font-weight="bold">Cadena Ajustable Incluida</text>
+    </svg>
+
+    <!-- Botón CTA 2 (repetido) -->
+    <a href="#formulario-orden" class="btn-gold anim-move" style="margin-top: 30px;">
+      <span class="title">👉 PIDE AHORA Y PAGA AL RECIBIR</span>
+      <span class="subtitle">🔥 457 Vendidos - Solo quedan 13 Unidades</span>
+    </a>
+
+    <!-- Texto de pago -->
+    <p class="pago-contraentrega-txt"><strong>PAGO CONTRAENTREGA + ENVIO GRATIS 🇪🇨</strong></p>
+  </section>
+
+  <!-- SECCIÓN 3 — Sección visual secundaria (Video + Imagen + CTA) -->
+  <section class="section-secondary">
+    <!-- Banner Intermedio -->
+    <svg viewBox="0 0 500 120" class="hero-banner" xmlns="http://www.w3.org/2000/svg">
+      <rect width="500" height="120" fill="#011540"/>
+      <line x1="0" y1="5" x2="500" y2="5" stroke="#946F22" stroke-width="2"/>
+      <text x="250" y="50" fill="#FFFFFF" font-family="'Montserrat', sans-serif" font-weight="800" font-size="18" text-anchor="middle">UN DETALLE INOLVIDABLE</text>
+      <text x="250" y="80" fill="#CCCCCC" font-family="'Open Sans', sans-serif" font-size="14" text-anchor="middle">Perfecto para aniversarios, cumpleaños o momentos especiales</text>
+      <line x1="0" y1="115" x2="500" y2="115" stroke="#946F22" stroke-width="2"/>
+    </svg>
+
+    <!-- Segundo Video Demostrativo -->
+    <div class="video-container">
+      <video class="video-element" autoplay loop muted playsinline>
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-woman-showing-off-a-luxury-necklace-40994-large.mp4" type="video/mp4">
+        Tu navegador no soporta videos.
+      </video>
+    </div>
+
+    <!-- Botón CTA 3 -->
+    <div class="btn-gold-wrap">
+      <a href="#formulario-orden" class="btn-gold anim-move">
+        <span class="title">👉 PIDE AHORA Y PAGA AL RECIBIR</span>
+        <span class="subtitle">🔥 457 Vendidos - Solo quedan 13 Unidades</span>
+      </a>
+    </div>
+
+    <!-- Imagen Cierre del Bloque -->
+    <svg class="hero-banner" viewBox="0 0 500 160" xmlns="http://www.w3.org/2000/svg">
+      <rect width="500" height="160" fill="#01072E"/>
+      <path d="M150 80 Q250 130 350 80" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="3"/>
+      <circle cx="250" cy="80" r="50" fill="#011540" stroke="#946F22" stroke-width="2"/>
+      <text x="250" y="70" fill="#FFFFFF" font-family="'Montserrat', sans-serif" font-weight="bold" font-size="28" text-anchor="middle">🎁</text>
+      <text x="250" y="100" fill="#FFFFFF" font-family="'Staatliches', sans-serif" font-size="16" text-anchor="middle" letter-spacing="1">ESTUCHE DE LUJO GRATIS</text>
+      <text x="250" y="140" fill="#E2E8F0" font-family="'Open Sans', sans-serif" font-size="12" text-anchor="middle">Tu collar se entrega listo para sorprender</text>
+    </svg>
+  </section>
+
+  <!-- SECCIÓN 4 — Características del producto -->
+  <section class="section-features">
+    <h3 class="features-title">Características</h3>
+    <div class="features-list">
+      <p><strong>Material:</strong> Plata Ley 925 Premium con baño protector de rodio.</p>
+      <p><strong>Piedra Principal:</strong> Gema de cristal azul zafiro creado, tallado en forma de corazón con facetas de alto brillo.</p>
+      <p><strong>Seguridad:</strong> <strong>NO CAMBIA DE COLOR NI CAUSA ALERGIAS</strong> (100% libre de níquel y plomo).</p>
+      <p><strong>Medidas:</strong> Dije de 2.5 x 2.5 cm. Cadena ajustable de 45 cm + 5 cm de extensión.</p>
+      <p><strong>Incluye:</strong> Caja de Terciopelo Azul de Colección + Tarjeta de Autenticidad.</p>
+    </div>
+
+    <!-- Botón CTA 4 -->
+    <a href="#formulario-orden" class="btn-gold anim-move">
+      <span class="title">👉 PIDE AHORA Y PAGA AL RECIBIR</span>
+      <span class="subtitle">🔥 457 Vendidos - Solo quedan 13 Unidades</span>
+    </a>
+  </section>
+
+  <!-- SECCIÓN 5 — Prueba social / Testimonios -->
+  <section class="section-testimonials">
+    <h3 class="testimonials-title">LO QUE DICEN NUESTROS CLIENTES</h3>
+    
+    <div class="testimonial-card">
+      <div class="testimonial-author">María Fernanda Espinoza (Quito)</div>
+      <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+      <p class="testimonial-text">"Es hermoso, brilla espectacular. Lo compré para el cumpleaños de mi mamá y le encantó el estuche de terciopelo. Pagué en mi casa cuando me lo entregaron."</p>
+    </div>
+
+    <div class="testimonial-card">
+      <div class="testimonial-author">Carlos Andrés Plaza (Guayaquil)</div>
+      <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+      <p class="testimonial-text">"El envío fue súper rápido, me llegó al día siguiente de pedirlo. La cadena es gruesa y el dije se ve muy elegante. Excelente servicio al cliente por WhatsApp."</p>
+    </div>
+
+    <div class="testimonial-card">
+      <div class="testimonial-author">Gabriela Tobar (Cuenca)</div>
+      <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+      <p class="testimonial-text">"Lo uso todos los días y no ha perdido el brillo ni se ha puesto negro como otros. Excelente calidad para el precio, ¡vale totalmente la pena!"</p>
+    </div>
+
+    <div class="testimonial-card">
+      <div class="testimonial-author">Luis Miguel Cueva (Loja)</div>
+      <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+      <p class="testimonial-text">"Fue el regalo de aniversario para mi esposa y quedó fascinada. La presentación en la cajita azul le da un toque premium impresionante."</p>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 6 — Garantía / Compra segura -->
+  <section class="section-warranty">
+    <h3 class="warranty-title">Compra 100% segura</h3>
+    <div class="warranty-separator">_______</div>
+    
+    <div class="warranty-blocks">
+      <div class="warranty-block">
+        <h4 class="warranty-block-title"><span>✓</span> Envío seguro</h4>
+        <p class="warranty-block-desc">Pagas al recibir tu producto en casa. Sin riesgos ni cargos ocultos.</p>
+      </div>
+      <div class="warranty-block">
+        <h4 class="warranty-block-title"><span>✓</span> Entrega garantizada</h4>
+        <p class="warranty-block-desc">Trabajamos con los couriers más rápidos de Ecuador, asegurando la llegada intacta de tu joya.</p>
+      </div>
+      <div class="warranty-block">
+        <h4 class="warranty-block-title"><span>✓</span> Garantía de satisfacción</h4>
+        <p class="warranty-block-desc">Garantía de 30 días contra cualquier defecto de fábrica o pérdida de brillo.</p>
+      </div>
+    </div>
+
+    <!-- SVG Badge de Garantía Oficial -->
+    <svg class="warranty-badge" viewBox="0 0 408 233" xmlns="http://www.w3.org/2000/svg">
+      <rect width="408" height="233" rx="10" fill="#1E293B" stroke="rgba(255,255,255,0.05)" stroke-width="2"/>
+      <!-- Gold Shield -->
+      <path d="M 204,30 C 204,30 254,40 254,80 C 254,130 204,170 204,170 C 204,170 154,130 154,80 C 154,40 204,30 204,30 Z" fill="none" stroke="#946F22" stroke-width="5"/>
+      <path d="M 204,35 C 204,35 249,45 249,80 C 249,125 204,163 204,163 C 204,163 159,125 159,80 C 159,45 204,35 204,35 Z" fill="#946F22" opacity="0.2"/>
+      <text x="204" y="105" fill="#FFFFFF" font-family="'Montserrat', sans-serif" font-weight="bold" font-size="28" text-anchor="middle">✓</text>
+      <text x="204" y="195" fill="#FFFFFF" font-family="'Staatliches', sans-serif" font-size="20" text-anchor="middle" letter-spacing="1">GARANTÍA DE SATISFACCIÓN TOTAL</text>
+      <text x="204" y="215" fill="#CCCCCC" font-family="'Open Sans', sans-serif" font-size="12" text-anchor="middle">Soporte y devolución sin complicaciones</text>
+    </svg>
+  </section>
+
+  <!-- SECCIÓN 7 — Urgencia + Timer + CTA final -->
+  <section class="section-urgency-timer">
+    <div class="urgency-header">
+      <div class="urgency-alert">⚠️ ATENCIÓN ⚠️</div>
+      <div class="urgency-promo">Oferta por tiempo limitado</div>
+      <div class="urgency-limit">¡QUEDAN POCAS UNIDADES!</div>
+    </div>
+
+    <!-- Timer countdown dinámico de 10 min reseteable -->
+    <div class="timer-container">
+      <div class="timer-box">
+        <div class="timer-num" id="timer-hours">00</div>
+        <div class="timer-lbl">Horas</div>
+      </div>
+      <div class="timer-box">
+        <div class="timer-num" id="timer-minutes">10</div>
+        <div class="timer-lbl">Minutos</div>
+      </div>
+      <div class="timer-box">
+        <div class="timer-num" id="timer-seconds">00</div>
+        <div class="timer-lbl">Segundos</div>
+      </div>
+    </div>
+
+    <!-- Botón CTA 5 -->
+    <a href="#formulario-orden" class="btn-gold anim-move">
+      <span class="title" style="color: #000000;">👉 HACER PEDIDO AHORA</span>
+      <span class="subtitle">🔥 Oferta válida solo por los próximos 10 minutos.</span>
+    </a>
+
+    <!-- Fila 7.2 — Llamado al formulario -->
+    <div class="form-anchor-row">
+      <div class="form-anchor-title anim-bounce">👇 Realiza Tu Orden AQUÍ 👇</div>
+      <div class="form-anchor-sub anim-bounce">¡PAGA AL RECIBIR!</div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 8 — Formulario de pedido (2 pasos) -->
+  <section class="section-order-form" id="formulario-orden">
+    <div class="form-outer-container">
+      <div class="form-inner-container">
+        
+        <!-- ================= PASO 1 ================= -->
+        <div id="step-1" class="step-content active">
+          <div class="form-step-header">
+            <span class="form-step-title">PASO 1 / Datos de envío</span>
+          </div>
+
+          <form id="order-form-step1" onsubmit="goToStep2(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Nombre *</label>
+                <input type="text" id="form-name" class="form-input" placeholder="Ej: María" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Apellido *</label>
+                <input type="text" id="form-lastname" class="form-input" placeholder="Ej: Pérez" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Número de celular *</label>
+              <input type="tel" id="form-phone" class="form-input" placeholder="Ej: 0999999999" required>
+              <div class="form-warning-text">Revisa si tu número de celular está correcto ☝️</div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Correo electrónico *</label>
+              <input type="email" id="form-email" class="form-input" placeholder="correo@ejemplo.com" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Dirección de entrega *</label>
+              <input type="text" id="form-address" class="form-input" placeholder="Calle principal, número de casa, referencias" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Provincia *</label>
+              <select id="form-province" class="form-select" onchange="loadCities()" required>
+                <option value="">Selecciona tu provincia</option>
+                <option value="Azuay">Azuay</option>
+                <option value="Bolivar">Bolívar</option>
+                <option value="Cañar">Cañar</option>
+                <option value="Carchi">Carchi</option>
+                <option value="Chimborazo">Chimborazo</option>
+                <option value="Cotopaxi">Cotopaxi</option>
+                <option value="El Oro">El Oro</option>
+                <option value="Esmeraldas">Esmeraldas</option>
+                <option value="Galapagos">Galápagos</option>
+                <option value="Guayas">Guayas</option>
+                <option value="Imbabura">Imbabura</option>
+                <option value="Loja">Loja</option>
+                <option value="Los Rios">Los Ríos</option>
+                <option value="Manabi">Manabí</option>
+                <option value="Morona Santiago">Morona Santiago</option>
+                <option value="Napo">Napo</option>
+                <option value="Orellana">Orellana</option>
+                <option value="Pastaza">Pastaza</option>
+                <option value="Pichincha">Pichincha</option>
+                <option value="Santa Elena">Santa Elena</option>
+                <option value="Santo Domingo">Santo Domingo de los Tsáchilas</option>
+                <option value="Sucumbios">Sucumbíos</option>
+                <option value="Tungurahua">Tungurahua</option>
+                <option value="Zamora Chinchipe">Zamora Chinchipe</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Ciudad *</label>
+              <select id="form-city" class="form-select" required>
+                <option value="">Selecciona tu ciudad</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">País *</label>
+              <select id="form-country" class="form-select" required>
+                <option value="Ecuador">Ecuador 🇪🇨</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn-step1 anim-bounce">HACER PEDIDO AHORA 🛍️</button>
+            <div class="form-footer-txt">PAGO CONTRAENTREGA + ENVIO GRATIS</div>
+          </form>
+        </div>
+
+        <!-- ================= PASO 2 ================= -->
+        <div id="step-2" class="step-content">
+          <div class="form-step-header">
+            <span class="form-step-title">PASO 2 / Confirma tu orden</span>
+          </div>
+
+          <div class="order-urgency-box">
+            <span style="color: var(--red-urgency);">🔥 218 Vendidos HOY</span>
+            <span style="color: #000000; font-size: 14px;">¡Solo 5 Unidades Disponibles!</span>
+          </div>
+
+          <div class="offer-title">SELECCIONA LA OFERTA 👇</div>
+
+          <!-- Selector de Packs/Ofertas -->
+          <div class="pack-selector">
+            <div class="pack-option selected" onclick="selectPack(1, 24.99, '1 Collar Titanic (Corazón del Océano)')">
+              <input type="radio" name="pack_selection" class="pack-radio" checked>
+              <div class="pack-details">
+                <div class="pack-name">1x Collar Titanic (Corazón del Océano)</div>
+                <div class="pack-price">$24.99</div>
+              </div>
+            </div>
+            <div class="pack-option" onclick="selectPack(2, 39.99, '2x Collares Titanic (Lleva 2 y Ahorra Más)')">
+              <input type="radio" name="pack_selection" class="pack-radio">
+              <div class="pack-details">
+                <div class="pack-name">2x Collares Titanic <span class="pack-badge">MÁS POPULAR</span></div>
+                <div class="pack-price">$39.99</div>
+              </div>
+            </div>
+            <div class="pack-option" onclick="selectPack(3, 49.99, '3x Collares Titanic (La Oferta Familiar)')">
+              <input type="radio" name="pack_selection" class="pack-radio">
+              <div class="pack-details">
+                <div class="pack-name">3x Collares Titanic <span class="pack-badge">MEJOR PRECIO</span></div>
+                <div class="pack-price">$49.99</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resumen de Orden -->
+          <div class="order-summary">
+            <div class="summary-row">
+              <span id="summary-product-name">1 Collar Titanic (Corazón del Océano)</span>
+              <span id="summary-product-price">$24.99</span>
+            </div>
+            <div class="summary-row">
+              <span>Envío Express a Ecuador</span>
+              <span style="color: var(--green-confirm); font-weight: bold;">GRATIS</span>
+            </div>
+            <div class="summary-row" id="bump-summary-row-1" style="display: none;">
+              <span>+ Aretes Titanic a Juego</span>
+              <span id="summary-bump-price-1">$9.99</span>
+            </div>
+            <div class="summary-row" id="bump-summary-row-2" style="display: none;">
+              <span>+ Caja Musical De Madera Titanic</span>
+              <span id="summary-bump-price-2">$12.99</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total a Pagar</span>
+              <span id="summary-total-price">$24.99</span>
+            </div>
+          </div>
+
+          <!-- Order Bump 1 -->
+          <div class="order-bump-card bump-yellow">
+            <div class="bump-header">
+              <input type="checkbox" id="bump-checkbox-1" class="bump-checkbox" onchange="toggleBump(1, 9.99)">
+              <span>💍 ¡SÍ, QUIERO AGREGAR LOS ARETES TITANIC!</span>
+            </div>
+            <div class="bump-body">
+              <!-- SVG Aretes -->
+              <svg class="bump-img" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100" height="100" fill="#01072E"/>
+                <!-- Two small hanging hearts -->
+                <path d="M 35,45 C 35,45 30,30 25,30 C 20,30 15,40 15,50 C 15,65 35,85 35,85 C 35,85 55,65 55,50 C 55,40 50,30 45,30 C 40,30 35,45 35,45 Z" fill="#0F4C81" stroke="#50E3C2" stroke-width="1.5"/>
+                <path d="M 65,45 C 65,45 60,30 55,30 C 50,30 45,40 45,50 C 45,65 65,85 65,85 C 65,85 85,65 85,65 C 85,55 80,30 75,30 C 70,30 65,45 65,45 Z" fill="#0F4C81" stroke="#50E3C2" stroke-width="1.5"/>
+                <!-- Silver hooks -->
+                <path d="M 35,45 L 35,15 A 5,5 0 0 0 25,15" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+                <path d="M 65,45 L 65,15 A 5,5 0 0 0 55,15" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+              </svg>
+              <div class="bump-info">
+                <p class="bump-desc">Lleva el juego de aretes Titanic bañados en plata con cristal de zafiro por un precio ridículo.</p>
+                <div class="bump-pricing">
+                  <span class="price-old">$19.99</span>
+                  <span class="price-new">Solo $9.99</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Order Bump 2 -->
+          <div class="order-bump-card bump-teal">
+            <div class="bump-header">
+              <input type="checkbox" id="bump-checkbox-2" class="bump-checkbox" onchange="toggleBump(2, 12.99)">
+              <span>🎵 ¡SÍ, AGREGAR CAJA MUSICAL TITANIC!</span>
+            </div>
+            <div class="bump-body">
+              <!-- SVG Caja Musical -->
+              <svg class="bump-img" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100" height="100" fill="#3E2723"/>
+                <!-- Wooden details -->
+                <rect x="20" y="35" width="60" height="40" rx="4" fill="#5D4037" stroke="#946F22" stroke-width="2"/>
+                <polygon points="20,35 30,15 70,15 80,35" fill="#8D6E63" stroke="#946F22" stroke-width="2"/>
+                <!-- Musical note -->
+                <path d="M 50,45 L 50,25 L 65,30 L 65,50" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+                <circle cx="45" cy="45" r="5" fill="#FFFFFF"/>
+                <circle cx="60" cy="50" r="5" fill="#FFFFFF"/>
+              </svg>
+              <div class="bump-info">
+                <p class="bump-desc">Caja musical de madera tallada que reproduce la icónica melodía "My Heart Will Go On".</p>
+                <div class="bump-pricing">
+                  <span class="price-old">$24.99</span>
+                  <span class="price-new">Solo $12.99</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button onclick="confirmOrder()" class="btn-step2 anim-move">👉 CONFIRMAR MI PEDIDO</button>
+          <div class="pago-contraentrega-txt" style="color: #000000; margin-top: 15px;">
+            <strong>PAGA AL RECIBIR + ENVÍO GRATIS</strong>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 9 — Soporte / WhatsApp / Aliados / Footer -->
+  <section class="section-support">
+    <h4 class="support-title">¿Aún tienes dudas?</h4>
+    <p class="support-desc">
+      Sabemos que comprar en internet puede generar desconfianza, por eso te ofrecemos la seguridad de pagar cuando el producto esté en tus manos. Si tienes preguntas sobre el material, el envío o quieres ver fotos reales, haz clic abajo.
+    </p>
+    <p class="support-cta">
+      Dando click en el siguiente botón estarás en línea con uno de nuestros representantes.
+    </p>
+
+    <!-- Botón WhatsApp 1 -->
+    <a href="https://wa.me/593999999999?text=Hola,%20tengo%20una%20duda%20sobre%20el%20Collar%20Titanic" target="_blank">
+      <svg class="whatsapp-btn-img1" viewBox="0 0 374 95" xmlns="http://www.w3.org/2000/svg">
+        <rect width="374" height="95" rx="47.5" fill="#25D366" filter="drop-shadow(0px 5px 8px rgba(0,0,0,0.15))"/>
+        <path d="M 55,47.5 C 55,29.5 69.5,15 87.5,15 C 105.5,15 120,29.5 120,47.5 C 120,65.5 105.5,80 87.5,80 C 81.5,80 75.8,78.3 71,75.4 L 58,79.5 L 62.2,66.8 C 57.6,61.7 55,54.8 55,47.5 Z" fill="#FFFFFF"/>
+        <!-- Inner Whatsapp bubble icon -->
+        <path d="M 87.5,23 C 74,23 63,34 63,47.5 C 63,53.2 65,58.5 68.3,62.7 L 65.5,72.7 L 76,69.9 C 79.5,72 83.5,73 87.5,73 C 101,73 112,62 112,47.5 C 112,34 101,23 87.5,23 Z" fill="#25D366"/>
+        <path d="M 81,38 C 79.5,35 78,35 77,35 C 76.5,35 75.5,35 74.5,36 C 73.5,37 71,39.5 71,44.5 C 71,49.5 74.5,54.3 75,55 C 75.5,55.8 82,66.2 92,70 C 99.5,72.8 101,71 102.5,70.8 C 104,70.5 107.5,68.5 108.2,66.5 C 109,64.5 109,62.8 108.8,62.5 C 108.6,62.2 108,62 107,61.5 C 106,61 101.5,58.8 100.7,58.5 C 99.9,58.2 99.3,58 98.7,59 C 97.5,60.8 95,64 94.2,65 C 93.4,66 92.5,66 91.5,65.5 C 88,63.7 82.5,61 79,57.8 C 76.2,55.2 78,55.5 79.5,53.2 C 79.8,52.8 79.6,52.4 79.5,52 C 79.3,51.6 78.5,49.5 77.8,47.8 C 77,46 76.2,46.2 75.8,46.2" fill="#FFFFFF"/>
+        <text x="235" y="47" fill="#FFFFFF" font-family="'Montserrat', sans-serif" font-weight="900" font-size="16" text-anchor="middle">¿DUDAS? ESCRÍBENOS</text>
+        <text x="235" y="65" fill="#FFFFFF" font-family="'Open Sans', sans-serif" font-size="12" text-anchor="middle">Respuesta inmediata por asesores</text>
+      </svg>
+    </a>
+
+    <!-- Botón WhatsApp 2 -->
+    <a href="https://wa.me/593999999999?text=Hola,%20quiero%20hacer%20un%20pedido%20del%20Collar%20Titanic%20por%20este%20medio" target="_blank">
+      <svg class="whatsapp-btn-img2" viewBox="0 0 500 90" xmlns="http://www.w3.org/2000/svg">
+        <rect width="500" height="90" rx="10" fill="#075E54"/>
+        <circle cx="50" cy="45" r="22" fill="#FFFFFF"/>
+        <!-- Phone Receiver Icon -->
+        <path d="M 42,35 C 42,35 40,37 40,39 C 40,43 45,50 49,54 C 53,58 57,58 59,56 C 61,54 61,54 61,54 L 56,49 L 54,51 C 53,52 52,52 51,51 C 49,49 47,47 45,45 C 44,44 44,43 45,42 L 47,40 L 42,35 Z" fill="#075E54"/>
+        <text x="280" y="40" fill="#FFFFFF" font-family="'Montserrat', sans-serif" font-weight="bold" font-size="18" text-anchor="middle">💬 ORDENAR POR WHATSAPP</text>
+        <text x="280" y="62" fill="#E2E8F0" font-family="'Open Sans', sans-serif" font-size="13" text-anchor="middle">Haz tu pedido directo si tienes problemas con el formulario</text>
+      </svg>
+    </a>
+
+    <h4 class="allies-title">Nuestros aliados</h4>
+    <!-- Imagen logos aliados/couriers de Ecuador -->
+    <svg class="allies-img" viewBox="0 0 500 100" xmlns="http://www.w3.org/2000/svg">
+      <rect width="500" height="100" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+      <!-- Courier Mock Logos: Servientrega, Laar Courier, Urbano -->
+      <g transform="translate(15, 20)">
+        <!-- Servientrega style logo -->
+        <rect width="140" height="60" rx="6" fill="#03AD33"/>
+        <text x="70" y="35" fill="#FFFFFF" font-family="'Montserrat', sans-serif" font-weight="900" font-size="12" text-anchor="middle">SERVIENTREGA</text>
+        <text x="70" y="48" fill="#F8E71C" font-family="'Open Sans', sans-serif" font-size="8" text-anchor="middle">ENTREGA SEGURA</text>
+      </g>
+      <g transform="translate(180, 20)">
+        <!-- Laarcourier style logo -->
+        <rect width="140" height="60" rx="6" fill="#003366"/>
+        <text x="70" y="35" fill="#FFFFFF" font-family="'Montserrat', sans-serif" font-weight="900" font-size="12" text-anchor="middle">LAAR COURIER</text>
+        <text x="70" y="48" fill="#50E3C2" font-family="'Open Sans', sans-serif" font-size="8" text-anchor="middle">LOGÍSTICA INTEGRAL</text>
+      </g>
+      <g transform="translate(345, 20)">
+        <!-- Urbano style logo -->
+        <rect width="140" height="60" rx="6" fill="#E11D48"/>
+        <text x="70" y="35" fill="#FFFFFF" font-family="'Montserrat', sans-serif" font-weight="900" font-size="12" text-anchor="middle">URBANO EXPRESS</text>
+        <text x="70" y="48" fill="#FFFFFF" font-family="'Open Sans', sans-serif" font-size="8" text-anchor="middle">COBERTURA NACIONAL</text>
+      </g>
+    </svg>
+
+    <div class="footer-copyright">
+      © Zambaro Ecuador <span id="current-year">2026</span> ® Todos los derechos reservados
+    </div>
+  </section>
+
+</div>
+
+<!-- Modal de Confirmación -->
+<div class="modal-overlay" id="success-modal">
+  <div class="modal-content">
+    <div class="modal-icon">🎉</div>
+    <div class="modal-title">¡Pedido Recibido!</div>
+    <div class="modal-desc">
+      Tu orden de <strong id="modal-order-summary">1 Collar Titanic</strong> ha sido registrada con éxito.<br><br>
+      Te contactaremos por WhatsApp o llamada para confirmar los detalles del envío.<br>
+      <strong>¡Pagas al recibir en casa!</strong>
+    </div>
+    <button class="btn-modal-close" onclick="closeModal()">Entendido ✅</button>
+  </div>
+</div>
+
+<script>
+  // VARIABLES DE PEDIDO EN PASO 2
+  let selectedQty = 1;
+  let selectedPrice = 24.99;
+  let selectedPackName = '1 Collar Titanic (Corazón del Océano)';
+  let bump1Active = false;
+  let bump2Active = false;
+  
+  // DATOS GUARDADOS DEL PASO 1
+  let clientData = {};
+
+  // CIUDADES POR PROVINCIA (ECUADOR)
+  const citiesMap = {
+    "Azuay": ["Cuenca", "Gualaceo", "Paute", "Girón", "Santa Isabel"],
+    "Bolivar": ["Guaranda", "San Miguel", "Chimbo", "Echeandía"],
+    "Cañar": ["Azogues", "La Troncal", "Cañar", "Biblián"],
+    "Carchi": ["Tulcán", "Bolívar", "Espejo", "Mira", "Montúfar"],
+    "Chimborazo": ["Riobamba", "Alausí", "Guano", "Chambo", "Colta"],
+    "Cotopaxi": ["Latacunga", "Pujilí", "Salcedo", "La Maná", "Saquisilí"],
+    "El Oro": ["Machala", "Pasaje", "Santa Rosa", "Huaquillas", "Arenillas"],
+    "Esmeraldas": ["Esmeraldas", "Quinindé", "Atacames", "San Lorenzo"],
+    "Galapagos": ["Puerto Ayora", "Puerto Baquerizo Moreno", "Puerto Villamil"],
+    "Guayas": ["Guayaquil", "Durán", "Samborondón", "Daule", "Milagro", "Naranjal", "Playas"],
+    "Imbabura": ["Ibarra", "Otavalo", "Cotacachi", "Atuntaqui"],
+    "Loja": ["Loja", "Catamayo", "Cariamanga", "Macará", "Saraguro"],
+    "Los Rios": ["Babahoyo", "Quevedo", "Vinces", "Buena Fe", "Ventanas"],
+    "Manabi": ["Portoviejo", "Manta", "Chone", "Bahía de Caráquez", "Montecristi", "Jipijapa"],
+    "Morona Santiago": ["Macas", "Gualaquiza", "Sucúa", "Limón Indanza"],
+    "Napo": ["Tena", "Archidona", "El Chaco", "Baeza"],
+    "Orellana": ["El Coca", "Joyas de los Sachas", "Loreto"],
+    "Pastaza": ["Puyo", "Mera", "Santa Clara"],
+    "Pichincha": ["Quito", "Sangolquí", "Machachi", "Cayambe", "Tabacundo"],
+    "Santa Elena": ["Santa Elena", "La Libertad", "Salinas", "Manglaralto"],
+    "Santo Domingo": ["Santo Domingo"],
+    "Sucumbios": ["Nueva Loja (Lago Agrio)", "Shushufindi", "Caspiscal"],
+    "Tungurahua": ["Ambato", "Baños de Agua Santa", "Pelileo", "Píllaro"],
+    "Zamora Chinchipe": ["Zamora", "Yantzaza", "El Pangui"]
+  };
+
+  // Cargar año actual
+  document.getElementById('current-year').textContent = new Date().getFullYear();
+
+  // TIMER COUNTDOWN RESETEABLE CADA 10 MINUTOS
+  function startTimer() {
+    const timerDuration = 10 * 60; // 10 minutos en segundos
+    let timeRemaining = localStorage.getItem('timer_remaining');
+    
+    if (timeRemaining === null || parseInt(timeRemaining) <= 0) {
+      timeRemaining = timerDuration;
+    } else {
+      timeRemaining = parseInt(timeRemaining);
+    }
+
+    const interval = setInterval(() => {
+      timeRemaining--;
+      localStorage.setItem('timer_remaining', timeRemaining);
+
+      if (timeRemaining <= 0) {
+        timeRemaining = timerDuration; // Reset localmente
+      }
+
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+
+      document.getElementById('timer-hours').textContent = "00";
+      document.getElementById('timer-minutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('timer-seconds').textContent = String(seconds).padStart(2, '0');
+    }, 1000);
+  }
+  startTimer();
+
+  // CARGAR CIUDADES EN BASE A LA PROVINCIA SELECCIONADA
+  function loadCities() {
+    const provinceSelect = document.getElementById('form-province');
+    const citySelect = document.getElementById('form-city');
+    const selectedProvince = provinceSelect.value;
+
+    citySelect.innerHTML = '<option value="">Selecciona tu ciudad</option>';
+
+    if (selectedProvince && citiesMap[selectedProvince]) {
+      citiesMap[selectedProvince].forEach(city => {
+        const option = document.createElement('option');
+        option.value = city;
+        option.textContent = city;
+        citySelect.appendChild(option);
+      });
+    }
+  }
+
+  // TRANSICIÓN A PASO 2
+  function goToStep2(event) {
+    event.preventDefault();
+    
+    // Capturar datos del cliente
+    clientData = {
+      name: document.getElementById('form-name').value.trim(),
+      lastname: document.getElementById('form-lastname').value.trim(),
+      phone: document.getElementById('form-phone').value.trim(),
+      email: document.getElementById('form-email').value.trim(),
+      address: document.getElementById('form-address').value.trim(),
+      province: document.getElementById('form-province').value,
+      city: document.getElementById('form-city').value,
+      country: document.getElementById('form-country').value
+    };
+
+    // Ocultar paso 1 y mostrar paso 2
+    document.getElementById('step-1').classList.remove('active');
+    document.getElementById('step-2').classList.add('active');
+
+    // Hacer scroll arriba del formulario para centrar
+    document.getElementById('formulario-orden').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // SELECCIONAR PACK / OFERTA EN EL PASO 2
+  function selectPack(qty, price, packName) {
+    selectedQty = qty;
+    selectedPrice = price;
+    selectedPackName = packName;
+
+    // Actualizar clase selected en la UI
+    const options = document.querySelectorAll('.pack-option');
+    options.forEach((opt, idx) => {
+      if (idx === qty - 1) {
+        opt.classList.add('selected');
+        opt.querySelector('.pack-radio').checked = true;
+      } else {
+        opt.classList.remove('selected');
+      }
+    });
+
+    updateSummary();
+  }
+
+  // ACTIVAR / DESACTIVAR BUMPERS
+  function toggleBump(bumpId, price) {
+    if (bumpId === 1) {
+      bump1Active = document.getElementById('bump-checkbox-1').checked;
+      document.getElementById('bump-summary-row-1').style.display = bump1Active ? 'flex' : 'none';
+    } else if (bumpId === 2) {
+      bump2Active = document.getElementById('bump-checkbox-2').checked;
+      document.getElementById('bump-summary-row-2').style.display = bump2Active ? 'flex' : 'none';
+    }
+    updateSummary();
+  }
+
+  // ACTUALIZAR RESUMEN Y TOTAL
+  function updateSummary() {
+    document.getElementById('summary-product-name').textContent = selectedPackName;
+    document.getElementById('summary-product-price').textContent = `$${selectedPrice.toFixed(2)}`;
+
+    let total = selectedPrice;
+    if (bump1Active) total += 9.99;
+    if (bump2Active) total += 12.99;
+
+    document.getElementById('summary-total-price').textContent = `$${total.toFixed(2)}`;
+  }
+
+  // ENVIAR CONFIRMACIÓN DEL PEDIDO
+  function confirmOrder() {
+    // Calcular Total
+    let total = selectedPrice;
+    let bumps = [];
+    if (bump1Active) {
+      total += 9.99;
+      bumps.push('Aretes Titanic');
+    }
+    if (bump2Active) {
+      total += 12.99;
+      bumps.push('Caja Musical Titanic');
+    }
+
+    const fullOrderDetails = {
+      client: clientData,
+      pack: selectedPackName,
+      quantity: selectedQty,
+      bumps: bumps.join(', ') || 'Ninguno',
+      totalPayable: `$${total.toFixed(2)}`,
+      date: new Date().toISOString()
+    };
+
+    console.log('PEDIDO REGISTRADO:', fullOrderDetails);
+
+    // Actualizar información en el modal
+    let orderSummaryText = `${selectedQty}x Titanic Pack`;
+    if (bumps.length > 0) {
+      orderSummaryText += ` + ${bumps.join(' & ')}`;
+    }
+    document.getElementById('modal-order-summary').textContent = orderSummaryText;
+
+    // Mostrar modal
+    document.getElementById('success-modal').classList.add('active');
+  }
+
+  // CERRAR MODAL Y REINICIAR FORMULARIO
+  function closeModal() {
+    document.getElementById('success-modal').classList.remove('active');
+    // Reiniciar al paso 1
+    document.getElementById('step-2').classList.remove('active');
+    document.getElementById('step-1').classList.add('active');
+    document.getElementById('order-form-step1').reset();
+    document.getElementById('bump-checkbox-1').checked = false;
+    document.getElementById('bump-checkbox-2').checked = false;
+    bump1Active = false;
+    bump2Active = false;
+    document.getElementById('bump-summary-row-1').style.display = 'none';
+    document.getElementById('bump-summary-row-2').style.display = 'none';
+    selectPack(1, 24.99, '1 Collar Titanic (Corazón del Océano)');
+  }
+</script>
+
+</body>
+</html>

@@ -77,6 +77,16 @@ async function _runInitDatabase() {
         problemHeadline VARCHAR(255),
         facebookPixelId VARCHAR(50) DEFAULT NULL,
         template VARCHAR(50) DEFAULT 'basica',
+        promptProblem TEXT,
+        promptFeatures TEXT,
+        promptHowTo TEXT,
+        promptGallery TEXT,
+        referenceImages JSON,
+        aiText TEXT,
+        landingButtons JSON,
+        promotions JSON,
+        showPriorityShipping BOOLEAN DEFAULT TRUE,
+        showDispatch24h BOOLEAN DEFAULT TRUE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
@@ -130,6 +140,16 @@ async function _runInitDatabase() {
       { name: 'problemHeadline', def: 'VARCHAR(255)' },
       { name: 'facebookPixelId', def: 'VARCHAR(50) DEFAULT NULL' },
       { name: 'template', def: "VARCHAR(50) DEFAULT 'basica'" },
+      { name: 'promptProblem', def: 'TEXT' },
+      { name: 'promptFeatures', def: 'TEXT' },
+      { name: 'promptHowTo', def: 'TEXT' },
+      { name: 'promptGallery', def: 'TEXT' },
+      { name: 'referenceImages', def: 'JSON' },
+      { name: 'aiText', def: 'TEXT' },
+      { name: 'landingButtons', def: 'JSON' },
+      { name: 'promotions', def: 'JSON' },
+      { name: 'showPriorityShipping', def: 'BOOLEAN DEFAULT TRUE' },
+      { name: 'showDispatch24h', def: 'BOOLEAN DEFAULT TRUE' },
     ];
     for (const col of newColumns) {
       try {

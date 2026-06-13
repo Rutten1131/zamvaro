@@ -39,6 +39,8 @@ async function getProductBySlug(slug: string) {
     steps: typeof prod.steps === 'string' ? JSON.parse(prod.steps) : prod.steps || [],
     faqs: typeof prod.faqs === 'string' ? JSON.parse(prod.faqs) : prod.faqs || [],
     problemFactors: typeof prod.problemFactors === 'string' ? JSON.parse(prod.problemFactors) : prod.problemFactors || [],
+    landingButtons: typeof prod.landingButtons === 'string' ? JSON.parse(prod.landingButtons) : prod.landingButtons || [],
+    promotions: typeof prod.promotions === 'string' ? JSON.parse(prod.promotions) : prod.promotions || [],
   };
 
   // 3. Guardar en cache

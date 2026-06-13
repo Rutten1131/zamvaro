@@ -34,6 +34,8 @@ export async function GET(request: Request) {
       return {
         ...prod,
         isAvailable: Boolean(prod.isAvailable),
+        showPriorityShipping: prod.showPriorityShipping === null ? true : Boolean(prod.showPriorityShipping),
+        showDispatch24h: prod.showDispatch24h === null ? true : Boolean(prod.showDispatch24h),
         images: typeof prod.images === 'string' ? JSON.parse(prod.images) : prod.images || [],
         bullets: typeof prod.bullets === 'string' ? JSON.parse(prod.bullets) : prod.bullets || [],
         features: typeof prod.features === 'string' ? JSON.parse(prod.features) : prod.features || [],
@@ -43,6 +45,9 @@ export async function GET(request: Request) {
         steps: typeof prod.steps === 'string' ? JSON.parse(prod.steps) : prod.steps || [],
         faqs: typeof prod.faqs === 'string' ? JSON.parse(prod.faqs) : prod.faqs || [],
         problemFactors: typeof prod.problemFactors === 'string' ? JSON.parse(prod.problemFactors) : prod.problemFactors || [],
+        referenceImages: typeof prod.referenceImages === 'string' ? JSON.parse(prod.referenceImages) : prod.referenceImages || [],
+        landingButtons: typeof prod.landingButtons === 'string' ? JSON.parse(prod.landingButtons) : prod.landingButtons || [],
+        promotions: typeof prod.promotions === 'string' ? JSON.parse(prod.promotions) : prod.promotions || [],
       };
     });
 
@@ -105,6 +110,16 @@ export async function POST(request: Request) {
       problemHeadline,
       facebookPixelId,
       template,
+      promptProblem,
+      promptFeatures,
+      promptHowTo,
+      promptGallery,
+      referenceImages,
+      aiText,
+      landingButtons,
+      promotions,
+      showPriorityShipping,
+      showDispatch24h,
     } = body;
 
     if (!name || !slug) {
@@ -118,8 +133,10 @@ export async function POST(request: Request) {
         imageProblem, imageFeatures, imageHowTo,
         isAvailable, slug, bullets, features, testimonials, comparisonTitle, comparisonOursLabel,
         comparisonTheirsLabel, comparison, stats, steps, faqs, guaranteeText, whatsappNumber, primaryColor,
-        problemFactors, problemTagline, problemHeadline, facebookPixelId, template
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        problemFactors, problemTagline, problemHeadline, facebookPixelId, template,
+        promptProblem, promptFeatures, promptHowTo, promptGallery, referenceImages, aiText, landingButtons, promotions,
+        showPriorityShipping, showDispatch24h
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const [result] = await pool.query(query, [
@@ -156,6 +173,16 @@ export async function POST(request: Request) {
       problemHeadline || null,
       facebookPixelId || null,
       template || 'basica',
+      promptProblem || null,
+      promptFeatures || null,
+      promptHowTo || null,
+      promptGallery || null,
+      JSON.stringify(referenceImages || []),
+      aiText || null,
+      JSON.stringify(landingButtons || []),
+      JSON.stringify(promotions || []),
+      showPriorityShipping !== false ? 1 : 0,
+      showDispatch24h !== false ? 1 : 0,
     ]);
 
     const insertId = (result as any).insertId;
@@ -163,6 +190,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, message: 'Producto creado exitosamente', id: insertId });
   } catch (error: any) {
     console.error('Error in POST /api/products:', error);
+    if (error.code === 'ER_DUP_ENTRY' || (error.message && error.message.includes('Duplicate entry'))) {
+      return NextResponse.json({ message: 'El slug ya está en uso por otro producto. Por favor, elige un slug diferente.' }, { status: 400 });
+    }
     return NextResponse.json({ message: 'Error al crear producto', error: error.message }, { status: 500 });
   }
 }

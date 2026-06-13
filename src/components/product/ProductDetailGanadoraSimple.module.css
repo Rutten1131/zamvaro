@@ -1,0 +1,531 @@
+/* d:\Abel paginas\Zambaro Ecuador\zamvaro-ecuador\src\components\product\ProductDetailGanadoraSimple.module.css */
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 0 40px 0; /* Reduced from 100px */
+  font-family: 'Poppins', 'Inter', -apple-system, sans-serif;
+  color: #333333;
+  background-color: #ffffff;
+}
+
+/* ── Announcement Bar ── */
+.announcement {
+  background: #2979ff; /* Blue similar to reference */
+  color: #ffffff;
+  padding: 8px 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  overflow: hidden;
+  white-space: nowrap;
+  box-shadow: 0 2px 10px rgba(41, 121, 255, 0.3);
+}
+
+.announcementScroller {
+  display: inline-flex;
+  gap: 24px;
+  animation: scrollTicker 28s linear infinite;
+  padding: 0 24px;
+}
+
+.announcementSep {
+  opacity: 0.6;
+}
+
+.timerInline {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-family: monospace;
+  letter-spacing: 1px;
+}
+
+@keyframes scrollTicker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ── Trust Banner ── */
+.trustBanner {
+  background: #f4fcff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #0d47a1;
+  border-bottom: 1px solid #e1f5fe;
+}
+
+/* ── Media/Images Layout ── */
+.imageSection {
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mediaItem {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ── Intermediate CTA Button ── */
+.ctaButtonWrapper {
+  width: 100%;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  background-color: #ffffff;
+}
+
+.ctaButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #fda101; /* Orange/Gold from reference */
+  color: #ffffff;
+  border: 2px solid #000000;
+  border-radius: 100px;
+  padding: 14px 28px;
+  cursor: pointer;
+  width: 100%;
+  box-shadow: -3px 4px 0px 3px #000000; /* Flat shadow style from reference */
+  transition: transform 0.1s;
+  text-decoration: none;
+  font-family: inherit;
+}
+
+.ctaButton:active {
+  transform: translate(-1px, 2px);
+  box-shadow: -1px 2px 0px 2px #000000;
+}
+
+.ctaHeadline {
+  font-weight: 800;
+  font-size: 1.15rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.ctaSubheadline {
+  font-size: 0.75rem;
+  font-weight: 700;
+  opacity: 0.9;
+  margin-top: 3px;
+}
+
+/* ── Moving animation from reference ── */
+.movingButton {
+  animation: move 0.8s alternate infinite;
+  position: relative;
+}
+
+@keyframes move {
+  0% { left: 0; }
+  100% { left: 8px; }
+}
+
+/* ── Checkout Box ── */
+.checkoutContainer {
+  background-color: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 24px 16px;
+  margin: 16px 16px 16px; /* Reduced top margin from 32px */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.checkoutBadge {
+  display: inline-block;
+  background: #22c55e;
+  color: white;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.checkoutHeader {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.checkoutTitle {
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: #1a202c;
+  margin: 0 0 6px 0;
+}
+
+.checkoutSubtitle {
+  font-size: 0.85rem;
+  color: #e53e3e;
+  font-weight: 700;
+  margin: 0;
+}
+
+.phoneAlert {
+  background: #fffdeb;
+  border-left: 4px solid #f59e0b;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  color: #78350f;
+  margin-bottom: 20px;
+  line-height: 1.4;
+  display: flex;
+  gap: 8px;
+}
+
+/* ── Checkout Form Elements ── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formGroup label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #4a5568;
+}
+
+.inputIconWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 12px;
+  color: #a0aec0;
+  pointer-events: none;
+}
+
+.lightInput,
+.lightSelect {
+  width: 100%;
+  padding: 12px 12px 12px 38px;
+  border: 1px solid #cbd5e0;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  outline: none;
+  background-color: #f7fafc;
+  box-sizing: border-box;
+  color: #2d3748;
+}
+
+.lightSelect {
+  padding-left: 12px;
+}
+
+.lightInput:focus,
+.lightSelect:focus {
+  border-color: #3182ce;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+}
+
+.phoneHint {
+  color: #b7791f;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* ── Packs / Offer Cards ── */
+.offersList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.offerCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  cursor: pointer;
+  background-color: #ffffff;
+  transition: all 0.2s;
+  text-align: left;
+  width: 100%;
+  position: relative;
+}
+
+.offerCardActive {
+  border-color: #22c55e;
+  background-color: rgba(34, 197, 94, 0.05);
+}
+
+.offerCardPopular {
+  border-color: #f59e0b;
+}
+
+.popularTag {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #f59e0b;
+  color: white;
+  border-radius: 20px;
+  padding: 1px 10px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.offerInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.offerTitle {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #2d3748;
+}
+
+.offerBadge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.badgeBest { background: #feebc8; color: #c05621; }
+.badgeOffer { background: #ebf8ff; color: #2b6cb0; }
+.badgeSpecial { background: #fffaf0; color: #dd6b20; }
+
+.offerPrices {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.offerOriginalPrice {
+  text-decoration: line-through;
+  color: #a0aec0;
+  font-size: 0.72rem;
+}
+
+.offerCurrentPrice {
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #2f855a;
+}
+
+/* ── Custom Steps & inputs ── */
+.stepTitle {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #2d3748;
+  margin: 24px 0 12px;
+  text-align: center;
+  border-bottom: 1px solid #edf2f7;
+  padding-bottom: 8px;
+}
+
+.lightInputNoIcon,
+.lightSelectNoIcon {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #cbd5e0;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  outline: none;
+  background-color: #f7fafc;
+  box-sizing: border-box;
+  color: #2d3748;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.lightInputNoIcon:focus,
+.lightSelectNoIcon:focus {
+  border-color: #3182ce;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+}
+
+.radioCircle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: white;
+}
+
+.radioDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.offerThumb {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+
+/* ── Order Summary ── */
+.orderSummary {
+  background: #f7fafc;
+  border: 1px solid #edf2f7;
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ── Checkbox ── */
+.checkboxGroup {
+  margin: 4px 0;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #4a5568;
+  cursor: pointer;
+}
+
+.checkboxInput {
+  margin-top: 2px;
+  width: 15px;
+  height: 15px;
+  accent-color: #22c55e;
+}
+
+.submitBtn {
+  background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+  color: #ffffff;
+  border: none;
+  padding: 18px 24px;
+  border-radius: 14px;
+  font-size: 1.25rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.4);
+  width: 100%;
+}
+
+.submitBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5);
+}
+
+.submitBtn:disabled {
+  background: #cbd5e0;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ── Couriers & Badges ── */
+.courierSection {
+  margin-top: 16px;
+  text-align: center;
+  padding-top: 14px;
+  border-top: 1px dashed #e2e8f0;
+}
+
+.courierLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #718096;
+  margin-bottom: 8px;
+}
+
+.courierLogos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+
+.courierBadge {
+  background: #f7fafc;
+  border: 1px solid #edf2f7;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #4a5568;
+}
+
+.badgesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.badgeIcon {
+  font-size: 1rem;
+}
+
+/* ── Sales Notification Popup ── */
+.salesPopup {
+  position: fixed;
+  bottom: 20px;
+  left: 16px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 10px 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 300;
+  max-width: 280px;
+  font-size: 0.8rem;
+  color: #1a202c;
+  border-left: 4px solid #22c55e;
+}

@@ -73,6 +73,8 @@ export interface Product {
   problemFactors?: ProductProblemFactor[];
   problemTagline?: string;
   problemHeadline?: string;
+  showPriorityShipping?: boolean;
+  showDispatch24h?: boolean;
 }
 
 export const products: Product[] = [
