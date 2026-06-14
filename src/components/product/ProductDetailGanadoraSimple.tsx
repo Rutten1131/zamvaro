@@ -579,64 +579,52 @@ export default function ProductDetailGanadoraSimple({ product }: Props) {
           </div>
 
           {/* Attention Message Box */}
-          <div style={{ margin: '20px 0', padding: '16px', border: '2px dashed #ecc94b', borderRadius: '12px', backgroundColor: '#fffdf5', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <span style={{ color: '#d69e2e', fontWeight: 800, fontSize: '0.9rem', textAlign: 'center' }}>⚠️ ATENCIÓN ⚠️</span>
-            <p style={{ margin: 0, fontSize: '0.8rem', color: '#744210', lineHeight: 1.4, textAlign: 'center' }}>
-              Tu pedido únicamente podrá salir de la bodega si tus datos están completos. Por favor, verifica que tu dirección esté correcta antes de continuar.
+          <div style={{ margin: '12px 0', padding: '10px 14px', border: '1px dashed #ecc94b', borderRadius: '10px', backgroundColor: '#fffdf5', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+            <span style={{ color: '#d69e2e', fontWeight: 800, fontSize: '0.85rem', textAlign: 'center' }}>⚠️ ATENCIÓN ⚠️</span>
+            <p style={{ margin: 0, fontSize: '0.76rem', color: '#744210', lineHeight: 1.3, textAlign: 'center' }}>
+              Tu pedido únicamente podrá salir de la bodega si tus datos están completos.
             </p>
           </div>
 
           {/* Paso 3: Metodo de Pago */}
-          <div className={styles.formGroup} style={{ marginTop: '20px' }}>
+          <div className={styles.formGroup} style={{ marginTop: '10px' }}>
             <h3 className={styles.stepTitle}>3 - Metodo de Pago 👆</h3>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '16px', border: '2px solid #e2e8f0', borderRadius: '12px', background: 'white', marginTop: '10px' }}>
-              <input type="radio" checked readOnly style={{ accentColor: '#22c55e', width: '18px', height: '18px' }} />
-              <span style={{ fontWeight: 700, fontSize: '0.9rem', color: '#2d3748' }}>Pago contraentrega</span>
-            </div>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginTop: '14px', padding: '16px', border: '1px solid #edf2f7', borderRadius: '12px', background: '#f7fafc' }}>
-              <span style={{ fontSize: '2rem', marginBottom: '8px' }}>🚚</span>
-              <p style={{ fontSize: '0.8rem', color: '#4a5568', lineHeight: 1.5, margin: 0 }}>
-                Haga clic en "👉 <strong>CONFIRMAR MI COMPRA</strong>" para completar su compra. Solo pagará el pedido una vez que se entregue en su dirección.
-              </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', border: '1px solid #e2e8f0', borderRadius: '10px', background: 'white', marginTop: '6px' }}>
+              <input type="radio" checked readOnly style={{ accentColor: '#22c55e', width: '16px', height: '16px' }} />
+              <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#2d3748' }}>Pago contraentrega</span>
             </div>
           </div>
 
           {/* Paso 4: Resumen de tu Pedido */}
-          <div className={styles.formGroup} style={{ marginTop: '20px' }}>
+          <div className={styles.formGroup} style={{ marginTop: '12px' }}>
             <h3 className={styles.stepTitle}>4 - Resumen de tu Pedido 👆</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', border: '1px solid #e2e8f0', borderRadius: '12px', overflow: 'hidden', marginTop: '10px', background: 'white' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 14px', borderBottom: '1px solid #edf2f7', backgroundColor: '#f7fafc', fontSize: '0.75rem', fontWeight: 800, color: '#718096', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', border: '1px solid #e2e8f0', borderRadius: '10px', overflow: 'hidden', marginTop: '6px', background: 'white' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 12px', borderBottom: '1px solid #edf2f7', backgroundColor: '#f7fafc', fontSize: '0.72rem', fontWeight: 800, color: '#718096', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 <span>Producto</span>
                 <span>Precio</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0, flex: 1 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0, flex: 1 }}>
                   {/* Thumbnail with Quantity Badge */}
                   {product.image && (
                     <div style={{ position: 'relative', flexShrink: 0 }}>
                       <img 
                         src={product.image} 
                         alt="Miniatura" 
-                        style={{ width: '50px', height: '50px', borderRadius: '8px', border: '1px solid #e2e8f0', objectFit: 'cover' }}
+                        style={{ width: '40px', height: '40px', borderRadius: '6px', border: '1px solid #e2e8f0', objectFit: 'cover' }}
                       />
-                      <span style={{ position: 'absolute', top: '-6px', right: '-6px', background: '#718096', color: 'white', fontSize: '10px', fontWeight: 800, borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <span style={{ position: 'absolute', top: '-6px', right: '-6px', background: '#718096', color: 'white', fontSize: '9px', fontWeight: 800, borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         {totalQuantity}
                       </span>
                     </div>
                   )}
                   <div style={{ minWidth: 0 }}>
-                    <div style={{ fontWeight: 700, fontSize: '0.82rem', color: '#2d3748', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                    <div style={{ fontWeight: 700, fontSize: '0.78rem', color: '#2d3748', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
                       {activeOffer.title}
                     </div>
-                    {activeOffer.badge && (
-                      <span className={`${styles.offerBadge} ${activeOffer.badgeClass}`} style={{ marginTop: '4px' }}>
-                        {activeOffer.badge}
-                      </span>
-                    )}
                   </div>
                 </div>
-                <span style={{ fontWeight: 800, fontSize: '0.95rem', color: '#2f855a', marginLeft: '12px', flexShrink: 0 }}>
+                <span style={{ fontWeight: 800, fontSize: '0.88rem', color: '#2f855a', marginLeft: '10px', flexShrink: 0 }}>
                   ${activeOffer.price.toFixed(2)}
                 </span>
               </div>
