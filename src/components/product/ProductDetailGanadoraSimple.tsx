@@ -485,18 +485,7 @@ export default function ProductDetailGanadoraSimple({ product }: Props) {
               )}
             </div>
 
-            <div className={styles.formGroupSub} style={{ marginTop: '12px' }}>
-              <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#4a5568', display: 'block', marginBottom: '4px' }}>Email</label>
-              <input 
-                type="email" 
-                name="email" 
-                placeholder="ejemplo@gmail.com" 
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)} 
-                disabled={loading} 
-                className={styles.lightInputNoIcon} 
-              />
-            </div>
+
 
             <div className={styles.formGroupSub} style={{ marginTop: '12px' }}>
               <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#4a5568', display: 'block', marginBottom: '4px' }}>Dirección Entrega: (2 calles y una referencia para el envío a domicilio) *</label>
