@@ -182,11 +182,17 @@ export default function ProductDetailGanadoraSimple({ product }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const fullName = `${firstName} ${lastName}`.trim();
+    const missing = [];
+    if (!firstName.trim()) missing.push('Nombre');
+    if (!lastName.trim()) missing.push('Apellido');
+    if (!formData.whatsapp.trim()) missing.push('WhatsApp');
+    if (!formData.street1.trim()) missing.push('Dirección de entrega');
+    if (!formData.province) missing.push('Provincia');
     const resolvedCity = isCustomCity ? customCity.trim() : formData.city.trim();
-    
-    if (!fullName || !formData.whatsapp || !formData.street1 || !formData.neighborhood || !formData.province || !resolvedCity) {
-      alert('Por favor complete los campos obligatorios (*)');
+    if (!resolvedCity) missing.push('Ciudad');
+
+    if (missing.length > 0) {
+      alert(`Por favor complete los campos obligatorios: ${missing.join(', ')}`);
       return;
     }
     if (!termsAccepted) {
@@ -201,6 +207,7 @@ export default function ProductDetailGanadoraSimple({ product }: Props) {
       const fbclid = sessionStorage.getItem('fbclid') || '';
       if (!fbc && fbclid) fbc = `fb.1.${Date.now()}.${fbclid}`;
 
+      const fullName = `${firstName} ${lastName}`.trim();
       const finalFormData = {
         ...formData,
         fullName,
@@ -682,6 +689,20 @@ export default function ProductDetailGanadoraSimple({ product }: Props) {
                 <span style={{ color: '#2f855a' }}>${totalPrice.toFixed(2)}</span>
               </div>
             </div>
+          </div>
+
+          {/* Casilla de verificación de datos correctos */}
+          <div style={{ marginTop: '14px', display: 'flex', alignItems: 'center', gap: '10px', background: '#fff', padding: '14px', border: '1px solid #e2e8f0', borderRadius: '12px' }}>
+            <input 
+              type="checkbox" 
+              id="termsAcceptedCheck" 
+              checked={termsAccepted} 
+              onChange={(e) => setTermsAccepted(e.target.checked)} 
+              style={{ width: '18px', height: '18px', accentColor: '#22c55e', cursor: 'pointer' }}
+            />
+            <label htmlFor="termsAcceptedCheck" style={{ fontSize: '0.82rem', fontWeight: 700, color: '#4a5568', cursor: 'pointer' }}>
+              Confirmar que mis datos de envío están correctos y pagaré al recibir 📦
+            </label>
           </div>
 
           <div style={{ marginTop: '20px' }}>

@@ -8,6 +8,8 @@ import type { Product } from '@/data/products';
 import styles from './CheckoutModal.module.css';
 import * as fpixel from '@/lib/fpixel';
 
+import { ECUADOR_LOCATIONS } from '@/data/ecuadorLocations';
+
 interface Props {
   product: Product;
   isOpen: boolean;
@@ -27,6 +29,8 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
   });
   const [loading, setLoading] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [customCity, setCustomCity] = useState('');
+  const [isCustomCity, setIsCustomCity] = useState(false);
 
   const basePrice = parseFloat(product.price.replace(/[^\d.]/g, '')) || 24.99;
 
@@ -88,25 +92,35 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
     }
   }, [isOpen, product, totalPrice]);
 
-  const provinces = [
-    'Azuay', 'Bolívar', 'Cañar', 'Carchi', 'Chimborazo', 'Cotopaxi', 'El Oro',
-    'Esmeraldas', 'Galápagos', 'Guayas', 'Imbabura', 'Loja', 'Los Ríos',
-    'Manabí', 'Morona Santiago', 'Napo', 'Orellana', 'Pastaza', 'Pichincha',
-    'Santa Elena', 'Santo Domingo de los Tsáchilas', 'Sucumbíos', 'Tungurahua',
-    'Zamora Chinchipe'
-  ];
+  const PROVINCES_CITIES = ECUADOR_LOCATIONS;
+  const provinces = Object.keys(PROVINCES_CITIES);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => {
+      const updated = { ...prev, [name]: value };
+      if (name === 'province') {
+        updated.city = '';
+      }
+      return updated;
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validar requeridos básicos
-    if (!formData.fullName || !formData.whatsapp || !formData.street1 || !formData.neighborhood || !formData.province || !formData.city) {
-      alert('Por favor complete los campos obligatorios (*)');
+    const resolvedCity = isCustomCity ? customCity.trim() : formData.city.trim();
+    const missing = [];
+    if (!formData.fullName.trim()) missing.push('Nombre y apellido');
+    if (!formData.whatsapp.trim()) missing.push('WhatsApp');
+    if (!formData.street1.trim()) missing.push('Calle principal');
+    if (!formData.street2.trim()) missing.push('Calle secundaria');
+    if (!formData.neighborhood.trim()) missing.push('Barrio/Sector');
+    if (!formData.province) missing.push('Provincia');
+    if (!resolvedCity) missing.push('Ciudad');
+
+    if (missing.length > 0) {
+      alert(`Por favor complete los campos obligatorios: ${missing.join(', ')}`);
       return;
     }
 
@@ -131,6 +145,11 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
         fbc = `fb.1.${Date.now()}.${fbclid}`;
       }
 
+      const finalFormData = {
+        ...formData,
+        city: resolvedCity
+      };
+
       // Enviar los datos del pedido al servidor de Next.js para despachar el correo por SMTP y disparar CAPI
       const response = await fetch('/api/send-order', {
         method: 'POST',
@@ -139,7 +158,7 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
         },
         body: JSON.stringify({
           product,
-          formData,
+          formData: finalFormData,
           totalPrice,
           quantity: totalQuantity,
           offer: activeOffer.title,
@@ -168,6 +187,9 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
       });
 
       alert('¡Tu pedido fue registrado con éxito! 🎉 Nos comunicaremos contigo pronto para confirmar tu entrega. Gracias por confiar en Zamvaro Ecuador.');
+      setFormData({ fullName: '', whatsapp: '', street1: '', street2: '', neighborhood: '', reference: '', province: '', city: '' });
+      setCustomCity('');
+      setIsCustomCity(false);
       onClose();
     } catch (err) {
       console.error(err);
@@ -415,18 +437,53 @@ export default function CheckoutModal({ product, isOpen, onClose }: Props) {
                 {/* Ciudad o Cantón */}
                 <div className={styles.formGroup}>
                   <label>Ciudad o Cantón *</label>
-                  <div className={styles.inputIconWrap}>
-                    <MapPin size={16} className={styles.inputIcon} />
-                    <input
-                      type="text"
+                  {isCustomCity ? (
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      <div className={styles.inputIconWrap} style={{ flex: 1 }}>
+                        <MapPin size={16} className={styles.inputIcon} />
+                        <input
+                          type="text"
+                          placeholder="Escribe tu ciudad..."
+                          required
+                          value={customCity}
+                          onChange={(e) => setCustomCity(e.target.value)}
+                          disabled={loading}
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsCustomCity(false);
+                          setCustomCity('');
+                          setFormData(prev => ({ ...prev, city: '' }));
+                        }}
+                        style={{ padding: '0 12px', background: '#ff4444', color: 'white', border: 'none', borderRadius: '10px', fontSize: '0.9rem', fontWeight: 'bold', cursor: 'pointer' }}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ) : (
+                    <select
                       name="city"
-                      placeholder="Ciudad o Cantón"
                       required
                       value={formData.city}
-                      onChange={handleInputChange}
-                      disabled={loading}
-                    />
-                  </div>
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === 'Otros/Cantón') {
+                          setIsCustomCity(true);
+                        } else {
+                          handleInputChange(e);
+                        }
+                      }}
+                      disabled={loading || !formData.province}
+                      className={styles.selectInput}
+                    >
+                      <option value="">Ciudad o Cantón</option>
+                      {formData.province && PROVINCES_CITIES[formData.province]?.map((city) => (
+                        <option key={city} value={city}>{city}</option>
+                      ))}
+                    </select>
+                  )}
                 </div>
 
                 {/* Casilla de verificación de datos correctos */}
