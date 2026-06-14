@@ -371,7 +371,7 @@ export default function ProductDetailGanadoraSimple({ product }: Props) {
               {offers.map((offer: Offer, index: number) => {
                 const isSelected = activeOfferIndex === index;
                 const savings = offer.originalPrice - offer.price;
-                const isPopular = offer.badgeClass === styles.badgeBest || (offers.length === 3 ? index === 2 : index === offers.length - 1);
+                const isPopular = offers.length > 0 && index === offers.length - 1;
                 return (
                   <button
                     key={index}
